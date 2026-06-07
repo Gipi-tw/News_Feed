@@ -1,0 +1,96 @@
+{
+  "timezone": "Asia/Taipei",
+  "scheduleCron": "0 8 * * *",
+  "search": {
+    "provider": "brave",
+    "fallbackProvider": "serper",
+    "freshnessHours": 48,
+    "resultsPerQuery": 10,
+    "languages": ["zh-hant", "en"]
+  },
+  "dedup": {
+    "windowDays": 30
+  },
+  "comment": {
+    "minChars": 800,
+    "maxChars": 1400,
+    "lifeMinChars": 400,
+    "lifeMaxChars": 800,
+    "maxRetries": 2
+  },
+  "tiers": [
+    {
+      "key": "corp",
+      "emoji": "🏢",
+      "label": "企業動態：國際科技巨頭",
+      "subtitle": "組織・人才・領導・商業模式",
+      "count": 12,
+      "tierClass": "tier0",
+      "scope": "國際科技巨頭限定：Google、Musk 系（Tesla/SpaceX/X）、Apple、Microsoft、OpenAI、Anthropic、NVIDIA（含黃仁勳言論）、Meta、Amazon、Netflix、Uber、Disney、Intel、Salesforce、Coinbase。切角：組織設計與重組、人才與薪酬制度、領導者決策與言論、企業文化事件（裁員信、工會、紀律通報、dogfooding）、商業模式轉變。排除純財報股價新聞。",
+      "queries": [
+        "Google org restructuring OR layoffs OR leadership",
+        "OpenAI OR Anthropic culture OR talent OR Sam Altman",
+        "NVIDIA Jensen Huang management OR talent",
+        "Microsoft OR Meta OR Amazon layoffs OR reorg OR dogfooding",
+        "Tesla OR SpaceX OR Musk compensation OR governance",
+        "Apple OR Netflix OR Uber OR Disney OR Intel OR Salesforce OR Coinbase organizational change"
+      ]
+    },
+    {
+      "key": "ai_work",
+      "emoji": "🤖",
+      "label": "AI × 工作方式",
+      "subtitle": "Agent・組織・人才・未來工作",
+      "count": 8,
+      "tierClass": "tier1",
+      "scope": "AI Agent 企業應用與 ROI、AI 對組織與中階主管的影響、AI 人才與技能、SaaS 商業模式變化、未來工作型態（RTO/遠距）、AI coding 重大進展。模型發布只挑最重大 1-2 則。",
+      "queries": [
+        "AI agent enterprise ROI OR adoption",
+        "AI impact on middle managers OR org design",
+        "AI talent OR skills OR future of work RTO remote",
+        "AI coding breakthrough OR vibe coding",
+        "SaaS business model AI disruption"
+      ]
+    },
+    {
+      "key": "tier2",
+      "emoji": "🟡",
+      "label": "第二級：開發實務 × 台灣科技圈 × 人才",
+      "subtitle": "vibe coding・產品・職涯・知識變現",
+      "count": 10,
+      "tierClass": "tier2",
+      "scope": "vibe coding / Claude Code 開發實務、台灣科技商業（INSIDE、數位時代、TechNews、經理人）、企業培訓與學習、產品經理、職涯、知識變現、中文新書。",
+      "queries": [
+        "Claude Code OR vibe coding 開發實務",
+        "INSIDE OR 數位時代 OR TechNews 科技 商業",
+        "經理人 領導 OR 管理 OR 學習",
+        "產品經理 OR 職涯 OR 知識變現 個人品牌",
+        "企業培訓 OR 線上課程 趨勢"
+      ]
+    },
+    {
+      "key": "life",
+      "emoji": "🟢",
+      "label": "生活版",
+      "subtitle": "遊戲・健身・投資・心理・親子",
+      "count": 5,
+      "tierClass": "tier3",
+      "scope": "艾爾登法環《黑夜君臨》/ 魂系遊戲、健身與運動科學、投資理財與總經、心理學（焦慮、內在安頓）、親子教育。語氣較輕鬆。",
+      "queries": [
+        "Elden Ring Nightreign OR 魂系遊戲 更新",
+        "運動科學 OR 健身 研究",
+        "投資理財 OR 總經 觀點",
+        "心理學 焦慮 OR 內在安頓",
+        "親子教育 研究"
+      ]
+    }
+  ],
+  "globalExclusions": [
+    "敏捷 / Scrum",
+    "數位轉型",
+    "電商",
+    "選舉政治（科技政策與勞動議題除外）",
+    "純股價財報新聞",
+    "中國企業動態（阿里、騰訊、字節跳動等，除非與國際巨頭直接相關）"
+  ]
+}

@@ -1,0 +1,27 @@
+# Fly.io deploy config for gipi-digest.
+# Edit `app` to your chosen name before `fly launch --no-deploy` / `fly deploy`.
+app = "gipi-digest"
+primary_region = "nrt" # Tokyo — closest to Taipei
+
+[build]
+
+[env]
+  DATABASE_URL = "file:/data/prod.db"
+  APP_BASE_URL = "https://gipi-digest.fly.dev"
+  SEARCH_PROVIDER = "" # leave empty in prod; provider comes from digest_config
+
+# SQLite lives on a persistent volume (single-user, single-machine).
+[mounts]
+  source = "digest_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1gb"

@@ -1,0 +1,8 @@
+# Normalize line endings to LF; protect shell scripts / Docker entrypoints on Windows checkouts
+* text=auto eol=lf
+*.sh text eol=lf
+*.{cmd,bat} text eol=crlf
+*.png binary
+*.jpg binary
+*.ico binary
+*.db binary

@@ -1,0 +1,28 @@
+node_modules
+.next
+out
+build
+dist
+
+# env
+.env
+.env.local
+.env*.local
+
+# sqlite
+*.db
+*.db-journal
+prisma/*.db
+prisma/*.db-journal
+/data
+
+# logs / os
+*.log
+.DS_Store
+Thumbs.db
+
+# prisma generated client (regenerated on build)
+/src/generated
+
+# next generated
+next-env.d.ts

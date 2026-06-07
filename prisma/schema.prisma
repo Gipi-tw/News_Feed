@@ -1,0 +1,78 @@
+// gipi-digest — 個人內容爬蟲與摘要日報
+// SQLite, single user. See SPEC.md §3 for the article data structure.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 一期日報（同一天可有多期：第 1 期 / 第 2 期…）
+model Digest {
+  id        String    @id @default(cuid())
+  date      String // YYYY-MM-DD (Asia/Taipei)
+  edition   Int       @default(1) // 期數
+  title     String    @default("內容摘要日報")
+  status    String    @default("complete") // generating | complete | failed
+  createdAt DateTime  @default(now())
+  articles  Article[]
+
+  @@unique([date, edition])
+}
+
+// 每篇文章（SPEC §3）
+model Article {
+  id            String   @id @default(cuid())
+  digestId      String
+  digest        Digest   @relation(fields: [digestId], references: [id], onDelete: Cascade)
+  tier          String // corp | ai_work | tier2 | life
+  position      Int
+  title         String
+  sourceName    String
+  sourceDate    String
+  factSummary   String
+  opinionHook   String
+  urls          String // JSON string[] — primary first
+  myComment     String   @default("")
+  commentStatus String   @default("draft") // draft | edited | published
+  lintReport    String? // JSON: last lint result for the comment
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([digestId])
+}
+
+// 去重索引（SPEC §4.3）— URL 為硬條件，窗口 30 天
+model DedupEntry {
+  id        String   @id @default(cuid())
+  date      String // 收錄日
+  title     String
+  url       String   @unique // 主 URL，硬去重
+  allUrls   String // JSON string[]
+  tier      String?
+  createdAt DateTime @default(now())
+
+  @@index([date])
+}
+
+// 可在後台編輯的設定（興趣輪廓 md / 口吻指南 md / 配比與排除規則 JSON / 排程）
+model Setting {
+  key       String   @id // interest_profile | style_guide | digest_config
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// pipeline 執行紀錄（觀測性 — 失敗可自診）
+model RunLog {
+  id         String    @id @default(cuid())
+  trigger    String    @default("cron") // cron | manual
+  status     String    @default("running") // running | success | failed
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  digestId   String?
+  message    String?
+  detail     String? // JSON: per-stage timing / counts / errors
+}

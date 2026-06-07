@@ -1,0 +1,101 @@
+/* ── Template styles (verified visual standard — ported verbatim from
+   config/template_reference.html, SPEC §5.2) ─────────────────────────── */
+:root {
+  --t0: #1f3a93; --t0-bg: #edf1fb;
+  --t1: #c0392b; --t1-bg: #fdf0ee;
+  --t2: #b9770e; --t2-bg: #fdf6e8;
+  --t3: #1e8449; --t3-bg: #edf7f0;
+  --ink: #1c2733; --muted: #6b7a88; --line: #e4e9ee; --link: #1a5fb4;
+}
+* { box-sizing: border-box; }
+html, body { padding: 0; margin: 0; }
+body {
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  color: var(--ink); background: #f5f7f9; line-height: 1.75;
+}
+a { color: inherit; }
+.wrap { max-width: 860px; margin: 0 auto; padding: 24px 20px 64px; }
+
+header.masthead { border-bottom: 3px solid var(--ink); padding-bottom: 16px; margin-bottom: 8px; }
+.masthead h1 { font-size: 28px; margin: 0; letter-spacing: 1px; }
+.masthead .meta { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.toc { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 20px; margin: 20px 0; font-size: 14px; color: var(--muted); }
+
+section.tier { margin-top: 36px; }
+.tier-head { display: flex; align-items: baseline; gap: 12px; border-left: 6px solid; padding: 6px 14px; border-radius: 4px; margin-bottom: 18px; flex-wrap: wrap; }
+.tier0 .tier-head { border-color: var(--t0); background: var(--t0-bg); }
+.tier1 .tier-head { border-color: var(--t1); background: var(--t1-bg); }
+.tier2 .tier-head { border-color: var(--t2); background: var(--t2-bg); }
+.tier3 .tier-head { border-color: var(--t3); background: var(--t3-bg); }
+.tier-head h2 { margin: 0; font-size: 20px; }
+.tier-head .count { color: var(--muted); font-size: 13px; }
+
+article.card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 18px 22px; margin-bottom: 14px; }
+.card h3 { margin: 0 0 4px; font-size: 17px; line-height: 1.5; }
+.card h3 .num { color: var(--muted); font-weight: 500; margin-right: 8px; }
+.card h3 a { color: var(--ink); text-decoration: none; }
+.card h3 a:hover { color: var(--link); text-decoration: underline; }
+.src { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
+.fact, .hook { margin: 8px 0; font-size: 15px; }
+.label { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 4px; padding: 1px 8px; margin-right: 8px; vertical-align: 1px; }
+.fact .label { background: #eaf1f8; color: #1a5fb4; }
+.hook .label { background: #fdf0ee; color: #c0392b; }
+.links { font-size: 13px; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.links a { color: var(--link); text-decoration: none; margin-right: 14px; }
+.links a:hover { text-decoration: underline; }
+footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 14px; }
+
+details.mycomment { margin-top: 12px; border-top: 1px dashed var(--line); padding-top: 10px; }
+details.mycomment summary { cursor: pointer; font-size: 13.5px; font-weight: 700; color: #7d3c98; list-style: none; display: flex; align-items: center; gap: 6px; user-select: none; }
+details.mycomment summary::-webkit-details-marker { display: none; }
+details.mycomment summary::before { content: "▸"; transition: transform .15s; }
+details.mycomment[open] summary::before { transform: rotate(90deg); }
+details.mycomment summary:hover { color: #5b2c6f; }
+.mycomment .post-body { white-space: pre-line; font-size: 14.5px; background: #faf7fc; border: 1px solid #ead9f2; border-radius: 8px; padding: 14px 16px; margin-top: 10px; line-height: 1.9; }
+.mycomment .copybtn, .mycomment .editbtn { margin-top: 8px; margin-right: 8px; font-size: 12.5px; border: 1px solid #ccd0d5; background: #fff; border-radius: 6px; padding: 3px 12px; cursor: pointer; }
+.mycomment .copybtn:hover, .mycomment .editbtn:hover { background: #f0f2f5; }
+
+/* ── App chrome (nav, login, settings, badges) ───────────────────────── */
+nav.topnav { background: var(--ink); color: #fff; }
+nav.topnav .inner { max-width: 860px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+nav.topnav .brand { font-weight: 700; letter-spacing: .5px; margin-right: auto; }
+nav.topnav a { color: #cdd6df; text-decoration: none; font-size: 14px; }
+nav.topnav a:hover, nav.topnav a.active { color: #fff; }
+nav.topnav form { margin: 0; }
+nav.topnav button.linkbtn { background: none; border: none; color: #cdd6df; cursor: pointer; font-size: 14px; padding: 0; }
+nav.topnav button.linkbtn:hover { color: #fff; }
+
+.badge { display: inline-block; font-size: 11px; border-radius: 4px; padding: 1px 7px; margin-left: 6px; vertical-align: 1px; }
+.badge.draft { background: #eef1f4; color: #6b7a88; }
+.badge.edited { background: #fff3d6; color: #b9770e; }
+.badge.published { background: #e3f5ea; color: #1e8449; }
+.badge.lintfail { background: #fdecea; color: #c0392b; }
+
+.btn { display: inline-block; border: 1px solid var(--ink); background: var(--ink); color: #fff; border-radius: 8px; padding: 8px 16px; font-size: 14px; cursor: pointer; text-decoration: none; }
+.btn:hover { opacity: .9; }
+.btn.secondary { background: #fff; color: var(--ink); }
+.btn:disabled { opacity: .5; cursor: default; }
+
+.card-pad { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; }
+input[type="text"], input[type="password"], input[type="number"], textarea, select {
+  width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line);
+  border-radius: 8px; background: #fff; color: var(--ink);
+}
+textarea { line-height: 1.6; resize: vertical; }
+label.field { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 14px; }
+.muted { color: var(--muted); }
+.row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.lint-list { font-size: 13px; margin: 8px 0 0; padding-left: 18px; }
+.lint-list li.ok { color: #1e8449; }
+.lint-list li.bad { color: #c0392b; }
+
+.history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.history-item a { text-decoration: none; color: var(--ink); font-weight: 600; }
+.history-item a:hover { color: var(--link); }
+
+@media (max-width: 480px) {
+  .masthead h1 { font-size: 23px; }
+  .wrap { padding: 18px 14px 48px; }
+  article.card { padding: 14px 16px; }
+  nav.topnav .inner { gap: 12px; }
+}
