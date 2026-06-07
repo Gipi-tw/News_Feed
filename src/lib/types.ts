@@ -17,7 +17,8 @@ export interface DigestConfig {
   timezone: string;
   scheduleCron: string;
   search: {
-    provider: "brave" | "serper" | "mock";
+    // "claude" = use Claude's built-in web_search tool (no third-party key).
+    provider: "claude" | "brave" | "serper" | "mock";
     fallbackProvider?: "brave" | "serper" | "mock";
     freshnessHours: number;
     resultsPerQuery: number;

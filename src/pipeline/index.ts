@@ -1,13 +1,15 @@
 import { prisma } from "../lib/db";
+import { env } from "../lib/env";
 import { getDigestConfig, getInterestProfile, getStyleGuide } from "../lib/config";
 import { todayInTz } from "../lib/date";
 import { mapPool } from "../lib/pool";
-import type { BuiltArticle, Candidate, SearchHit, TierKey } from "../lib/types";
+import type { BuiltArticle, Candidate, SearchHit, SelectedArticle, TierKey } from "../lib/types";
 import { runSearches } from "../lib/search";
 import { enrichCandidates } from "./fetch";
 import { getRecentEntries, hardFilter } from "./dedup";
 import { selectForTier } from "./select";
 import { summarizeTier } from "./summarize";
+import { researchTier } from "./research";
 import { generateComment } from "./comment";
 import { nextEdition, saveDigest } from "./assemble";
 import { notifyDigestReady } from "./notify";
@@ -47,57 +49,74 @@ export async function runDigest(opts?: {
     const edition = await nextEdition(today);
     log(`日期 ${today}｜第 ${edition} 期｜trigger=${trigger}`);
 
-    // 1. Search every query across every tier.
-    const hits = await runSearches(cfg);
-    log(`搜尋取得 ${hits.length} 則候選`);
-    detail.rawHits = hits.length;
-
-    // 2. Hard dedup (URL) against the last `windowDays`.
+    // Dedup index (recent published) — needed by both search modes.
     const { urls: knownUrls, titles: recentTitles } = await getRecentEntries(
       today,
       cfg.dedup.windowDays,
     );
-    const fresh = hardFilter(hits, knownUrls);
-    log(`URL 去重後剩 ${fresh.length} 則（已排除 ${hits.length - fresh.length}）`);
 
-    // 3. Select per tier (snippet-based) — parallel.
-    const byTierHits = new Map<TierKey, SearchHit[]>();
-    for (const h of fresh) {
-      const t = (h.tier ?? "tier2") as TierKey;
-      (byTierHits.get(t) ?? byTierHits.set(t, []).get(t)!).push(h);
+    const mode = env.searchProviderOverride || cfg.search.provider;
+    let articlesFlat: SelectedArticle[];
+
+    if (mode === "claude") {
+      // ── Claude-native path: web_search does search+select+summarize per tier.
+      log("搜尋模式：Claude web_search（無需第三方搜尋 key）");
+      const perTier = await Promise.all(
+        cfg.tiers.map((tier) =>
+          researchTier({ tier, recentTitles, interestProfile, today, cfg }),
+        ),
+      );
+      // Backstop URL hard-dedup against the last `windowDays` (SPEC §4.3).
+      articlesFlat = perTier
+        .flat()
+        .filter((a) => a.urls[0] && !knownUrls.has(a.urls[0]));
+      detail.mode = "claude";
+      log(`研究完成：${articlesFlat.length} 篇`);
+    } else {
+      // ── Third-party provider path (Brave/Serper/mock).
+      const hits = await runSearches(cfg);
+      log(`搜尋取得 ${hits.length} 則候選`);
+      detail.rawHits = hits.length;
+
+      const fresh = hardFilter(hits, knownUrls);
+      log(`URL 去重後剩 ${fresh.length} 則（已排除 ${hits.length - fresh.length}）`);
+
+      const byTierHits = new Map<TierKey, SearchHit[]>();
+      for (const h of fresh) {
+        const t = (h.tier ?? "tier2") as TierKey;
+        (byTierHits.get(t) ?? byTierHits.set(t, []).get(t)!).push(h);
+      }
+      const selections = await Promise.all(
+        cfg.tiers.map((tier) =>
+          selectForTier({
+            tier,
+            candidates: byTierHits.get(tier.key) ?? [],
+            recentTitles,
+            interestProfile,
+            today,
+            cfg,
+          }).then((picked) => ({ tier, picked })),
+        ),
+      );
+      log(`選文完成：共選 ${selections.reduce((n, s) => n + s.picked.length, 0)} 則`);
+
+      const allPicked = selections.flatMap((s) => s.picked);
+      const enriched = await enrichCandidates(allPicked);
+      const enrichedByUrl = new Map<string, Candidate>(enriched.map((c) => [c.url, c]));
+
+      const summaries = await Promise.all(
+        selections.map((s) =>
+          summarizeTier({
+            tier: s.tier,
+            selected: s.picked.map((h) => enrichedByUrl.get(h.url) ?? { ...h }),
+            today,
+          }),
+        ),
+      );
+      articlesFlat = summaries.flat();
+      detail.mode = mode;
+      log(`摘要完成：${articlesFlat.length} 篇`);
     }
-    const selections = await Promise.all(
-      cfg.tiers.map((tier) =>
-        selectForTier({
-          tier,
-          candidates: byTierHits.get(tier.key) ?? [],
-          recentTitles,
-          interestProfile,
-          today,
-          cfg,
-        }).then((picked) => ({ tier, picked })),
-      ),
-    );
-    const selectedCount = selections.reduce((n, s) => n + s.picked.length, 0);
-    log(`選文完成：共選 ${selectedCount} 則`);
-
-    // 4. Fetch full text only for the winners.
-    const allPicked = selections.flatMap((s) => s.picked);
-    const enriched = await enrichCandidates(allPicked);
-    const enrichedByUrl = new Map<string, Candidate>(enriched.map((c) => [c.url, c]));
-
-    // 5. Summarize per tier — parallel.
-    const summaries = await Promise.all(
-      selections.map((s) =>
-        summarizeTier({
-          tier: s.tier,
-          selected: s.picked.map((h) => enrichedByUrl.get(h.url) ?? { ...h }),
-          today,
-        }),
-      ),
-    );
-    const articlesFlat = summaries.flat();
-    log(`摘要完成：${articlesFlat.length} 篇`);
 
     // 6. Generate comments with lint+retry — bounded concurrency.
     const built = await mapPool(articlesFlat, 4, async (article) => {
