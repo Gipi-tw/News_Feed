@@ -88,9 +88,11 @@ ${recentTitles.length ? recentTitles.slice(0, 80).map((t) => `- ${t}`).join("\n"
 請先用 web_search 搜尋並閱讀，挑出最多 ${tier.count} 則，最後呼叫 submit_selection 提交。`;
 
   const tools = [
-    // Keep searches modest: each web_search result payload is large input, and
-    // the org's per-minute input-token budget is the binding constraint.
-    { type: "web_search_20260209", name: "web_search", max_uses: 4 },
+    // COST GUARD: web_search result payloads are large input tokens (and the
+    // _20260209 dynamic-filtering version runs server-side code execution).
+    // Cap searches hard — this mode is convenient but pricey; prefer a cheap
+    // search provider (Brave free tier) for routine use.
+    { type: "web_search_20260209", name: "web_search", max_uses: 3 },
     SUBMIT_TOOL,
   ];
 
@@ -101,10 +103,10 @@ ${recentTitles.length ? recentTitles.slice(0, 80).map((t) => `- ${t}`).join("\n"
   // The SDK auto-runs the server-side web_search loop within a turn; the model
   // pauses (stop_reason "pause_turn") if it hits the server-tool iteration cap,
   // and stops with "tool_use" when it calls submit_selection.
-  for (let round = 0; round < 5; round++) {
+  for (let round = 0; round < 3; round++) {
     const res = await client().messages.create({
       model: MODELS.summarize,
-      max_tokens: 16000,
+      max_tokens: 6000,
       thinking: { type: "adaptive" },
       output_config: { effort: "medium" },
       system,
