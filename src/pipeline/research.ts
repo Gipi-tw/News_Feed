@@ -88,7 +88,9 @@ ${recentTitles.length ? recentTitles.slice(0, 80).map((t) => `- ${t}`).join("\n"
 請先用 web_search 搜尋並閱讀，挑出最多 ${tier.count} 則，最後呼叫 submit_selection 提交。`;
 
   const tools = [
-    { type: "web_search_20260209", name: "web_search", max_uses: 8 },
+    // Keep searches modest: each web_search result payload is large input, and
+    // the org's per-minute input-token budget is the binding constraint.
+    { type: "web_search_20260209", name: "web_search", max_uses: 4 },
     SUBMIT_TOOL,
   ];
 

@@ -32,12 +32,26 @@ type Logger = (msg: string) => void;
 export async function runDigest(opts?: {
   trigger?: "cron" | "manual";
   log?: Logger;
+  runId?: string;
 }): Promise<RunResult> {
   const trigger = opts?.trigger ?? "manual";
   const log: Logger = opts?.log ?? ((m) => console.log(`[pipeline] ${m}`));
 
-  const run = await prisma.runLog.create({ data: { trigger, status: "running" } });
+  // Reuse a pre-created RunLog (async trigger) or create one (CLI/cron sync).
+  const runId =
+    opts?.runId ??
+    (await prisma.runLog.create({ data: { trigger, status: "running" } })).id;
   const detail: Record<string, unknown> = {};
+
+  // Persist progress to RunLog.message so the UI can poll a live stage readout.
+  const progress = async (m: string) => {
+    log(m);
+    try {
+      await prisma.runLog.update({ where: { id: runId }, data: { message: m } });
+    } catch {
+      /* ignore */
+    }
+  };
 
   try {
     const cfg = await getDigestConfig();
@@ -47,7 +61,7 @@ export async function runDigest(opts?: {
     ]);
     const today = todayInTz(cfg.timezone);
     const edition = await nextEdition(today);
-    log(`日期 ${today}｜第 ${edition} 期｜trigger=${trigger}`);
+    await progress(`開始產生 ${today} 第 ${edition} 期`);
 
     // Dedup index (recent published) — needed by both search modes.
     const { urls: knownUrls, titles: recentTitles } = await getRecentEntries(
@@ -60,18 +74,24 @@ export async function runDigest(opts?: {
 
     if (mode === "claude") {
       // ── Claude-native path: web_search does search+select+summarize per tier.
-      log("搜尋模式：Claude web_search（無需第三方搜尋 key）");
-      const perTier = await Promise.all(
-        cfg.tiers.map((tier) =>
-          researchTier({ tier, recentTitles, interestProfile, today, cfg }),
-        ),
-      );
+      await progress("搜尋中（Claude web_search）…");
+      // Sequential per tier: web_search payloads are token-heavy, and running
+      // tiers in parallel exceeds the org's per-minute input-token limit.
+      const perTier: SelectedArticle[][] = [];
+      for (let i = 0; i < cfg.tiers.length; i++) {
+        const tier = cfg.tiers[i];
+        const arts = await researchTier({ tier, recentTitles, interestProfile, today, cfg });
+        perTier.push(arts);
+        await progress(
+          `已完成 ${i + 1}/${cfg.tiers.length} 分區（${tier.label.split("：")[0]}，${arts.length} 篇）`,
+        );
+      }
       // Backstop URL hard-dedup against the last `windowDays` (SPEC §4.3).
       articlesFlat = perTier
         .flat()
         .filter((a) => a.urls[0] && !knownUrls.has(a.urls[0]));
       detail.mode = "claude";
-      log(`研究完成：${articlesFlat.length} 篇`);
+      await progress(`研究完成：${articlesFlat.length} 篇，開始生成評論…`);
     } else {
       // ── Third-party provider path (Brave/Serper/mock).
       const hits = await runSearches(cfg);
@@ -118,8 +138,9 @@ export async function runDigest(opts?: {
       log(`摘要完成：${articlesFlat.length} 篇`);
     }
 
-    // 6. Generate comments with lint+retry — bounded concurrency.
-    const built = await mapPool(articlesFlat, 4, async (article) => {
+    // 6. Generate comments with lint+retry — low concurrency to respect the
+    //    org's per-minute input-token limit.
+    const built = await mapPool(articlesFlat, 2, async (article) => {
       const { comment, lint } = await generateComment({ article, styleGuide, cfg, today });
       return { article, comment, lint };
     });
@@ -142,7 +163,7 @@ export async function runDigest(opts?: {
     for (const a of finalArticles) byTier[a.tier] = (byTier[a.tier] ?? 0) + 1;
     detail.byTier = byTier;
     detail.lintFailures = failures;
-    log(`評論完成：${finalArticles.length} 篇（${failures} 篇未過 lint）`);
+    await progress(`評論完成：${finalArticles.length} 篇（${failures} 篇未過 lint），存檔中…`);
 
     // 8. Persist + dedup index.
     const digestId = await saveDigest({
@@ -153,7 +174,7 @@ export async function runDigest(opts?: {
     });
 
     await prisma.runLog.update({
-      where: { id: run.id },
+      where: { id: runId },
       data: {
         status: "success",
         finishedAt: new Date(),
@@ -177,7 +198,7 @@ export async function runDigest(opts?: {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     await prisma.runLog.update({
-      where: { id: run.id },
+      where: { id: runId },
       data: { status: "failed", finishedAt: new Date(), message, detail: JSON.stringify(detail) },
     });
     log(`失敗 ✗ ${message}`);

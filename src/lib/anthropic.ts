@@ -12,7 +12,11 @@ export const MODELS = {
 
 let _client: Anthropic | null = null;
 export function client(): Anthropic {
-  if (!_client) _client = new Anthropic({ apiKey: requireAnthropicKey() });
+  if (!_client) {
+    // maxRetries: the SDK backs off on 429/5xx honoring retry-after, which
+    // smooths bursts against the org's per-minute input-token limit.
+    _client = new Anthropic({ apiKey: requireAnthropicKey(), maxRetries: 6 });
+  }
   return _client;
 }
 
