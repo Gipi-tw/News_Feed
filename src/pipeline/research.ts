@@ -93,7 +93,9 @@ ${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n"
     // Cap searches hard — this mode is convenient but pricey; prefer a cheap
     // search provider (Brave free tier) for routine use. max_uses=1 keeps the
     // server-tool fee at ~$0.01/tier (4 tiers ≈ $0.04/run).
-    { type: "web_search_20260209", name: "web_search", max_uses: 1 },
+    // allowed_callers=["direct"]: Haiku 4.5 doesn't support programmatic tool
+    // calling, so web_search must be invoked directly by the model.
+    { type: "web_search_20260209", name: "web_search", max_uses: 1, allowed_callers: ["direct"] },
     SUBMIT_TOOL,
   ];
 
