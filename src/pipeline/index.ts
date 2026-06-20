@@ -1,8 +1,7 @@
 import { prisma } from "../lib/db";
 import { env } from "../lib/env";
-import { getDigestConfig, getInterestProfile, getStyleGuide } from "../lib/config";
+import { getDigestConfig, getInterestProfile } from "../lib/config";
 import { todayInTz } from "../lib/date";
-import { mapPool } from "../lib/pool";
 import type { BuiltArticle, Candidate, SearchHit, SelectedArticle, TierKey } from "../lib/types";
 import { runSearches } from "../lib/search";
 import { enrichCandidates } from "./fetch";
@@ -10,9 +9,9 @@ import { getRecentEntries, hardFilter } from "./dedup";
 import { selectForTier } from "./select";
 import { summarizeTier } from "./summarize";
 import { researchTier } from "./research";
-import { generateComment } from "./comment";
 import { nextEdition, saveDigest } from "./assemble";
 import { notifyDigestReady } from "./notify";
+import { estimateCostUSD, resetUsage, usage } from "../lib/anthropic";
 
 export interface RunResult {
   digestId: string;
@@ -42,6 +41,7 @@ export async function runDigest(opts?: {
     opts?.runId ??
     (await prisma.runLog.create({ data: { trigger, status: "running" } })).id;
   const detail: Record<string, unknown> = {};
+  resetUsage(); // start cost accounting for this run
 
   // Persist progress to RunLog.message so the UI can poll a live stage readout.
   const progress = async (m: string) => {
@@ -55,10 +55,8 @@ export async function runDigest(opts?: {
 
   try {
     const cfg = await getDigestConfig();
-    const [interestProfile, styleGuide] = await Promise.all([
-      getInterestProfile(),
-      getStyleGuide(),
-    ]);
+    // styleGuide is no longer needed (pure-curation digest writes no comment).
+    const interestProfile = await getInterestProfile();
     const today = todayInTz(cfg.timezone);
     const edition = await nextEdition(today);
     await progress(`開始產生 ${today} 第 ${edition} 期`);
@@ -138,32 +136,26 @@ export async function runDigest(opts?: {
       log(`摘要完成：${articlesFlat.length} 篇`);
     }
 
-    // 6. Generate comments with lint+retry — low concurrency to respect the
-    //    org's per-minute input-token limit.
-    const built = await mapPool(articlesFlat, 2, async (article) => {
-      const { comment, lint } = await generateComment({ article, styleGuide, cfg, today });
-      return { article, comment, lint };
-    });
-
-    // 7. Assign positions per tier and build final records.
+    // 6. Pure-curation digest: no comment/post draft is generated (the only
+    //    stage that needed a high-end model). Assign positions per tier and
+    //    build final records directly from the selected/summarized articles.
     const posCounter = new Map<TierKey, number>();
-    const finalArticles: BuiltArticle[] = built.map((b) => {
-      const pos = (posCounter.get(b.article.tier) ?? 0) + 1;
-      posCounter.set(b.article.tier, pos);
+    const finalArticles: BuiltArticle[] = articlesFlat.map((article) => {
+      const pos = (posCounter.get(article.tier) ?? 0) + 1;
+      posCounter.set(article.tier, pos);
       return {
-        ...b.article,
+        ...article,
         position: pos,
-        myComment: b.comment,
-        lintReport: b.lint,
+        myComment: "",
+        lintReport: { ok: true, charCount: 0, checks: [] },
       };
     });
 
-    const failures = finalArticles.filter((a) => !a.lintReport.ok).length;
+    const failures = 0; // no comment lint in pure-curation mode
     const byTier: Record<string, number> = {};
     for (const a of finalArticles) byTier[a.tier] = (byTier[a.tier] ?? 0) + 1;
     detail.byTier = byTier;
-    detail.lintFailures = failures;
-    await progress(`評論完成：${finalArticles.length} 篇（${failures} 篇未過 lint），存檔中…`);
+    await progress(`研究完成：${finalArticles.length} 篇，存檔中…`);
 
     // 8. Persist + dedup index.
     const digestId = await saveDigest({
@@ -173,13 +165,22 @@ export async function runDigest(opts?: {
       articles: finalArticles,
     });
 
+    // Cost accounting ("先量再砍"): record token/search usage + USD estimate so
+    // we can trim web_search caps from real data.
+    const costUSD = estimateCostUSD();
+    detail.usage = { ...usage };
+    detail.estimatedCostUSD = Number(costUSD.toFixed(4));
+    log(
+      `成本估算 ≈ $${costUSD.toFixed(4)}（${usage.calls} 次呼叫｜in ${usage.inputTokens}＋out ${usage.outputTokens} tok｜${usage.webSearches} 次搜尋）`,
+    );
+
     await prisma.runLog.update({
       where: { id: runId },
       data: {
         status: "success",
         finishedAt: new Date(),
         digestId,
-        message: `${finalArticles.length} 篇（${failures} 未過 lint）`,
+        message: `${finalArticles.length} 篇｜估算 $${costUSD.toFixed(4)}`,
         detail: JSON.stringify(detail),
       },
     });

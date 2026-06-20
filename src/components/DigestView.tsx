@@ -1,11 +1,10 @@
 import type { DigestView as DigestData } from "@/lib/digest-data";
 import { getTierMeta } from "@/lib/digest-data";
 import { formatChineseDate } from "@/lib/date";
-import CommentBlock from "./CommentBlock";
 
 // Renders one digest with the verified template layout (SPEC §5.2):
-// masthead, TOC, four colored tier sections, cards with fact/hook/links, and
-// the expandable 我的評論 block.
+// masthead, TOC, four colored tier sections, cards with fact/hook/links.
+// Pure-curation mode: no 我的評論 block.
 export default async function DigestView({ digest }: { digest: DigestData }) {
   const tiers = await getTierMeta();
   const byTier = new Map<string, typeof digest.articles>();
@@ -28,7 +27,7 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
         <h1>內容摘要日報</h1>
         <div className="meta">
           {formatChineseDate(digest.date)} 第 {digest.edition} 期｜依《游舒帆興趣輪廓分析》產出｜
-          格式：事實摘要 ＋ 觀點 hook ＋ 原始連結 ＋ 我的評論
+          純策展清單：事實摘要 ＋ 觀點 hook ＋ 原始連結
         </div>
       </header>
 
@@ -82,7 +81,6 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
                     ))}
                   </div>
                 ) : null}
-                <CommentBlock article={a} />
               </article>
             ))}
           </section>
@@ -92,7 +90,7 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
       <footer>
         <p>
           依《游舒帆興趣輪廓分析》產出。配比：企業動態 12 ＋ AI × 工作方式 8 ＋ 第二級 10 ＋ 生活版 5。
-          去重以 URL 為硬條件、事件相似為軟條件，窗口 30 天。「我的評論」經程式化風格 lint 檢核。
+          去重以 URL 為硬條件、事件相似為軟條件，窗口 30 天。純策展清單，不含貼文草稿。
         </p>
       </footer>
     </div>

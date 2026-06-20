@@ -1,4 +1,4 @@
-import { MODELS, client } from "../lib/anthropic";
+import { MODELS, client, recordUsage } from "../lib/anthropic";
 import type { DigestConfig, SelectedArticle, TierConfig } from "../lib/types";
 
 // Claude-native research stage: instead of a separate search provider, Claude's
@@ -80,10 +80,10 @@ ${tier.queries.map((q) => `- ${q}`).join("\n")}
 ${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
 
 # 興趣輪廓（節錄，判斷相關性用）
-${interestProfile.slice(0, 3000)}
+${interestProfile.slice(0, 1500)}
 
 # 近 30 天已發過的標題（避免重複；同事件僅收新進展）
-${recentTitles.length ? recentTitles.slice(0, 80).map((t) => `- ${t}`).join("\n") : "（無）"}
+${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n") : "（無）"}
 
 請先用 web_search 搜尋並閱讀，挑出最多 ${tier.count} 則，最後呼叫 submit_selection 提交。`;
 
@@ -91,8 +91,9 @@ ${recentTitles.length ? recentTitles.slice(0, 80).map((t) => `- ${t}`).join("\n"
     // COST GUARD: web_search result payloads are large input tokens (and the
     // _20260209 dynamic-filtering version runs server-side code execution).
     // Cap searches hard — this mode is convenient but pricey; prefer a cheap
-    // search provider (Brave free tier) for routine use.
-    { type: "web_search_20260209", name: "web_search", max_uses: 3 },
+    // search provider (Brave free tier) for routine use. max_uses=1 keeps the
+    // server-tool fee at ~$0.01/tier (4 tiers ≈ $0.04/run).
+    { type: "web_search_20260209", name: "web_search", max_uses: 1 },
     SUBMIT_TOOL,
   ];
 
@@ -103,7 +104,7 @@ ${recentTitles.length ? recentTitles.slice(0, 80).map((t) => `- ${t}`).join("\n"
   // The SDK auto-runs the server-side web_search loop within a turn; the model
   // pauses (stop_reason "pause_turn") if it hits the server-tool iteration cap,
   // and stops with "tool_use" when it calls submit_selection.
-  for (let round = 0; round < 3; round++) {
+  for (let round = 0; round < 2; round++) {
     const res = await client().messages.create({
       model: MODELS.summarize,
       max_tokens: 6000,
@@ -115,6 +116,7 @@ ${recentTitles.length ? recentTitles.slice(0, 80).map((t) => `- ${t}`).join("\n"
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       messages: messages as any,
     });
+    recordUsage(res.usage);
 
     const submit = res.content.find(
       (b) => b.type === "tool_use" && b.name === "submit_selection",
