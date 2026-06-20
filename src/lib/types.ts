@@ -19,8 +19,9 @@ export interface DigestConfig {
   search: {
     // "claude" = Claude's built-in web_search tool (no key, but heavy input).
     // "ddg" = key-free DuckDuckGo HTML snippets (cheap input, snippet-first path).
-    provider: "claude" | "ddg" | "brave" | "serper" | "mock";
-    fallbackProvider?: "ddg" | "brave" | "serper" | "mock";
+    // "google" = Google Custom Search snippets (datacenter-friendly, free 100/day).
+    provider: "claude" | "google" | "ddg" | "brave" | "serper" | "mock";
+    fallbackProvider?: "google" | "ddg" | "brave" | "serper" | "mock";
     freshnessHours: number;
     resultsPerQuery: number;
     languages: string[];

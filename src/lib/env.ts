@@ -6,6 +6,8 @@ export const env = {
   anthropicKey: process.env.ANTHROPIC_API_KEY ?? "",
   braveKey: process.env.BRAVE_API_KEY ?? "",
   serperKey: process.env.SERPER_API_KEY ?? "",
+  googleCseKey: process.env.GOOGLE_CSE_KEY ?? "",
+  googleCseId: process.env.GOOGLE_CSE_ID ?? "",
   searchProviderOverride: process.env.SEARCH_PROVIDER ?? "",
   authUsername: process.env.AUTH_USERNAME ?? "",
   authPasswordHash: process.env.AUTH_PASSWORD_HASH ?? "",
