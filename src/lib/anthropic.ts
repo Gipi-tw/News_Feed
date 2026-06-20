@@ -102,10 +102,11 @@ export async function generateJSON<T>(opts: {
   maxTokens?: number;
 }): Promise<T> {
   const res = await client().messages.create({
+    // Haiku 4.5 rejects `thinking: adaptive` / output_config.effort; keep only
+    // the structured-output format directive.
     model: opts.model,
     max_tokens: opts.maxTokens ?? 16000,
-    thinking: { type: "adaptive" },
-    output_config: { effort: "medium", format: { type: "json_schema", schema: opts.schema } },
+    output_config: { format: { type: "json_schema", schema: opts.schema } },
     system: opts.system,
     messages: [{ role: "user", content: opts.user }],
   });
@@ -128,10 +129,9 @@ export async function generateText(opts: {
   maxTokens?: number;
 }): Promise<string> {
   const stream = client().messages.stream({
+    // Haiku 4.5 rejects `thinking: adaptive` / output_config.effort.
     model: opts.model,
     max_tokens: opts.maxTokens ?? 4000,
-    thinking: { type: "adaptive" },
-    output_config: { effort: "high" },
     system: opts.system,
     messages: [{ role: "user", content: opts.user }],
   });

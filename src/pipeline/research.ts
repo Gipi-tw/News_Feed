@@ -106,10 +106,10 @@ ${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n"
   // and stops with "tool_use" when it calls submit_selection.
   for (let round = 0; round < 2; round++) {
     const res = await client().messages.create({
+      // Haiku 4.5 does not support `thinking: adaptive` or output_config.effort
+      // (those were Sonnet/Opus features). Plain call keeps cost minimal.
       model: MODELS.summarize,
       max_tokens: 6000,
-      thinking: { type: "adaptive" },
-      output_config: { effort: "medium" },
       system,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tools: tools as any,
