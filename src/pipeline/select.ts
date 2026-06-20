@@ -62,10 +62,10 @@ export async function selectForTier(opts: {
 ${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
 
 # 興趣輪廓（節錄，用於判斷相關性）
-${interestProfile.slice(0, 3500)}
+${interestProfile.slice(0, 1500)}
 
 # 近 30 天已發過的標題（避免重複，同事件除非有新進展）
-${recentTitles.length ? recentTitles.map((t) => `- ${t}`).join("\n") : "（無）"}
+${recentTitles.length ? recentTitles.slice(0, 50).map((t) => `- ${t}`).join("\n") : "（無）"}
 
 # 候選新聞（共 ${candidates.length} 則）
 ${list}

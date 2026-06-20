@@ -51,7 +51,9 @@ export async function summarizeTier(opts: {
   const docs = selected
     .map(
       (c, i) =>
-        `## [${i}] ${c.title}\nURL：${c.url}\n來源：${c.sourceName ?? "?"}｜原始日期：${c.publishedDate ?? "?"}\n內文：\n${(c.fullText ?? c.snippet ?? "").slice(0, 4000)}`,
+        // COST KNOB: cap text fed to the LLM per article. 2500 chars (~900
+        // tokens) is enough for a fact summary; raising it scales input cost.
+        `## [${i}] ${c.title}\nURL：${c.url}\n來源：${c.sourceName ?? "?"}｜原始日期：${c.publishedDate ?? "?"}\n內文：\n${(c.fullText ?? c.snippet ?? "").slice(0, 2500)}`,
     )
     .join("\n\n");
 

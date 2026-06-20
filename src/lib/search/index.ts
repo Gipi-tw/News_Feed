@@ -2,6 +2,7 @@ import { env } from "../env";
 import type { DigestConfig, SearchHit, TierKey } from "../types";
 import { BraveProvider } from "./brave";
 import { SerperProvider } from "./serper";
+import { DuckDuckGoProvider } from "./ddg";
 import { MockProvider } from "./mock";
 import type { SearchProvider } from "./provider";
 
@@ -13,6 +14,8 @@ function make(name: string): SearchProvider {
       return new BraveProvider();
     case "serper":
       return new SerperProvider();
+    case "ddg":
+      return new DuckDuckGoProvider();
     default:
       return new MockProvider();
   }

@@ -2,7 +2,7 @@
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
-    "provider": "claude",
+    "provider": "ddg",
     "fallbackProvider": "serper",
     "freshnessHours": 48,
     "resultsPerQuery": 10,

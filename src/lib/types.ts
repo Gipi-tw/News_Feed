@@ -17,9 +17,10 @@ export interface DigestConfig {
   timezone: string;
   scheduleCron: string;
   search: {
-    // "claude" = use Claude's built-in web_search tool (no third-party key).
-    provider: "claude" | "brave" | "serper" | "mock";
-    fallbackProvider?: "brave" | "serper" | "mock";
+    // "claude" = Claude's built-in web_search tool (no key, but heavy input).
+    // "ddg" = key-free DuckDuckGo HTML snippets (cheap input, snippet-first path).
+    provider: "claude" | "ddg" | "brave" | "serper" | "mock";
+    fallbackProvider?: "ddg" | "brave" | "serper" | "mock";
     freshnessHours: number;
     resultsPerQuery: number;
     languages: string[];
