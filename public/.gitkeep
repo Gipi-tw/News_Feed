@@ -1,0 +1,3 @@
+# Keeps the public/ directory present for the Docker build (Dockerfile copies
+# /app/public into the Next.js standalone runner image). Next.js serves static
+# assets placed here; empty is fine.
