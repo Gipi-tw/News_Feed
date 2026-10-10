@@ -1,0 +1,27 @@
+name: Cloud probe
+
+# One-off source/Supadata checks from a datacenter IP (local results don't
+# reflect prod). Runs on push to probe/** branches; re-run with `gh run rerun`.
+on:
+  push:
+    branches: ["probe/**"]
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Probe sources and Supadata
+        env:
+          SUPADATA_API_KEY: ${{ secrets.SUPADATA_API_KEY }}
+        run: node scripts/probe/cloud-probe.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-out
+          path: probe-out/
+          retention-days: 7
