@@ -89,6 +89,7 @@ export async function summarizeTier(opts: {
       factSummary: a.factSummary,
       opinionHook: a.opinionHook,
       urls,
+      tags: src?.tags ?? [],
     });
   }
   return out;

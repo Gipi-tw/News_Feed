@@ -1,16 +1,27 @@
 import type { DigestView as DigestData } from "@/lib/digest-data";
 import { getTierMeta } from "@/lib/digest-data";
 import { formatChineseDate } from "@/lib/date";
+import { getDigestConfig } from "@/lib/config";
 
 // Renders one digest with the verified template layout (SPEC §5.2):
-// masthead, TOC, four colored tier sections, cards with fact/hook/links.
+// masthead, TOC, colored tier sections, cards with fact/hook/links, footer
+// with the quota line and why any tier shipped short.
 // Pure-curation mode: no 我的評論 block.
 export default async function DigestView({ digest }: { digest: DigestData }) {
-  const tiers = await getTierMeta();
+  const [tiers, cfg] = await Promise.all([getTierMeta(), getDigestConfig()]);
   const byTier = new Map<string, typeof digest.articles>();
   for (const a of digest.articles) {
     (byTier.get(a.tier) ?? byTier.set(a.tier, []).get(a.tier)!).push(a);
   }
+  // One running number across the whole digest (1–45), in display order.
+  const numberOf = new Map<string, number>();
+  for (const t of tiers) {
+    for (const a of byTier.get(t.key) ?? []) numberOf.set(a.id, numberOf.size + 1);
+  }
+  const quotaLine = cfg.tiers
+    .map((t) => `${t.label.split("：")[0]} ${t.count}`)
+    .join(" ＋ ");
+  const quotaTotal = cfg.tiers.reduce((n, t) => n + t.count, 0);
 
   const tocParts = tiers
     .map((t) => {
@@ -51,7 +62,7 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
             {items.map((a) => (
               <article className="card" key={a.id}>
                 <h3>
-                  <span className="num">{String(a.position).padStart(2, "0")}</span>
+                  <span className="num">{String(numberOf.get(a.id) ?? a.position).padStart(2, "0")}</span>
                   {a.urls[0] ? (
                     <a href={a.urls[0]} target="_blank" rel="noreferrer">
                       {a.title}
@@ -88,9 +99,21 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
       })}
 
       <footer>
+        {digest.notes.length ? (
+          <>
+            <p>
+              <strong>關於篇數</strong>：本期 {total} 篇（目標 {quotaTotal}）。寧缺勿濫，不拿 AI 新聞或重複事件硬湊。
+            </p>
+            <ul className="notes">
+              {digest.notes.map((n, i) => (
+                <li key={i}>{n}</li>
+              ))}
+            </ul>
+          </>
+        ) : null}
         <p>
-          依《游舒帆興趣輪廓分析》產出。配比：企業動態 12 ＋ AI × 工作方式 8 ＋ 第二級 10 ＋ 生活版 5。
-          去重以 URL 為硬條件、事件相似為軟條件，窗口 30 天。純策展清單，不含貼文草稿。
+          依《游舒帆興趣輪廓分析》產出。配比：{quotaLine}（共 {quotaTotal} 篇）。
+          去重以 URL 為硬條件、事件相似為軟條件，窗口 {cfg.dedup.windowDays} 天。純策展清單，不含貼文草稿。
         </p>
       </footer>
     </div>

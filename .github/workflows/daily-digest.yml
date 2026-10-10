@@ -1,9 +1,9 @@
-name: Daily digest
+name: Daily digest (manual trigger)
 
-# 08:00 Asia/Taipei == 00:00 UTC. GitHub cron is UTC-only.
+# The daily 08:00 Asia/Taipei run is scheduled inside the app itself
+# (src/lib/scheduler.ts). This workflow is only a manual remote trigger —
+# no `schedule:` here, or the digest would run twice.
 on:
-  schedule:
-    - cron: "0 0 * * *"
   workflow_dispatch: {}
 
 jobs:

@@ -17,6 +17,7 @@ model Digest {
   edition   Int       @default(1) // 期數
   title     String    @default("內容摘要日報")
   status    String    @default("complete") // generating | complete | failed
+  notes     String    @default("[]") // JSON string[] — footer: short tiers + why (寧缺勿濫)
   createdAt DateTime  @default(now())
   articles  Article[]
 
@@ -28,7 +29,7 @@ model Article {
   id            String   @id @default(cuid())
   digestId      String
   digest        Digest   @relation(fields: [digestId], references: [id], onDelete: Cascade)
-  tier          String // corp | ai_work | tier2 | life
+  tier          String // corp | food | leadership | tier2 | life (legacy: ai_work)
   position      Int
   title         String
   sourceName    String
@@ -36,6 +37,7 @@ model Article {
   factSummary   String
   opinionHook   String
   urls          String // JSON string[] — primary first
+  tags          String   @default("[]") // JSON string[] — quota tags (ai, ai_dev, psych_parenting…)
   myComment     String   @default("")
   commentStatus String   @default("draft") // draft | edited | published
   lintReport    String? // JSON: last lint result for the comment

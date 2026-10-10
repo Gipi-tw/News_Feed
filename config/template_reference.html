@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>內容摘要日報｜2026-06-07 第 2 期</title>
+<title>內容摘要日報｜2026-06-13 第 2 期</title>
 <style>
   :root{
     --t0:#1f3a93; --t0-bg:#edf1fb;
+    --t4:#d35400; --t4-bg:#fdf2e9;
     --t1:#c0392b; --t1-bg:#fdf0ee;
     --t2:#b9770e; --t2-bg:#fdf6e8;
     --t3:#1e8449; --t3-bg:#edf7f0;
@@ -19,9 +20,11 @@
   .masthead h1{font-size:28px;margin:0;letter-spacing:1px}
   .masthead .meta{color:var(--muted);font-size:14px;margin-top:6px}
   .toc{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 20px;margin:20px 0;font-size:14px;color:var(--muted)}
+  .note{background:#fff8e8;border:1px solid #f3e2b8;border-radius:10px;padding:12px 18px;margin:14px 0;font-size:13.5px;color:#7a5b12}
   section.tier{margin-top:36px}
   .tier-head{display:flex;align-items:baseline;gap:12px;border-left:6px solid;padding:6px 14px;border-radius:4px;margin-bottom:18px}
   .tier0 .tier-head{border-color:var(--t0);background:var(--t0-bg)}
+  .tier4 .tier-head{border-color:var(--t4);background:var(--t4-bg)}
   .tier1 .tier-head{border-color:var(--t1);background:var(--t1-bg)}
   .tier2 .tier-head{border-color:var(--t2);background:var(--t2-bg)}
   .tier3 .tier-head{border-color:var(--t3);background:var(--t3-bg)}
@@ -51,709 +54,923 @@
   .mycomment .post-body{white-space:pre-line;font-size:14.5px;background:#faf7fc;border:1px solid #ead9f2;border-radius:8px;padding:14px 16px;margin-top:10px;line-height:1.9}
   .mycomment .copybtn{margin-top:8px;font-size:12.5px;border:1px solid #ccd0d5;background:#fff;border-radius:6px;padding:3px 12px;cursor:pointer}
   .mycomment .copybtn:hover{background:#f0f2f5}
+
+  /* 標註（👍/👎）與匯出 */
+  .votebar{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);display:flex;gap:8px;align-items:center}
+  .votebar .vlbl{font-size:12px;color:var(--muted);margin-right:2px}
+  .vbtn{font-size:13px;border:1px solid #ccd0d5;background:#fff;border-radius:999px;padding:3px 12px;cursor:pointer;transition:all .12s}
+  .vbtn:hover{background:#f0f2f5}
+  .vbtn.up.on{background:#e7f6ec;border-color:#1e8449;color:#1e7a40;font-weight:700}
+  .vbtn.down.on{background:#fdecea;border-color:#c0392b;color:#a5281b;font-weight:700}
+  .exportbar{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);box-shadow:0 4px 16px rgba(0,0,0,.12);border-radius:999px;padding:8px 12px 8px 16px}
+  .exportbar .vcount{font-size:12.5px;color:var(--muted)}
+  .exportbtn{font-size:13px;font-weight:700;border:0;background:var(--t0);color:#fff;border-radius:999px;padding:7px 14px;cursor:pointer}
+  .exportbtn:hover{background:#16306f}
+  .exporthint{position:fixed;right:18px;bottom:64px;z-index:50;max-width:300px;font-size:11.5px;color:#7a5b12;background:#fff8e8;border:1px solid #f3e2b8;border-radius:8px;padding:8px 12px;display:none}
+  .exporthint.show{display:block}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header class="masthead">
 <h1>內容摘要日報</h1>
-<div class="meta">2026 年 6 月 7 日（日）第 2 期｜依《游舒帆興趣輪廓分析》產出｜格式：事實摘要 ＋ 觀點 hook ＋ 原始連結｜本期已排除今晨第 1 期之全部選文</div>
+<div class="meta">2026 年 6 月 13 日（六）第 2 期｜手動補跑｜新增 🍔 餐飲・飲料產業獨立區塊（每日 10 篇）</div>
 </header>
-<div class="toc">本期 35 篇：🏢 企業動態 12 篇｜🤖 AI × 工作方式 8 篇｜🟡 第二級「開發實務 × 台灣科技圈 × 人才」10 篇｜🟢 生活版 5 篇</div>
+<div class="toc">本期 25 篇：🍔 餐飲・飲料 10 篇｜🏢 企業動態 5 篇｜🧭 領導・組織 3 篇｜🟡 第二級 2 篇｜🟢 生活版 5 篇</div>
+<div class="note">🍔 <strong>新區塊上線（你要的就是這個）</strong>：依指示新增「餐飲・飲料產業」獨立區塊、橘棕色、每日 10 篇，涵蓋跨國餐飲集團、飲料含酒、精品咖啡與烈酒，閱讀切角沿用你的組織/領導/商業模式視角。<br>⚠️ <strong>關於篇數</strong>：今早 8 點的排程已自動發過一份 6/13 日報（35 則，舊版型、無餐飲區）。本期為手動補跑，為遵守你的「不重複」規則，企業/領導/第二級只收今早<strong>沒寫到</strong>的新題材，故篇數偏少；餐飲區為全新題材，足額 10 篇。<strong>明早起排程會用新版型、五區齊發。</strong></div>
+<!-- ================= 餐飲・飲料 ================= -->
+<section class="tier tier4">
+<div class="tier-head"><h2>🍔 餐飲・飲料產業</h2><span class="count">10 篇｜跨國餐飲集團・飲料含酒・精品咖啡與烈酒</span></div>
+<article class="card">
+<h3><span class="num">01</span><a href="https://www.qsrmagazine.com/story/after-years-of-progress-burger-king-and-rbi-prepare-for-a-simpler-2026/" target="_blank">RBI 的「無聊 2026」：漢堡王母公司結束買回餐廳潮，回到「靠加盟主、不靠自己開店」</a></h3>
+<div class="src">QSR Magazine・CoStar｜2026 年（Q1 後策略更新）</div>
+<p class="fact"><span class="label">事實</span>Restaurant Brands International（漢堡王、Tim Hortons、Popeyes、Firehouse Subs）高管 Sami Siddiqui 直言 2026 的目標「可能被說很無聊」，但這正是經歷數年大改造後他要的：過去兩年公司一直在買回餐廳、砸錢翻修，現在「能不做就不做」，重新把重心放回加盟夥伴。Tim Hortons 英國與愛爾蘭把主加盟開發協議續約到 2045 年；漢堡王「Reclaim the Flame」翻身計畫獲加盟主支持，把廣告基金提撥率延續到至少 2027。</p>
+<p class="hook"><span class="label">Hook</span>「無聊」其實是一種很高級的經營狀態——它代表你已經把該動的大手術做完，進入靠系統穩定複利的階段。很多組織反過來，永遠在追新題材、永遠在重組，因為它不敢承認「把基本功做穩、然後重複」才是最難的紀律。</p>
+<div class="links"><a href="https://www.qsrmagazine.com/story/after-years-of-progress-burger-king-and-rbi-prepare-for-a-simpler-2026/" target="_blank">QSR Magazine</a><a href="https://www.costar.com/article/1731865387/here-are-the-restaurants-burger-kings-owner-is-expanding-hint-its-not-burger-king" target="_blank">CoStar</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一個蠻有意思的說法。漢堡王母公司 RBI 的高管講，他們 2026 年的目標「可能會被覺得很無聊」，但他很興奮——因為經歷了好幾年的大改造，公司終於可以進入「無聊」的階段了。
+
+過去兩年，他們一直在買回加盟店、大筆翻修、做各種結構性調整。現在的策略反而是：能不自己下場就不下場，把重心放回加盟夥伴身上，讓他們去開店、去經營。
+
+我覺得「無聊」這兩個字，用在經營上，其實是很高級的狀態。
+
+它代表什麼？代表你該動的大手術已經做完了，現在進入的是「靠系統穩定運轉、靠紀律重複複利」的階段。不需要再天天有大新聞、不需要再不斷推翻重來，就是把已經被驗證有效的事，扎扎實實地、一遍又一遍地做好。
+
+但弔詭的是，這種「無聊」恰恰是最難的。
+
+很多組織做不到。它們會上癮般地追新題材、做新計畫，每隔一陣子就要來一次「轉型」。表面上看起來很積極、很有活力，但骨子裡，常常是因為它不敢、或不願承認一件事：把基本功做穩，然後耐著性子重複，才是真正的功夫。
+
+我在帶團隊、做課程的時候也常有這種掙扎。人總是被「新的」吸引，覺得做新東西才叫成長、才有成就感。但很多時候，真正創造價值的，是把一件對的事，重複做到極致、做到變成肌肉記憶。
+
+長線複利的威力，從來不是來自你做了多少新鮮事，而是來自你把對的事重複了多少次。
+
+當然，RBI 能進入「無聊」階段，前提是它前面那幾年的大改造做對了。如果基礎沒打穩就急著「躺平複利」，那不是紀律，是怠惰，這個分寸得拿捏。
+
+但對一個已經把地基打好的組織來說，敢於無聊、敢於不追熱鬧、安靜地重複正確的事，我覺得是一種很值得尊敬的成熟。
+
+熱鬧的轉型誰都會喊，安靜的複利才見真章。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">02</span><a href="https://www.restaurantbusinessonline.com/financing/its-new-value-standard-mcdonalds-makes-another-big-change-its-franchise-relationship" target="_blank">麥當勞用「McValue 平價菜單」逼出加盟關係的張力：總部要全國一致，撞上加盟主的訂價自主</a></h3>
+<div class="src">Restaurant Business・CNBC・Fox Business｜2026 年</div>
+<p class="fact"><span class="label">事實</span>麥當勞自 4/21 推出標準化的全國 McValue 菜單（10 項 3 美元以下、新增 4 美元早餐組合），主打「可預期的每日低價」，要搶回靠麥當勞當日常的通勤族與輪班工作者。但這套「價值標準」改變了它與加盟主的關係——總部要全國一致的低價，部分加盟主則認為自己該有訂價權；一個獨立經營者倡議團體甚至提出「加盟主權利法案」，主張能不受報復地自行訂價。</p>
+<p class="hook"><span class="label">Hook</span>加盟體系是「標準化」與「在地自主」的永恆拉鋸：總部要一致性才有品牌與規模，加盟主要彈性才能因地制宜。這跟任何「總部 vs 分公司」「制度 vs 現場」的組織難題是同一道題——你給多少標準、留多少空間，沒有標準答案，只有動態平衡。</p>
+<div class="links"><a href="https://www.restaurantbusinessonline.com/financing/its-new-value-standard-mcdonalds-makes-another-big-change-its-franchise-relationship" target="_blank">Restaurant Business</a><a href="https://www.cnbc.com/2026/02/11/mcdonalds-value-franchisees.html" target="_blank">CNBC</a><a href="https://www.foxbusiness.com/lifestyle/mcdonalds-goes-all-in-affordability-full-menu-revealed-new-under-3-4-deals" target="_blank">Fox Business</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">麥當勞推全國統一的 McValue 平價菜單，10 項東西賣 3 美元以下，要搶回那些把麥當勞當日常的通勤族跟輪班族。聽起來是個行銷動作，但它真正掀起的，是加盟體系裡一個很根本的張力。
+
+總部要的是「全國一致的低價」，這樣品牌訊息才清楚、規模效益才出得來。但部分加盟主不爽——憑什麼總部幫我定價？我這家店的租金、人力成本跟別的地區不一樣，賣同樣的價格，我可能根本不賺錢。甚至有加盟主倡議團體提出「加盟主權利法案」，主張要有自己的訂價權。
+
+這個衝突，我覺得是所有「總部與現場」關係的縮影。
+
+▊ 標準化 vs 在地自主，是一道永恆的題
+
+加盟體系的本質，就是在「標準化」跟「在地彈性」之間找平衡。
+
+標準化的好處很明顯：品牌一致、品質可控、規模效益、消費者到哪家店體驗都一樣。麥當勞之所以是麥當勞，靠的就是這套標準化的威力。
+
+但標準化的代價，是犧牲現場的彈性。每個地區的成本結構、客群、競爭環境都不一樣，一刀切的政策，必然在某些地方水土不服。對那些被政策壓到利潤的加盟主來說，總部的「全國一致」，就是在拿他的口袋補品牌的大局。
+
+這道題沒有標準答案。給太多標準，現場僵化、加盟主反彈；給太多自主，品牌失控、規模效益消失。真正的功夫，是在這兩端之間，抓到一個動態的平衡。
+
+▊ 這其實是每個組織都會遇到的事
+
+把「總部 vs 加盟主」換成「總公司 vs 分公司」「制度 vs 第一線」「中央 vs 地方團隊」，是完全一樣的難題。
+
+我帶團隊、輔導企業時，常看到兩種極端。一種是總部什麼都要管、什麼都要統一，現場被綁得死死的，最懂客戶的人反而沒有發揮空間。另一種是過度放權，每個分支各搞各的，最後品牌、品質、文化全部碎掉。
+
+健康的組織，是在這兩端之間動態調整：哪些是「非統一不可」的核心（品牌、價值觀、關鍵品質），就守得很緊；哪些是「該交給現場判斷」的彈性（在地行銷、服務細節、定價空間），就大方放手。
+
+麥當勞這次的拉鋸，沒有誰對誰錯，雙方都有道理。我會持續看它怎麼收尾，因為一家公司怎麼處理跟加盟主的衝突，反映的是它把這些「為它賺錢的夥伴」當成執行命令的下游，還是當成需要被傾聽的合夥人。
+
+標準帶來規模，彈性帶來韌性。好的組織，兩個都要，而且知道什麼時候該偏哪一邊。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">03</span><a href="https://www.fooddive.com/news/nestle-overhauls-senior-leadership-operating-structure-slowing-sales/730135/" target="_blank">雀巢的大重整：新 CEO 把全球收成 5 大區、董座 6/18 換 Pablo Isla，目標裁 1.6 萬人省 30 億瑞郎</a></h3>
+<div class="src">Food Dive・People Matters・Nestlé 官方｜2026 年（6/18 董座接班）</div>
+<p class="fact"><span class="label">事實</span>雀巢在銷售放緩下大動組織：新任 CEO Philipp Navratil 把全球營運重組為五大區、權力向 CEO 集中，並規劃裁員約 16,000 人、目標省下 30 億瑞士法郎。董事會層級也換血——6/18 宣布由前 Inditex（Zara 母公司）執行董座 Pablo Isla 出任新主席。Navratil 上任後對全體員工喊話：「我們每個人能做什麼，讓雀巢更好、更聰明、更快？」此前一任 CEO 因與下屬未揭露的關係被解職，公司一度動盪。</p>
+<p class="hook"><span class="label">Hook</span>「更快」是這兩年大公司的共同焦慮。但把組織收攏、權力集中到 CEO，是雙面刃：決策確實會變快，可是當所有路都通向一個人，這個人的頻寬與判斷，就成了整間公司的天花板。集權換速度，代價是韌性。</p>
+<div class="links"><a href="https://www.fooddive.com/news/nestle-overhauls-senior-leadership-operating-structure-slowing-sales/730135/" target="_blank">Food Dive</a><a href="https://sea.peoplemattersglobal.com/amp/news/strategic-hr/new-nestle-ceo-targets-3bn-francs-in-savings-with-16000-layoffs-46889" target="_blank">People Matters</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">雀巢正在進行一場大重整。新任 CEO Navratil 把全球營運收攏成五大區、權力往自己集中，同時規劃裁員約一萬六千人、要省下三十億瑞郎。董事長也換人，由 Zara 母公司 Inditex 的前執行董座 Pablo Isla 接任。
+
+這是一家全球最大的食品飲料集團，在銷售放緩、前一任 CEO 又因為一段未揭露的關係被解職之後，試圖重新站穩。Navratil 上任喊的口號很直白：更好、更聰明、更快。
+
+「更快」這兩個字，我覺得是這兩年大公司共同的焦慮。
+
+組織一大，決策就慢。一個提案要過五關六將，等簽到核可，市場早就變了。所以「把組織壓扁、把權力集中、加快決策」變成顯學，從科技業，到現在的雀巢，劇本都很像。
+
+集權確實能換到速度，這點我不否認。當所有決策都收到一個強勢的 CEO 手上，少了中間的扯皮，事情推得會快很多。
+
+但我想提醒一個容易被忽略的代價：當所有的路都通向同一個人，那個人，就成了整間公司的天花板。
+
+▊ 集權換速度，代價是韌性
+
+權力集中的組織，跑得快，但也脆。
+
+它高度依賴頂端那個人的頻寬、判斷力跟健康。CEO 對的時候，全公司跟著對得很快；但 CEO 看錯方向，或者哪天他撐不住了，整個系統會跟著一起出事，因為下面已經習慣了等他拍板，自己不太會做決定了。
+
+相對的，一個適度分權的組織，跑得可能沒那麼快，但比較有韌性。它有很多個能獨立判斷、獨立負責的節點，某一處出問題，其他地方還能運轉。
+
+我不是說集權一定錯。在危機、在需要快速止血的時候，集中權力、統一指揮，往往是必要的。雀巢現在銷售放緩、又剛經歷高層醜聞，這個階段集權，我可以理解。
+
+但我認為，集權應該是「階段性的手段」，不該是「長期的結構」。等公司穩住了，聰明的領導者會開始反向操作——把權力、把判斷的責任，重新還給組織裡的人，培養出更多能獨當一面的節點。
+
+因為一家公司真正的強壯，不是有一個英明的 CEO，而是就算這個 CEO 不在，它依然能好好運轉。
+
+集權能救急，分權才能長久。Navratil 現在踩的是油門，我會觀察的是，等公司穩了，他懂不懂得鬆開方向盤。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">04</span><a href="https://newsroom.chipotle.com/2026-01-12-CHIPOTLE-ANNOUNCES-LEADERSHIP-TRANSITIONS" target="_blank">Chipotle 的「人優先」復原術：Boatwright 推五點成長計畫，靠設備與培訓把「翻桌率」變回核心</a></h3>
+<div class="src">Chipotle 新聞室・QSR Magazine・NRN｜2026 年</div>
+<p class="fact"><span class="label">事實</span>Chipotle 在銷售放緩後由 CEO Scott Boatwright 推出五點「Recipe for Growth」：餐廳執行、強化人才領導、用科技優化體驗。組織面 1/12 換血——人資長 Ilene Eskenazi 升任「法務暨人資長」、品牌行銷副總 Stephanie Perdue 暫代行銷長。營運面靠「全套新設備包」拉高 throughput，已導入的約 350 家店在口味、滿意度、同店銷售與出餐速度全面改善，年底前約 2,000 家店將換裝。公司強調「人優先」、培養未來領導者的板凳。</p>
+<p class="hook"><span class="label">Hook</span>Chipotle 的復原，靠的不是新行銷噱頭，而是回到最基本的「人」與「現場執行」。把人資長升到跟法務同級，是個訊號——它在說「人」是策略級的事，不是後勤。很多公司嘴上喊以人為本，組織圖卻把 HR 擺在最邊邊。</p>
+<div class="links"><a href="https://newsroom.chipotle.com/2026-01-12-CHIPOTLE-ANNOUNCES-LEADERSHIP-TRANSITIONS" target="_blank">Chipotle 新聞室</a><a href="https://www.qsrmagazine.com/story/after-sales-speed-bump-chipotle-responds-with-5-point-plan-of-action/" target="_blank">QSR Magazine</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Chipotle 在經歷一段銷售放緩之後，端出了 CEO Boatwright 的五點成長計畫。我看了內容，最打動我的不是哪一招特別新，而是它整個方向——回到最基本的「人」跟「現場執行」。
+
+它的重點是：把餐廳的執行做好、強化第一線的人才領導、用科技讓出餐更順。聽起來一點都不性感，沒有什麼驚天動地的大策略。但餐飲業的本質，恰恰就是這些不性感的基本功。
+
+有一個組織面的細節我覺得很有訊號意義：它把人資長 Ilene Eskenazi，升任成「法務暨人資長」，層級拉到跟法務同等。
+
+▊ 你把 HR 放在組織的哪個高度，騙不了人
+
+很多公司都會喊「以人為本」「員工是我們最重要的資產」。但你看它的組織圖，往往就露餡了——HR 被擺在很邊陲的位置，是個處理招募、發薪、辦活動的後勤單位，碰不到核心決策。
+
+嘴上說人重要，結構上卻把管「人」的功能邊緣化，這中間的落差，員工是看得懂的。
+
+Chipotle 把人資長的層級拉這麼高，等於是用組織結構在宣告：「人」是策略級的議題，不是行政庶務。對一家靠第一線員工撐起體驗的餐飲公司來說，這個定位我認為是對的。它的食物好不好吃、服務順不順，最終都取決於那些在櫃台後面工作的人，狀態好不好、有沒有被好好帶。
+
+▊ 復原靠的是基本功，不是噱頭
+
+我特別欣賞它沒有用花俏的行銷去救場。
+
+公司遇到困難時，最容易的反應是搞個大活動、出個聯名、打波廣告，製造一波熱度。但那通常是止痛藥，不是解藥。熱度過了，如果店裡的體驗沒變好，客人還是會走。
+
+Chipotle 選的是難走但扎實的路：把設備換好讓出餐更快、把人帶好讓服務更穩、把領導板凳養起來讓組織能持續。這些事都很慢、很瑣碎，短期看不到掌聲，但它們才是真正能讓一家店長久好下去的東西。
+
+我常說，願景是做出來的，不是喊出來的。Chipotle 這套打法，剛好是這句話的註腳——它不急著喊一個漂亮的口號，而是回到現場，一家店一家店地把基本功做扎實。
+
+能不能成，還要再觀察幾季。但這個「回到人、回到現場」的方向，我是認同的。生意做到最後，拼的往往不是誰的點子最炫，而是誰把最基本的事做得最穩。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">05</span><a href="https://www.cspdailynews.com/beverages/coca-cola-wraps-bottling-system-restructuring" target="_blank">可口可樂收尾「裝瓶系統重組」、企業端分階段裁員：Quincey 3 月交棒，新設數位企業角色</a></h3>
+<div class="src">CSP Daily News・AJC・可口可樂官方｜2026 年</div>
+<p class="fact"><span class="label">事實</span>可口可樂完成歷時多年的裝瓶系統重組，同時在企業端啟動分階段裁員（總部先裁 75 人、2 月底生效，後續分批）。領導層交棒：執行長 James Quincey 3 月轉任執行董事長，由 Henrique Braun 接掌；原 Eurasia 與中東營運單位總裁 Sedef Salingan Sahin 改任新設的企業級數位轉型角色、直接向 Braun 報告。公司把省下的資源投向成長領域，包括 AI。</p>
+<p class="hook"><span class="label">Hook</span>可口可樂的「裝瓶商」模式，是商業史上最經典的商業模式設計之一——總公司掌品牌與濃縮液、把資本最重的裝瓶與配送交給夥伴。它示範了一件事：你不必什麼都自己做，關鍵是握住價值鏈裡「最不可取代」的那一段。</p>
+<div class="links"><a href="https://www.cspdailynews.com/beverages/coca-cola-wraps-bottling-system-restructuring" target="_blank">CSP Daily News</a><a href="https://www.ajc.com/business/2025/12/coca-cola-will-reorganize-its-workforce-in-2026-it-starts-with-75-layoffs/" target="_blank">AJC</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">可口可樂完成了一場歷時多年的「裝瓶系統重組」，同時在企業端分階段裁員、領導層也交棒。新聞本身是組織調整，但它讓我想重新講一下可口可樂那個經典到不行的商業模式。
+
+可口可樂自己，其實不太「做」可樂。
+
+它真正握在手上的，是品牌、是配方、是那個全世界沒人能複製的濃縮液。而資本最重、最辛苦的部分——把濃縮液裝成一瓶瓶飲料、配送到全球每一個角落的通路——它很大程度交給了各地的「裝瓶商」夥伴去做。
+
+這個設計，是商業模式裡的神來之筆。
+
+▊ 你不必什麼都自己做，但要握住最不可取代的那一段
+
+裝瓶、配送這些事，需要龐大的廠房、車隊、人力，資本密集、利潤又薄。如果可口可樂全部自己扛，它的資產負債表會被壓得很重、擴張速度會很慢。
+
+但它聰明的地方在於：它把這些重、累、利潤薄的環節，交給夥伴；自己牢牢握住價值鏈裡「最不可取代、利潤最高」的那一段——品牌與配方。
+
+結果就是，可口可樂可以用相對輕的資產，撬動全球的規模。夥伴幫它把通路鋪到天涯海角，而它每賣出一瓶，都靠著那段不可取代的核心持續獲利。
+
+這個邏輯，我覺得對任何人思考自己的定位，都很有啟發。
+
+▊ 找到你的「濃縮液」
+
+不管是公司還是個人，價值鏈上總有些環節是高價值、難取代的，也有些是辛苦、容易被替換的。
+
+關鍵的策略問題是：你有沒有握住屬於你的那段「濃縮液」？
+
+很多人很努力，但努力的全是那些「誰來做都差不多」的環節，於是再拼命，議價力也有限，因為你是可被替換的。而真正聰明的做法，是辨識出哪一段是你獨特的、難被取代的核心，把資源集中在那裡，其他的，能交給夥伴、能外包、能借力的，就大方放手。
+
+可口可樂這次重組，本質上也是在重新檢視：哪些該自己掌握、哪些該交給系統、哪些該砍掉。一家百年公司還在做這件事，可見「定位」這道題，永遠沒有做完的一天。
+
+你的濃縮液是什麼？這個問題，值得每隔一陣子就問自己一次。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">06</span><a href="https://in.marketscreener.com/quote/stock/DIAGEO-PLC-4000514/news/Diageo-reshuffles-its-management-team-Nik-Jhangiani-temporarily-replaces-Debra-Crew-50525394/" target="_blank">帝亞吉歐的「領導旋轉門」：30 年來烈酒業首見收縮，CEO 換人、組合精簡、傳 Dave Lewis 接棒</a></h3>
+<div class="src">MarketScreener・The Spirits Business・WineMixture｜2026 年</div>
+<p class="fact"><span class="label">事實</span>高端烈酒龍頭帝亞吉歐（Johnnie Walker、健力士、Don Julio 等）陷入領導動盪：CEO Debra Crew 離任後由 Nik Jhangiani 暫代，外傳將由前 Tesco 執行長 Sir Dave Lewis 接棒。暫代期間優先順序是「加速成長、精簡品牌組合、把投資集中到高毛利品項」。產業背景是觀察者所稱「30 年來烈酒業首次真正的收縮」，引發整併討論。</p>
+<p class="hook"><span class="label">Hook</span>「精簡組合、集中投資到高毛利品項」是逆風期最常見、也最對的動作——但它考驗的是領導者的取捨勇氣：砍掉的往往是有感情、有歷史、養著一群人的品牌。成長期人人會加法，收縮期才看得出誰真的會做減法。</p>
+<div class="links"><a href="https://in.marketscreener.com/quote/stock/DIAGEO-PLC-4000514/news/Diageo-reshuffles-its-management-team-Nik-Jhangiani-temporarily-replaces-Debra-Crew-50525394/" target="_blank">MarketScreener</a><a href="https://www.winemixture.com/archives/36023" target="_blank">WineMixture</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">高端烈酒龍頭帝亞吉歐，就是 Johnnie Walker、健力士那家，最近陷入領導動盪。CEO 離任、由人暫代、又傳出要找前 Tesco 執行長來接棒，外界形容是「領導旋轉門」。
+
+更大的背景是，觀察者說這是「烈酒業 30 年來第一次真正的收縮」。過去幾十年高端烈酒一路長，現在風向變了。
+
+暫代 CEO 開出的優先順序很典型：加速成長、精簡品牌組合、把投資集中到高毛利的品項。
+
+我想談的是中間那個「精簡品牌組合」，因為它聽起來理所當然，做起來卻最難。
+
+▊ 收縮期，真正考驗的是「做減法」的勇氣
+
+成長的時候，做加法很容易，也很爽。多出一個品牌、多進一個市場、多開一條產品線，每個決定都帶著「我們在擴張」的興奮感。資源夠、士氣高，加什麼好像都對。
+
+但逆風的時候，要做的是減法。而減法，難太多了。
+
+當你要「精簡品牌組合」，意思就是你得砍掉一些品牌。而每一個要被砍的品牌，背後往往都有感情、有歷史、有一群為它努力多年的人。砍掉它，不只是財務決策，是要去面對那些人失望的眼神、要去承認「我們當初的投入，現在得認賠」。
+
+這種時候，領導者最容易犯的錯，是不敢砍、或砍不乾淨。捨不得這個、放不下那個，最後每個品牌都留著、每個都分到一點資源，結果是全部半死不活，沒有一個被養好。
+
+真正成熟的領導者，會在這時候展現一種冷靜的狠勁：清楚地分辨哪些是未來、哪些是包袱，然後把資源從沒前途的地方，果斷地抽出來，集中灌注到最有勝算的品項上。
+
+▊ 集中，是逆風期唯一的活法
+
+資源有限的時候，分散就是慢性死亡。
+
+把有限的子彈，平均撒在十個目標上，每個都打不痛；不如集中火力，先把最有勝算的兩三個打穿。這個道理在烈酒業成立，在任何資源吃緊的組織、甚至在個人身上，都成立。
+
+帝亞吉歐現在這場領導動盪怎麼收，我持保留態度，旋轉門式的換將本身不是好兆頭。但它端出的「精簡組合、集中投資」的方向，我認為是逆風期該做的對的事。
+
+成長期比的是誰敢加，收縮期比的是誰會減。會做減法，往往比會做加法，更見一個經營者的功力。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">07</span><a href="https://f1i.com/news/521122-marko-details-management-structure-at-post-mateschitz-red-bull.html" target="_blank">Red Bull 的「三人分權」接班實驗：創辦人走後不再設單一 CEO，把權力拆成三塊</a></h3>
+<div class="src">F1i・Business Street Magazine・The SportsRush｜2026 年</div>
+<p class="fact"><span class="label">事實</span>創辦人 Dietrich Mateschitz 過世後，Red Bull 沒有再設單一 CEO，而是把策略與營運責任拆給三人：Franz Watzlawick 掌核心飲料業務、Oliver Mintzlaff 任「企業專案與投資」CEO（含掌管 F1）、Alexander Kirchmayr 任 CFO。創辦人之子 Mark Mateschitz 持有父親留下的 49% 股權，與泰國 Yoovidhya 家族（持多數）共同擁有，以低調風格維持成長。</p>
+<p class="hook"><span class="label">Hook</span>「不設單一 CEO、三人分權」是很罕見的接班設計——它在分散「強人退場」的風險，但也埋下「三頭馬車各拉一方」的隱憂。沒有人能完全取代創辦人，與其硬找一個，不如承認這件事、用結構去分擔。這份務實，本身就是一種智慧。</p>
+<div class="links"><a href="https://f1i.com/news/521122-marko-details-management-structure-at-post-mateschitz-red-bull.html" target="_blank">F1i</a><a href="https://business-street-magazine.com/economy/red-bull-after-the-founder-heir-mark-mateschitz-steers-the-empire-into-a-new-era.html" target="_blank">Business Street</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Red Bull 的接班方式，我覺得很值得拿出來說。
+
+創辦人 Mateschitz 過世之後，這家公司沒有再找一個新的 CEO 來接他的位子。而是把整個公司的策略與營運責任，拆成三塊，交給三個人：一個管核心的飲料業務，一個管企業專案與投資（包含 F1），一個當 CFO。創辦人的兒子持有父親留下的 49% 股權，低調地維持著公司的方向。
+
+「不設單一 CEO、三人分權」，這是很罕見的設計。我覺得它背後藏著一個很務實、甚至有點謙遜的判斷。
+
+▊ 承認「沒有人能完全取代創辦人」
+
+很多由強人創辦的公司，在創辦人離開後，會掉進一個陷阱：拼命想找「下一個他」。
+
+但問題是，創辦人之所以是創辦人，往往是因為他身上集合了一整套獨特的東西——願景、魅力、品味、人脈、還有那種別人學不來的直覺。這些東西長在一個人身上幾十年，幾乎不可能由另一個人完整複製。
+
+硬要找一個「接班的強人」，結果常常是兩種悲劇：要嘛找來的人撐不起那個位子，被舊勢力架空；要嘛他想證明自己，急著做出和創辦人不一樣的東西，反而把公司帶歪。
+
+Red Bull 的選擇是：不假裝有人能取代創辦人。既然一個人扛不起，那就用結構，把責任拆給三個各有專長的人去分擔。
+
+我認為這是一種很成熟的務實。它不糾結於「找到完美接班人」這個可能根本不存在的答案，而是退一步，用制度設計來解決問題。
+
+▊ 但分權也有它的風險
+
+當然，我得持平地說，三人分權不是沒有代價。
+
+最大的隱憂就是「三頭馬車」——三個人各有想法、各拉一個方向，遇到需要快速、統一決策的時刻，可能會卡住、會內耗。單一 CEO 的好處就是指揮統一、責任清楚；分權則把這個優勢犧牲掉了。
+
+所以這套設計能不能成，關鍵不在結構本身，而在這三個人之間的默契、信任，以及他們上面那個持股的家族，能不能在關鍵時刻定紛止爭。
+
+這也呼應了我一直相信的：沒有完美的組織設計，只有適合當下情境的取捨。Red Bull 用分散風險，換來了可能的決策摩擦，這個交換划不划算，得用未來幾年來驗證。
+
+但我欣賞的是那份「不假裝、不硬撐」的清醒。承認自己的極限，然後誠實地用方法去面對，這件事無論對組織還是對人，都不容易。
+
+接班這道題沒有標準答案，但願意務實面對，已經贏過很多硬撐的公司了。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">08</span><a href="https://www.thedrinksbusiness.com/2026/04/pernod-ricard-and-brown-forman-call-off-merger-talks/" target="_blank">Pernod Ricard × Brown-Forman 併購喊停：談不攏的「對等合併」，與烈酒業的整併焦慮</a></h3>
+<div class="src">The Drinks Business・The Spirits Business｜2026 年 4–5 月</div>
+<p class="fact"><span class="label">事實</span>烈酒巨頭 Pernod Ricard（Jameson、Absolut）與美國 Brown-Forman（Jack Daniel's）於 4 月談判「對等合併」破局，未能就關鍵條件達成共識。Pernod 同步推進內部重組，Irish Distillers 的 Jameson 系列被視為重組的關鍵；Brown-Forman 則「重回市場」尋找下一個對象。背景同樣是烈酒業 30 年首見的收縮，逼出產業整併潮。</p>
+<p class="hook"><span class="label">Hook</span>「對等合併」是最美、也最難成的併購——因為它要求兩個都覺得自己更強的人，平起平坐。多數破局不是估值談不攏，是「誰說了算」談不攏。合作要成，往往得有人願意當那個不主導的人，而這正是最反人性的地方。</p>
+<div class="links"><a href="https://www.thedrinksbusiness.com/2026/04/pernod-ricard-and-brown-forman-call-off-merger-talks/" target="_blank">The Drinks Business</a><a href="https://www.thespiritsbusiness.com/2026/05/back-on-the-market-could-brown-forman-still-find-its-perfect-match/" target="_blank">The Spirits Business</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">兩家烈酒巨頭，Pernod Ricard（Jameson、Absolut 的母公司）跟 Brown-Forman（Jack Daniel's 的母公司），原本在談一樁「對等合併」，四月的時候破局了，因為關鍵條件談不攏。
+
+「對等合併」這四個字，我每次看到都會多想一下，因為它聽起來很美，但實際上是所有併購裡最難成的一種。
+
+▊ 「對等」的難，不在錢，在「誰說了算」
+
+一般的併購，是大魚吃小魚，主從關係很清楚：誰買誰、誰主導、誰聽誰的，一翻兩瞪眼。雖然被併的一方可能不爽，但至少權力結構是明確的。
+
+但「對等合併」不一樣。它的前提是兩家規模、地位相當的公司，要平起平坐地融成一家。聽起來很平等、很美好，可是魔鬼就藏在這裡：到底誰當 CEO？總部設在哪？哪邊的文化說了算？關鍵職位怎麼分？
+
+這些問題，每一個都沒有「客觀正確」的答案，全是權力的角力。而兩家能長成巨頭的公司，骨子裡都有一份「我們比較強」的驕傲。要這兩種驕傲平起平坐、互相退讓，難如登天。
+
+所以我觀察，很多對等合併的破局，表面上說是「估值沒談攏」「綜效不如預期」，但更深層的原因，往往是「誰說了算」這件事談不攏。不是算術問題，是面子與權力問題。
+
+▊ 合作要成，得有人願意不主導
+
+這件事其實放大到任何合作，都成立。
+
+不管是兩家公司結盟、兩個團隊整併，還是兩個人合夥創業，真正能長久的合作，背後幾乎都有一個共同點：有人願意當那個「不主導的人」。
+
+願意退一步、願意讓對方拿主導權、願意把「我對」的執念放下，去成就一個更大的「我們」。這聽起來簡單，但它違反人性。人的本能是想掌控、想證明自己是對的、想當那個說了算的人。
+
+我不是說退讓的一方就比較高尚，這裡面有策略、有算計，也有對自己定位的清醒判斷。有時候，當那個「不主導但分到實利」的人，反而是更聰明的選擇。
+
+Pernod 跟 Brown-Forman 談不攏，產業整併的壓力卻還在，我猜這不會是烈酒業最後一樁談判。接下來會成的那些案子，我會特別留意一個細節：是誰，願意當那個退一步的人。
+
+合作的成敗，常常不取決於誰更強，而取決於誰更能放下「我要說了算」。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">09</span><a href="https://fortune.com/2026/03/23/starbucks-ceo-brian-niccol-back-to-starbucks-ran-like-manufacturing-facility/" target="_blank">星巴克「把人加回來」見效：Niccol 承認過去「像工廠」，靠加人、加薪、手寫杯換回 9% 成長</a></h3>
+<div class="src">Fortune・CNBC・Marketing Dive｜2026 年（最新一季）</div>
+<p class="fact"><span class="label">事實</span>星巴克交出兩年多來首見的營收獲利雙增：營收 +9% 至 95 億美元、淨利 +33%，全球同店 +6.2%，前十大國際市場（含中國）九季來首度全部轉正。Niccol 坦承過去星巴克「像在跑製造工廠」，復原核心是「低科技」的——增加排班人手、發獎金（加上小費咖啡師薪資可漲達 8%）、8 月起全美員工改週薪、咖啡師在外帶杯上手寫訊息。另一面：星巴克因頻繁誤算而退役了 AI 庫存盤點技術。</p>
+<p class="hook"><span class="label">Hook</span>「我們把店當工廠在跑」是這幾年最值得聽進去的一句 CEO 自白。當你把人變成生產線上可被優化的單位，效率上去了，但體驗、溫度、人味會悄悄流失——而對服務業，那才是命脈。把人當人，竟然成了「轉型策略」，這本身就很諷刺。</p>
+<div class="links"><a href="https://fortune.com/2026/03/23/starbucks-ceo-brian-niccol-back-to-starbucks-ran-like-manufacturing-facility/" target="_blank">Fortune</a><a href="https://www.cnbc.com/2026/04/02/starbucks-to-award-bonuses-to-baristas-expand-tipping.html" target="_blank">CNBC</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">星巴克交出了兩年多來第一次的營收獲利雙增，營收成長 9%、淨利大漲 33%。但讓我記下來的，不是這些數字，是 CEO Niccol 的一句自白。
+
+他說，過去的星巴克，「像在跑一座製造工廠」。
+
+這句話的份量很重。
+
+它的意思是，過去為了追求效率、追求出杯速度、追求每一單的標準化，星巴克把整個門市，當成一條生產線在優化。咖啡師變成生產線上的一個工序，每個動作都被計算、被壓縮，目標就是更快、更多、更省。
+
+從製造業的角度，這套邏輯沒錯。但星巴克賣的，從來不只是一杯咖啡。
+
+▊ 把人當生產線優化，會悄悄失去最值錢的東西
+
+星巴克當年之所以能成為星巴克，靠的是那個「第三空間」的體驗——你願意多付幾十塊，不只是為了咖啡因，是為了那個氛圍、那份從容、那種被當成一個人款待的感覺。
+
+而這種體驗，是靠「人」創造的。是靠一個有餘裕、心情不錯、願意跟你多聊兩句的咖啡師創造的。
+
+當你把門市當工廠跑，把咖啡師壓到只能機械式地出杯，效率的數字確實會變漂亮。但那個讓人願意一再回來的「溫度」，會在這個過程裡，一點一點被榨乾。客人說不出哪裡不對，但他就是感覺不到以前那個味道了，然後慢慢地，不再來了。
+
+▊ 而 Niccol 的解方，低科技到有點諷刺
+
+你看他怎麼救？不是上更厲害的 AI、不是搞更炫的數位點餐。
+
+他做的是：增加排班人手，讓咖啡師不要那麼趕；發獎金、加薪，讓他們有動力；改週薪，讓他們現金流好過一點；甚至要咖啡師在杯子上手寫訊息給客人。
+
+這些全都是「把人當人」的事。
+
+最諷刺的是，「把人當人」竟然成了一家公司的「轉型策略」、成了能換回成長的解方。這反過來說明，過去這件最基本的事，被丟掉得多徹底。
+
+而同一時間，星巴克還退役了一套老是算錯的 AI 庫存技術。一加一減之間，訊息很清楚：有些事該交給科技，但「人對人的服務」這個核心，科技取代不了，反而是過度追求效率時，最先被犧牲掉的。
+
+我覺得這個案例，值得每個做服務、做帶人的人想一想。當我們忙著優化流程、追求效率的時候，有沒有不小心，把「人」也當成了一個待優化的零件？
+
+效率很重要，但對某些行業來說，溫度才是命脈。把人當人，從來不該是一種策略，它本該是常識。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+<article class="card">
+<h3><span class="num">10</span><a href="https://www.esmmagazine.com/drinks/lvmh-replaces-leadership-at-spirits-unit-moet-hennessy-277146" target="_blank">LVMH 重整精品酒事業 Moët Hennessy：阿諾特之子接副 CEO，回穩後 Q1 交出三年來最佳一季</a></h3>
+<div class="src">ESM Magazine・The Drinks Business・Global Drinks Intel｜2026 年</div>
+<p class="fact"><span class="label">事實</span>LVMH 大改精品酒事業 Moët Hennessy（香檳、軒尼詩干邑）：集團財務長 Jean-Jacques Guiony 出任總裁兼 CEO，集團主席 Bernard Arnault 之子 Alexandre Arnault 任副 CEO；前 Dior 高管 Charles Delapalme 接掌軒尼詩。換血是為扭轉前三季營收下滑約 8%（美中市場放緩）的頹勢，轉向「Gen-Z 數位轉型」與永續。新人事到位後，2026 Q1 營收成長 5%、為 2022 第三季以來最佳一季。</p>
+<p class="hook"><span class="label">Hook</span>家族企業的接班總在「血緣」與「專業」之間拉扯。Alexandre Arnault 從集團各品牌歷練後再進核心，是典型的「先證明、再交棒」路徑——含著金湯匙不是原罪，重點是有沒有讓他在真實戰場上被驗證過。</p>
+<div class="links"><a href="https://www.esmmagazine.com/drinks/lvmh-replaces-leadership-at-spirits-unit-moet-hennessy-277146" target="_blank">ESM Magazine</a><a href="https://drinks-intel.com/news/moet-hennessy-recruits-from-inside-parent-lvmh-for-new-chief-hr-officer/" target="_blank">Global Drinks Intel</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">LVMH 大幅改組它的精品酒事業 Moët Hennessy，也就是香檳跟軒尼詩干邑那塊。新的 CEO 由集團財務長出任，而副 CEO，是集團主席 Bernard Arnault 的兒子 Alexandre Arnault。
+
+換血是為了扭轉前三季營收下滑約 8% 的頹勢。結果新人事到位後，第一季營收回到成長 5%，是三年多來最好的一季。
+
+老闆的兒子進核心管理層，這種事最容易引來「靠爸」的議論。但我想從「家族企業接班」這個更普遍的角度來看。
+
+▊ 血緣 vs 專業，是家族企業永恆的兩難
+
+所有家族企業，遲早都要面對這道題：位子要傳給自己人，還是交給最有能力的專業經理人？
+
+傳給自己人，好處是價值觀的延續、是對家族長遠利益的承諾，但風險是——萬一那個自己人能力不足，整家公司要陪葬。交給專業經理人，能力有保障，但你可能擔心他的忠誠、他的時間視野（職業經理人常為短期績效，犧牲長期）。
+
+這兩邊各有道理，沒有絕對的對錯。
+
+而我覺得 Alexandre Arnault 這個案例，走的是一條相對健康的路徑：先證明，再交棒。
+
+▊ 含金湯匙不是原罪，重點是有沒有被真實驗證過
+
+Alexandre 不是一畢業就空降到核心位子。他在集團底下的不同品牌歷練過，做出過一些成績，然後才一步步走進權力核心。
+
+這個「先在真實戰場上被驗證」的過程，我認為很關鍵。
+
+含著金湯匙出生，本身不是罪。問題從來不是「他是不是老闆的兒子」，而是「他有沒有在沒有保護傘的情況下，真的證明過自己」。
+
+如果一個接班人，是靠著一個個被丟到火線上的實戰、靠著真實的成績單一路爬上來，那就算他姓 Arnault，別人也比較難說嘴，他自己也比較站得住腳。反過來，如果他是直接被塞進高位、從沒被市場驗證過，那無論他多努力，下面的人都很難真正服他。
+
+這跟我們培養任何接班人的道理是一樣的：不要用保護來「捧」他，要用挑戰來「磨」他。真正的傳承，不是把位子交出去，而是先確認那個人，已經在足夠多的實戰裡，被淬鍊成扛得起這個位子的人。
+
+當然，Moët Hennessy 才回穩一季，能不能持續還要再觀察，一季的好數字證明不了太多。但「讓接班人先在戰場上被驗證，再交棒」這個方向，我認為是家族企業比較穩健的走法。
+
+血緣可以決定誰有資格站上起跑線，但能不能跑到終點，終究還是得靠真本事。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+</section>
 <!-- ================= 企業動態 ================= -->
 <section class="tier tier0">
-<div class="tier-head"><h2>🏢 企業動態：國際科技巨頭</h2><span class="count">12 篇｜組織・人才・領導・商業模式</span></div>
+<div class="tier-head"><h2>🏢 企業動態：國際科技巨頭</h2><span class="count">5 篇｜今早排程未收的新題材（3 非 AI＋2 AI）</span></div>
 <article class="card">
-<h3><span class="num">01</span><a href="https://blog.google/alphabet/investor-presentation-june-2026/" target="_blank">Alphabet 一週募資 850 億美元全押 AI：2026 資本支出上看 1,900 億、是 2022 的六倍</a></h3>
-<div class="src">Google/Alphabet 投資人簡報・Bloomberg｜2026-06-02 宣布、06-03 加碼</div>
-<p class="fact"><span class="label">事實</span>Alphabet 6/2 宣布增資 800 億美元投入 AI 支出，隔日因需求強勁加碼到 850 億；公司預估 2026 年資本支出達 1,800–1,900 億美元，約為 2022 年的六倍。同場簡報亮點：Waymo 今年新開 6 個市場、覆蓋 11 個美國大城，每週全自動駕駛載客突破 50 萬趟。</p>
-<p class="hook"><span class="label">Hook</span>當資本支出變成六倍，競爭的單位就從「產品」升級成「資產負債表」。這對所有經營者是同一道題：你的賭注夠不夠集中、口袋夠不夠深、敘事能不能說服出資人——AI 時代的策略，先是財務題，才是技術題。</p>
-<div class="links"><a href="https://blog.google/alphabet/investor-presentation-june-2026/" target="_blank">Alphabet 簡報</a><a href="https://www.bloomberg.com/latest/google" target="_blank">Bloomberg</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Alphabet 上週宣布增資 800 億美元投入 AI，隔天因為認購太踴躍，直接加碼到 850 億。
+<h3><span class="num">11</span><a href="https://www.aol.com/news/exclusive-intel-ceo-lip-bu-233237020.html" target="_blank">Oracle 找來新財務長 Hilary Maxson：底薪 95 萬、目標獎金 250 萬、股票 2,600 萬——重金挖人的訊號</a></h3>
+<div class="src">綜合報導（Oracle 8-K 脈絡）｜2026 年</div>
+<p class="fact"><span class="label">事實</span>在史上最大裁員（約 3 萬人）與 AI 資本支出暴增的同時，Oracle 宣布聘任新財務長 Hilary Maxson：年度底薪 95 萬美元、目標績效獎金 250 萬美元、再加上一筆估值約 2,600 萬美元的股票授予。一邊大砍基層、一邊重金禮聘高階人才，反映出企業在「成本」與「關鍵人才」上的兩套截然不同的邏輯。</p>
+<p class="hook"><span class="label">Hook</span>同一家公司，對基層做減法、對關鍵高位做加法，這不是矛盾，是「人才不是齊頭式資源」的赤裸體現。組織願意為某個位子付天價，等於在說這個位子的槓桿大到值得。問題是：被砍的那群人，怎麼看待這套雙重標準。</p>
+<div class="links"><a href="https://www.aol.com/news/exclusive-intel-ceo-lip-bu-233237020.html" target="_blank">綜合報導</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Oracle 一邊在進行史上最大規模的裁員，砍掉約三萬人；一邊卻重金禮聘新的財務長——底薪 95 萬美元、目標獎金 250 萬，再加上一筆價值約 2,600 萬美元的股票。
 
-公司預估 2026 年的資本支出會落在 1,800–1,900 億美元，大概是 2022 年的六倍。
+這個對比很刺眼，但我覺得它不是矛盾，而是把一個殘酷的真相，攤開在陽光下：人才，從來不是齊頭式的資源。
 
-六倍是什麼概念？2022 年大家都還在討論 AI 要不要投，四年後，這變成一張你不跟就出局的牌桌。
+▊ 對成本做減法，對關鍵人才做加法
 
-以前我們說策略是「選擇做什麼、不做什麼」，但現在巨頭的玩法是：我先把資本堆到你跟不起，你連選擇的資格都沒有。
+企業在管「人」這件事上，其實同時跑著兩套邏輯。
 
-同一份簡報裡還有一個數字值得看：Waymo 每週的全自動駕駛載客已經突破 50 萬趟，覆蓋 11 個美國城市。燒了十幾年的東西，開始長出商業的樣子了。
+一套是「成本邏輯」。對於那些貢獻相對標準化、可被流程或科技替代的職能，企業看的是成本，會想方設法精簡、優化、降低。裁員，走的就是這套。
 
-AI 時代的競爭，先是財務題，才是技術題。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+另一套是「槓桿邏輯」。對於那些少數能撬動巨大價值的關鍵位子——比如能管好幾百億現金流的財務長、能定義產品方向的核心人才——企業看的不是成本，是回報。為了搶到對的人，它願意付出在外人看來高得離譜的代價。
+
+因為對這種位子來說，找對一個人跟找錯一個人，差別可能是幾十億的價值。相較之下，那筆薪酬根本是小數目。
+
+所以「一邊裁三萬人、一邊花兩千多萬挖一個人」，在企業的邏輯裡，完全自洽。
+
+▊ 但這套雙重標準，員工是看在眼裡的
+
+我想補一個保留。這套邏輯雖然在財務上成立，但它對組織文化的衝擊，不能不顧。
+
+當基層員工看到「公司說要降本增效所以裁我，回頭卻花天價挖一個高管」，他心裡會怎麼想？他學到的一課是：在這家公司，價值是極度兩極分化的，我如果不是那少數的「高槓桿人才」，我就是隨時可以被優化掉的成本。
+
+這會徹底改變人跟組織的關係。忠誠、歸屬感這些東西，會在這種認知下被稀釋。
+
+我不是說企業就不該這樣分配資源，商業現實如此。但領導者至少要意識到，這套「對少數人做加法、對多數人做減法」的做法，是有文化成本的。你省下的薪資，可能正在用留下來那群人的安全感跟認同感去支付。
+
+對個人來說，這則新聞其實是個很實際的提醒：與其抱怨這套不公平，不如想清楚——你要怎麼讓自己，待在那個「值得被做加法」的位子上？
+
+讓自己成為那種「找對你跟找錯你差很多」的人，是這個時代最實在的安全感。槓桿大的人，永遠有人搶；可被替換的人，永遠在擔心被換。這話現實，但這是現實。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">02</span><a href="https://fortune.com/2026/06/06/elon-musk-spacex-ipo-tesla-moonshot-mars/" target="_blank">Musk 的「火星對賭」薪酬案：上市前夕把一兆美元綁進 15 道里程碑＋百萬人火星殖民地</a></h3>
-<div class="src">Fortune・CNBC｜2026-06-06（IPO 預定 06-12 掛牌）</div>
-<p class="fact"><span class="label">事實</span>SpaceX 確定 6/12 以每股 135 美元固定價在 Nasdaq 掛牌，估值 1.77 兆美元、募資 750 億，將成史上最大 IPO。Musk 持有 SpaceX 股票價值逾 8,660 億美元，加上 Tesla 逾 3,500 億持股，將成為首位「兆元富豪」。他的新薪酬案要求達成 15 個市值里程碑（最高 7.5 兆美元），最終條件是「在火星建立至少 100 萬人的永久殖民地」才能全數兌現 10 億股。</p>
-<p class="hook"><span class="label">Hook</span>把個人報酬綁在百年願景上，是激勵設計的極端實驗。多數公司的問題剛好相反——KPI 綁的是下一季，所以沒有人為十年後的事負責。你的薪酬制度在獎勵守成，還是在獎勵造未來？</p>
-<div class="links"><a href="https://fortune.com/2026/06/06/elon-musk-spacex-ipo-tesla-moonshot-mars/" target="_blank">Fortune</a><a href="https://www.cnbc.com/2026/06/03/spacex-ipo-stock-price-roadshow-musk.html" target="_blank">CNBC 定價</a><a href="https://www.cnbc.com/2026/06/03/elon-musks-net-worth-poised-to-sail-past-1-trillion-in-spacex-ipo.html" target="_blank">CNBC 身價</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">SpaceX 下週四要掛牌了，每股 135 美元，估值 1.77 兆，將是史上最大 IPO。掛牌後 Musk 的身價會突破一兆美元，人類史上第一位。
+<h3><span class="num">12</span><a href="https://www.hrgrapevine.com/us/content/article/2026-06-01-meta-faces-employee-backlash-over-ai-tracking-tool-as-privacy-concerns-grow" target="_blank">Meta 被員工逼退一步：AI 監控工具引爆反彈後縮手，開放員工「暫停被追蹤 30 分鐘」</a></h3>
+<div class="src">HR Grapevine・The Workers Rights｜2026-06-01</div>
+<p class="fact"><span class="label">事實</span>Meta 在員工持續數週的反彈後，縮減一項具爭議的 AI 員工監控計畫，新增控制權讓員工可一次暫停資料蒐集達 30 分鐘、並可申請豁免。背景是更廣的職場監控浪潮：研究指 75% 雇主用監控手段、61% 用 AI 分析衡量生產力，但 72% 員工認為監控對產出沒幫助甚至更糟，逾 56% 因被監控而感到壓力與焦慮。</p>
+<p class="hook"><span class="label">Hook</span>監控的本質是「我不信任你」，而不信任是會傳染的——你越盯，員工越覺得自己被當賊，越用「假裝在線」來應付你。研究說監控讓生產力降 8–19%，這不意外：你能監控行為，但你監控不了一個人願不願意真心投入。</p>
+<div class="links"><a href="https://www.hrgrapevine.com/us/content/article/2026-06-01-meta-faces-employee-backlash-over-ai-tracking-tool-as-privacy-concerns-grow" target="_blank">HR Grapevine</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Meta 在員工持續好幾週的反彈之後，縮減了一項有爭議的 AI 監控計畫，現在開放員工可以一次「暫停被追蹤」30 分鐘。
 
-但我覺得更有意思的是他的薪酬案設計。
+這只是個案，但它背後是一股更大的浪潮。有研究指出，現在四分之三的雇主用某種形式監控員工，超過六成用 AI 來分析、衡量生產力。而員工這端呢？72% 覺得監控對產出根本沒幫助、甚至更糟，超過一半的人因為被監控而感到壓力跟焦慮。
 
-要全數兌現那 10 億股，他得帶公司達成 15 個市值里程碑，一路推到 7.5 兆美元。而最後一關的條件是：在火星建立至少 100 萬人的永久殖民地。
+我想談的是監控這件事的本質。
 
-很多人看到的是誇張，我看到的是激勵設計的極端樣本。
+▊ 監控傳遞的核心訊息，是「我不信任你」
 
-多數公司的問題剛好相反，KPI 綁的是下一季的數字，所以沒有人為十年後的事情負責。每個人都在優化眼前，沒有人在經營未來。
+不管你用多溫和的詞包裝——「生產力分析」「工作量管理」「效率優化」——員工接收到的訊息只有一個：公司信不過我，所以要盯著我。
 
-你可以不喜歡 Musk，但這個問題值得每個經營者想想：你的薪酬制度，在獎勵守成，還是在獎勵造未來？</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+而不信任，是會傳染、會自我實現的。
+
+當一個人感覺到自己被當成「需要被監控的對象」，他的反應通常不是「那我更努力證明我值得信任」，而是「既然你把我當賊，那我就應付你」。於是研究裡才會出現那些數字：將近一半的員工會「假裝在線」、有人專門研究怎麼騙過監控系統。
+
+你花大錢、花力氣建了一套監控，最後換到的，是員工花心思跟你鬥智、表演努力。這不是雙輸是什麼？
+
+▊ 你能監控行為，但監控不了「真心」
+
+研究裡有個數字我覺得最關鍵：監控反而讓生產力下降了 8 到 19%。
+
+這一點都不讓我意外。因為真正創造價值的，從來不是「看起來在工作」，而是一個人「願不願意真心投入」——願不願意多想一步、願不願意主動補位、願不願意在沒人看的時候還是把事情做好。
+
+而這種「願意」，是監控逼不出來的。你可以監控一個人的滑鼠有沒有在動、螢幕有沒有亮著，但你監控不了他的腦子有沒有在轉、他的心有沒有在這裡。
+
+當你用監控取代信任，你得到的會是「行為上的服從」，但你失去的，是「心理上的投入」。而後者，才是真正的生產力來源。
+
+我一直相信，管理的根基是信任，不是控制。當然，信任不是不管不問、不是沒有課責。但它的起點，應該是「我預設你是想把事情做好的」，然後用清楚的目標、坦誠的回饋去支持你，而不是預設你會偷懶，然後用監控去防你。
+
+Meta 被員工逼著退一步，我覺得是個健康的訊號。它至少證明，當管理走得太過、把人逼到牆角，人是會反彈的。
+
+最好的管理，是讓員工因為「想做好」而投入，不是因為「被盯著」而不敢混。前者長出來的是主動，後者長出來的，只是表演。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">03</span><a href="https://electrek.co/2026/05/27/tesla-spacex-merger-musk-self-dealing-fourth-time/" target="_blank">上市前夕傳合併：Musk 放風 Tesla 併 SpaceX，將是他第四次「十億美元級自家交易」</a></h3>
-<div class="src">Electrek｜2026-05-27 報導、IPO 前持續發酵</div>
-<p class="fact"><span class="label">事實</span>就在 SpaceX IPO 前數週，Musk 被報導正向外圍放出 Tesla 與 SpaceX 合併的構想。Electrek 統計這將是他第四次涉及自身利益的大型自家交易（前例如 Tesla 收購 SolarCity）。另傳 Tesla 將為 100GW 太陽能計畫加碼 29 億美元資本支出，墊高原先指引的 200 億年度 capex。</p>
-<p class="hook"><span class="label">Hook</span>創辦人魅力與公司治理是一組永恆張力：當董事會沒有能力對創辦人說不，「綜效」就很容易變成「輸送」。治理結構的價值，平時看不見，都是在這種時刻被定價的。</p>
-<div class="links"><a href="https://electrek.co/2026/05/27/tesla-spacex-merger-musk-self-dealing-fourth-time/" target="_blank">Electrek</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">SpaceX 上市前夕，Musk 又放出一個想法：把 Tesla 跟 SpaceX 合併。
+<h3><span class="num">13</span><a href="https://www.nasdaq.com/articles/microsoft-cut-9000-jobs-cancel-major-xbox-projects-sweeping-restructuring" target="_blank">微軟砍 9,000 人、關閉 The Initiative 工作室、砍掉 Perfect Dark 與 Everwild：重組的真實代價</a></h3>
+<div class="src">Nasdaq・European Business Review｜2026 年</div>
+<p class="fact"><span class="label">事實</span>微軟在全面重組下裁員約 9,000 人（占全球員工不到 4%），跨部門、跨地區、跨層級。其中遊戲部門代價最重：關閉了開發中的 3A 工作室 The Initiative，並取消已投入多年的高調作品《Perfect Dark》與《Everwild》。這是「組織效率」敘事底下，被犧牲的具體創作與團隊。</p>
+<p class="hook"><span class="label">Hook</span>裁員與「砍專案」在財報上是一行數字，但每一個被取消的專案，背後都是好幾年的心血、一整個團隊的青春、與一群人對作品的信念。效率敘事說起來很乾淨，承受的人很痛。領導者該記得：你優化的是成本，但被結束的是人的一段人生。</p>
+<div class="links"><a href="https://www.nasdaq.com/articles/microsoft-cut-9000-jobs-cancel-major-xbox-projects-sweeping-restructuring" target="_blank">Nasdaq</a><a href="https://www.europeanbusinessreview.com/microsoft-to-cut-9000-jobs-amid-ongoing-organizational-restructuring/" target="_blank">European Business Review</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">微軟在新一波重組裡裁了約 9,000 人，而遊戲部門承受得特別重——它關閉了一個開發中的 3A 工作室 The Initiative，還取消了《Perfect Dark》跟《Everwild》這兩款已經做了好幾年的高調作品。
 
-媒體統計，這會是他第四次涉及自身利益的大型自家交易，前面幾次包含 Tesla 收購 SolarCity。
+在財報上，這是「優化成本、提升效率」的一行字。但我想停下來，講講這行字底下的東西。
 
-每一次的劇本都很像：願景很大、綜效很美、時機很微妙。
+▊ 每一個被取消的專案，都是一群人的一段人生
 
-合併本身未必是壞事，問題在於決策的過程。當一個人同時是買方跟賣方的最大受益者，這筆交易的合理性就不該由他自己來說。
+《Perfect Dark》跟《Everwild》不是憑空消失的兩個名字。它們是好幾年的時間、是一整個團隊的青春、是一群開發者每天加班熬夜、為了把心中那個作品做出來而投入的信念。
 
-公司治理的價值平常看不見，大家會覺得董事會就是橡皮圖章，開會就是行禮如儀。
+對那些開發者來說，這不只是「失去一份工作」。是他們投注了人生好幾年、傾注了熱情與才華的東西，在快要完成的時候，被一個遠在天邊的財務決策，按下了刪除鍵。那種感覺，不是遣散費能補償的。
 
-但治理結構的好壞，都是在這種時刻被定價的。當董事會沒有能力對創辦人說不，股東剩下的選擇就只有用腳投票了。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+我講這個，不是要說微軟做錯了。商業有它的現實，一個專案如果評估下來真的沒有勝算，及時止損，可能對公司、甚至對團隊都是負責任的決定。硬撐一個做不起來的東西，拖更久、賠更多，也未必更好。
+
+我想說的是另一件事：領導者在做這種決定的時候，心裡要清楚自己按下的，是什麼。
+
+▊ 效率敘事很乾淨，承受的人很痛
+
+「組織重組」「效率優化」「資源重新配置」——這些詞都很乾淨、很理性、很沒有溫度。它們把活生生的衝擊，包裝成損益表上的調整。
+
+用這些詞，做決定的人會比較好受，因為它把「我結束了一群人的心血」這件事，抽象成了「我們優化了成本結構」。
+
+但我認為，一個有溫度的領導者，不該讓自己躲在這些乾淨的詞後面。你可以做艱難的決定，但你要誠實地面對這個決定的重量——它不只是省下了多少錢，它也結束了一些人投入多年的東西。
+
+帶著這份清醒去做決定，跟麻木地把人當成本表上的數字去刪減，是兩種完全不同的領導者。前者就算做了同樣艱難的決定，也會在過程裡盡量給人尊重、給人支持、好好地說再見；後者只會冷冰冰地發一封通知信。
+
+被砍的專案，公司可以重啟；但承受的人那段被中止的人生，回不來了。
+
+做艱難的決定，是領導者的責任。但在做的時候，記得那行數字底下，是一個個真實的人。這份不麻木，是我認為領導者最該守住的東西。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">04</span><a href="https://www.thestreet.com/technology/microsoft-ceo-sends-shocking-message-to-employees" target="_blank">微軟內部「斷供」Claude Code：Windows 與 M365 部門 6/30 前全面停用</a></h3>
-<div class="src">TheStreet・Microsoft Build 2026 脈絡｜2026-06 月初</div>
-<p class="fact"><span class="label">事實</span>微軟正取消 Experiences and Devices 部門（負責 Windows、Microsoft 365、Outlook、Teams、Surface）絕大多數內部 Claude Code 授權，期限 6/30。時間點緊接 Build 2026 發表 7 個自研 MAI 模型、宣示降低對 OpenAI 依賴之後——對內的訊息很清楚：吃自己的狗糧。</p>
-<p class="hook"><span class="label">Hook</span>dogfooding 是文化宣言，但有兩種讀法：對自家產品的信心，或是對競品滲透的恐懼。當你的工程師私下更愛用對手的工具，禁用解決的是症狀還是病因？工具選擇已經變成企業的策略表態。</p>
-<div class="links"><a href="https://www.thestreet.com/technology/microsoft-ceo-sends-shocking-message-to-employees" target="_blank">TheStreet</a><a href="https://news.microsoft.com/build-2026/" target="_blank">Build 2026</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">微軟正在取消 Windows 跟 M365 部門內部的 Claude Code 授權，期限是 6 月 30 日。
+<h3><span class="num">14</span><a href="https://www.basenor.com/blogs/news/musk-hints-at-deeper-nvidia-partnership-what-it-means-for-tesla" target="_blank">Musk 放話「把與 NVIDIA 的合作推向新層次」：Tesla、xAI、SpaceX 與輝達的綁定再加深</a></h3>
+<div class="src">Basenor・綜合報導｜2026-06-12</div>
+<p class="fact"><span class="label">事實</span>6/12 Musk 在社群發文「期待把我們與 NVIDIA 令人興奮的合作推向新層次」，外界解讀為 Tesla／xAI／SpaceX 與輝達的綁定將再加深。Tesla 至 2025 年底估計累計花約 100 億美元購置輝達硬體（主要訓練自駕系統）；黃仁勳則把 Tesla 的人形機器人 Optimus 形容為「實體 AI」可能的數兆美元機會，而 Optimus 的開發高度依賴同一套訓練基礎建設。</p>
+<p class="hook"><span class="label">Hook</span>當競爭的瓶頸是算力，「你跟誰綁在一起」就成了策略本身。但深度綁定一個供應商是雙面刃：它給你優先取得的籌碼，也讓你的命脈握在別人手裡。生態結盟與供應鏈自主，是這一波每家公司都在算的帳。</p>
+<div class="links"><a href="https://www.basenor.com/blogs/news/musk-hints-at-deeper-nvidia-partnership-what-it-means-for-tesla" target="_blank">Basenor</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Musk 在 6 月 12 日發了一則文，說期待把他跟 NVIDIA 的合作「推向新的層次」。考慮到 Tesla、xAI、SpaceX 都跟輝達深度綁定，這句話的份量不小。光是 Tesla，到去年底估計就花了約一百億美元買輝達的硬體，拿去訓練自駕系統。
 
-時間點很微妙，就在 Build 2026 一口氣發表 7 個自研 MAI 模型之後。對內的訊息很清楚：要用，就用自己家的。
+這則新聞，我看到的不是兩家公司要更好，而是這個時代一個越來越重要的策略課題：當算力是瓶頸，「你跟誰綁在一起」，本身就是一種策略。
 
-之前寫過 Uber 要求員工 dogfooding 的案例，吃自己的狗糧本來是好事，自家人都不用的產品，憑什麼要客戶買單。
+▊ 深度綁定，是一把雙面刃
 
-但微軟這個案例有趣的地方在於順序是反過來的。不是員工自願用自家產品，而是員工先用了對手的，公司再下令禁止。
+跟一個關鍵供應商深度結盟，好處很實在。
 
-一個是信心，一個是保護主義，這兩種 dogfooding 的味道完全不同。
+在算力這麼稀缺、大家搶破頭的時候，能跟輝達建立深厚關係，意味著你在拿貨、在取得最新技術、在優先供應上，都有別人沒有的籌碼。對 Musk 這種需要海量算力來訓練自駕跟機器人的公司，這是命脈。
 
-如果你的工程師私下都在用對手的工具，禁用解決的是症狀，不是病因。產品輸了，行政命令是贏不回來的。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+但這把刀的另一面是：你把命脈，交到了別人手裡。
+
+當你的核心競爭力高度依賴單一供應商，你就承受了一個結構性的風險——萬一對方漲價、斷供、把更好的東西優先給你的對手，或者你們關係生變，你會非常被動。你越依賴它，它對你的議價力就越大。
+
+所以你看，這就是為什麼 Musk 一邊跟輝達深化合作，另一邊其實也在佈局自己的算力（xAI 的超級電腦），甚至很多巨頭都在自研晶片。大家都在算同一筆帳：我要透過結盟拿到現在的優勢，但我不能讓自己的命，完全握在別人手上。
+
+▊ 結盟 vs 自主，沒有標準答案
+
+這個「深度綁定夥伴」還是「保持自主」的拉扯，其實不只發生在科技巨頭身上。
+
+任何一家公司，在選擇核心夥伴、核心供應商、甚至核心通路的時候，都會遇到。綁得深，效率高、關係穩，但風險集中；保持距離、多方分散，比較安全，但可能拿不到最好的條件、也經營不出最深的綜效。
+
+我自己的觀察是，這沒有標準答案，關鍵是「清醒」。
+
+最怕的是不知不覺地，把自己的命脈，全部押在一個你控制不了的對象身上，等到對方變臉了，才發現自己沒有退路。健康的做法，是享受深度合作帶來的好處的同時，心裡永遠留一份警覺，手上永遠保留一點備案。
+
+把雞蛋放在最好的那個籃子裡，可以；但你得知道那個籃子不是你的，而且要隨時準備好，萬一籃子破了，你還有別的地方放。
+
+依賴是一種策略，但保有自主，是一種智慧。在這個算力為王的時代，怎麼拿捏這兩者，是每家公司都得反覆計算的功課。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">05</span><a href="https://techcrunch.com/2026/06/01/florida-sues-openai-sam-altman-in-first-of-its-kind-lawsuit-over-violent-incidents/" target="_blank">佛州告上 OpenAI 與 Altman「本人」：首宗州政府 AI 安全失職訴訟</a></h3>
-<div class="src">TechCrunch・Washington Post｜2026-06-01</div>
-<p class="fact"><span class="label">事實</span>佛羅里達州檢察長 6/1 對 OpenAI 與 CEO Sam Altman 個人提起全美首宗州級訴訟，指控 ChatGPT 與多起暴力事件有關，公司「為了贏得 AI 軍備競賽、累積巨額財富」而無視內外部安全警告、置兒童於風險之中。源頭是去年佛州州立大學槍擊案後對 OpenAI 角色的刑事調查。</p>
-<p class="hook"><span class="label">Hook</span>當 CEO 個人成為被告，「move fast」的代價開始進入法律定價。治理從來不是合規部門的文書作業，而是領導者的風險決策——你願意為成長速度，押上多少個人責任？</p>
-<div class="links"><a href="https://techcrunch.com/2026/06/01/florida-sues-openai-sam-altman-in-first-of-its-kind-lawsuit-over-violent-incidents/" target="_blank">TechCrunch</a><a href="https://www.washingtonpost.com/technology/2026/06/01/florida-lawsuit-accuses-openai-ceo-sam-altman-endangering-children/" target="_blank">Washington Post</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">佛羅里達州檢察長對 OpenAI 提告了，這是第一宗州政府控告 AI 公司安全失職的訴訟。
+<h3><span class="num">15</span><a href="https://www.bloomberg.com/news/articles/2026-06-12/anthropic-openai-google-executives-plan-to-attend-g7-summit" target="_blank">G7 高峰會請來 AI 三巨頭：Altman、Hassabis、Amodei 同台——產業領袖正搶「定義規則」的位子</a></h3>
+<div class="src">Bloomberg・法國總統府名單｜2026-06-12</div>
+<p class="fact"><span class="label">事實</span>法國總統府公布，下週於法國登場的 G7 高峰會，將邀 AI 業界高層出席，名單包括 OpenAI 的 Sam Altman、Google 的 Demis Hassabis、Anthropic 的 Dario Amodei。同期消息：OpenAI 任命 Barret Zoph 主導企業端銷售；據創投 Menlo Ventures 報告，Anthropic 在企業大型語言模型使用上以約 40% 市佔領先。AI 領袖正同時在「商業落地」與「政策桌邊」兩條戰線卡位。</p>
+<p class="hook"><span class="label">Hook</span>當產業領袖開始坐上制定規則的那張桌子，遊戲就變了——他們不再只是「被監管的對象」，而是「規則的共同作者」。這是影響力的最高形式：不是在既定規則裡贏，而是去定義規則本身。但這也讓「誰來監督這些定義規則的人」變成更尖銳的問題。</p>
+<div class="links"><a href="https://www.bloomberg.com/news/articles/2026-06-12/anthropic-openai-google-executives-plan-to-attend-g7-summit" target="_blank">Bloomberg</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">下週的 G7 高峰會，法國總統府公布的出席名單裡，除了各國領袖，還有 AI 業界的三巨頭：OpenAI 的 Altman、Google 的 Hassabis、Anthropic 的 Amodei。
 
-值得注意的是，被告名單上不只有公司，還有 Sam Altman 本人。
+科技公司的執行長，坐上了世界領袖開會的那張桌子。我覺得這個畫面，本身就很有訊號意義。
 
-起訴書的指控很重：為了贏得 AI 軍備競賽、累積巨額財富，無視內部與外部的安全警告，把兒童置於風險之中。源頭是去年佛州州立大學槍擊案後的刑事調查。
+▊ 從「被監管」到「共同制定規則」
 
-官司的是非很難說，可能要打很多年。但有一條線已經被劃出來了：當 CEO 個人成為被告，「快速行動，打破常規」這句矽谷格言的代價，開始有了法律上的定價。
+過去，企業跟政府的關係，比較像是「被管的」跟「管人的」。政府制定規則，企業在規則裡面競爭、遵守、偶爾遊說。
 
-治理從來不是合規部門的文書作業，而是領導者自己的風險決策。
+但當 AI 巨頭的執行長，受邀坐進 G7 這種制定全球議程的場合，關係就微妙地變了。他們不再只是「被監管的對象」，而開始變成「規則的共同作者」。
 
-跑得快的時候，記得回頭看一眼，你願意為這個速度押上多少個人責任。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">06</span><a href="https://www.cnbc.com/2026/06/03/open-ai-altman-congress-trump-eo.html" target="_blank">被告後兩天進華府：Altman 提「AI 監督藍圖」，倡議把 AI 紅利直接發給人民</a></h3>
-<div class="src">CNBC・Bloomberg｜2026-06-03</div>
-<p class="fact"><span class="label">事實</span>Altman 6/3 在華府密集會見兩黨議員（含眾院議長 Johnson、少數黨領袖 Jeffries）與白宮 AI 行政命令相關官員，提出公私協作的 AI 監督構想，並倡議建立機制把 AI 創造的龐大財務紅利「轉移給消費者」。時間點就在佛州訴訟後 48 小時。</p>
-<p class="hook"><span class="label">Hook</span>從「請監管我」到「我來幫你寫監管」——這是產業領袖搶定義權的教科書操作。「AI 紅利全民共享」的論述同時也是在為失業敘事買保險：先給社會一個分潤想像，才能繼續換取發展空間。</p>
-<div class="links"><a href="https://www.cnbc.com/2026/06/03/open-ai-altman-congress-trump-eo.html" target="_blank">CNBC</a><a href="https://www.bloomberg.com/news/articles/2026-06-03/openai-ceo-to-share-oversight-ideas-in-wake-of-trump-ai-order" target="_blank">Bloomberg</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">被佛州起訴後的第 48 小時，Altman 人已經在華府。
+這是影響力的最高形式。
 
-會見兩黨議員，拜訪白宮 AI 行政命令的相關官員，提出公私協作的 AI 監督藍圖，還倡議建立一個機制，把 AI 創造的財務紅利「直接轉移給人民」。
+我常跟人說，最厲害的競爭，不是在既定的規則裡贏，而是有能力去影響、去定義規則本身。在一個你參與制定的賽局裡比賽，你的優勢是結構性的，遠遠超過單純把產品做好。
 
-這套動作可以拆成兩層看。
+這些 AI 公司現在做的，正是這件事。他們一邊在商業上拼命落地（OpenAI 派人專攻企業銷售、Anthropic 拿下企業市場四成市佔），一邊在政策桌邊卡位。商業跟政治兩條戰線，同時推進。
 
-第一層是危機處理：你告我安全失職，我就讓所有人看到我比監管者更積極談安全。
+從企業策略的角度，這是非常高明的。
 
-第二層更深：從「請監管我」走到「我來幫你寫監管」。誰參與規則的制定，誰就擁有規則的解釋權。
+▊ 但這也讓一個老問題變得更尖銳
 
-至於 AI 紅利共享的論述，某種程度也是在為失業敘事買保險。先給社會一個分潤的想像，才能繼續換取發展的空間。
+我想提一個保留。當「制定規則的人」跟「被規則規範的人」越來越是同一群人，那「誰來監督這些人」就變成一個很難迴避的問題。
 
-商業的高手過招，從來不只在產品上。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">07</span><a href="https://9to5mac.com/2026/06/01/apple-facing-congressional-pressure-over-closure-of-first-unionized-us-store/" target="_blank">40 名國會議員致函 Apple：關掉「第一家工會門市」是不是秋後算帳？</a></h3>
-<div class="src">9to5Mac｜2026-06-01</div>
-<p class="fact"><span class="label">事實</span>Apple 宣布 6 月關閉馬里蘭州 Towson 門市（2022 年全美第一家工會化的 Apple Store，近百名員工），理由是商場「多家零售商撤出、條件惡化」。40 位國會議員聯名致函 Tim Cook 與準 CEO John Ternus，質疑這「看起來是打壓工會的最新一步、對組工會員工的報復」，要求重新評估替代方案。</p>
-<p class="hook"><span class="label">Hook</span>接班過渡期的第一道文化考題往往不是產品，是勞資。Ternus 還沒上任（9/1 生效），員工關係的帳已經算到他頭上——新領導者的「文化遺產盤點」，從來不能等到就任那天才開始。</p>
-<div class="links"><a href="https://9to5mac.com/2026/06/01/apple-facing-congressional-pressure-over-closure-of-first-unionized-us-store/" target="_blank">9to5Mac</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Apple 要關掉馬里蘭州的 Towson 門市，理由是商場條件惡化、多家零售商撤出。
+讓最懂技術的人參與規則制定，有它的道理——外行人訂出來的規則，可能既擋不住風險、又綁死了創新。讓 Altman、Amodei 這些最了解 AI 的人進來，理論上能讓規則更務實。
 
-聽起來是個再正常不過的商業決定。但這家店有個特殊身分：2022 年全美第一家組工會的 Apple Store，將近一百名員工。
+但同一件事的另一面是：他們也是最有利益關係的人。他們提出的「監管藍圖」，會不會剛好是對自己最有利、最能擴大自己護城河的版本？這很難說，也很難防。
 
-於是 40 位國會議員聯名寫信給 Tim Cook 跟即將接班的 John Ternus，質疑這是對組工會員工的報復，要求重新評估。
+這不是說他們一定居心不良，而是「球員兼裁判」這個結構，本身就值得警惕。
 
-關店的真實原因外人很難斷定。但這件事提醒了我一個觀察：接班過渡期的第一道考題，往往不是產品，是勞資。
+我不對這件事下定論，這是個沒有簡單答案的治理難題。但我會持續觀察一個重點：當這些手握巨大技術權力的人，越來越靠近政治權力的核心，社會有沒有同步建立起，能夠制衡他們的機制。
 
-Ternus 九月才上任，員工關係的帳已經開始算到他頭上了。
+權力往少數人集中的速度，如果遠快於制衡機制建立的速度，那不管這些人多有才華、多有善意，都是一件值得我們所有人保持警覺的事。
 
-新領導者的文化遺產盤點，從來不能等到就任那天才開始。前任留下的每一個未解的結，都會在你任內被重新打開。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">08</span><a href="https://www.aljazeera.com/economy/2026/6/5/anthropic-urges-ai-labs-to-pause-warns-humans-risk-losing-control" target="_blank">Anthropic 罕見喊「暫停」：呼籲各實驗室協調減速，自曝 5 月 80% 程式碼已由 Claude 寫</a></h3>
-<div class="src">Al Jazeera・Anthropic 官方部落格｜2026-06-05</div>
-<p class="fact"><span class="label">事實</span>Anthropic 發文呼籲主要 AI 實驗室考慮「協調且可驗證的暫停（pause）」選項，警告 AI 完成任務的速度進步太快，人類有失去控制的風險，「讓世界保有放慢或暫停的選項是好事」。文中自曝：5 月合併進自家程式庫的程式碼超過 80% 由 Claude 撰寫。同週 Code w/ Claude 大會移師東京（6/5–6/6）。</p>
-<p class="hook"><span class="label">Hook</span>跑最快的人喊暫停，是煞車還是卡位？兩種解讀都成立，但對經營者更實用的提醒是：當你的產能成長快過治理能力，風險就不再是技術問題，而是管理問題。你的組織有「減速機制」嗎？</p>
-<div class="links"><a href="https://www.aljazeera.com/economy/2026/6/5/anthropic-urges-ai-labs-to-pause-warns-humans-risk-losing-control" target="_blank">Al Jazeera</a><a href="https://www.anthropic.com/news" target="_blank">Anthropic Newsroom</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Anthropic 發了一篇很特別的文章，呼籲主要的 AI 實驗室考慮「協調且可驗證的暫停」，理由是 AI 進步的速度太快，人類有失去控制權的風險。
-
-文章裡有一個數字比呼籲本身更震撼：5 月份合併進他們自家程式庫的程式碼，超過 80% 是 Claude 寫的。
-
-跑最快的人喊暫停，這件事有兩種讀法。
-
-一種是真心的煞車：他們最清楚車速有多快，所以最早感覺到危險。
-
-另一種是卡位：先把「負責任」的位置佔好，後面的監管討論就有了話語權。
-
-兩種可能都存在，我不急著下結論。但對經營者來說，這裡面有一個很實際的提醒：
-
-當你的產能成長速度超過你的治理能力，風險就不再是技術問題，而是管理問題。
-
-你的組織，有減速機制嗎？還是只有油門？</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">09</span><a href="https://www.pcgamer.com/hardware/people-talk-about-ai-reducing-jobs-complete-nonsense-nvidias-jensen-huang-criticises-economic-doomerism-on-gtc-stage/" target="_blank">黃仁勳台北舞台再嗆「AI 滅職論是徹底胡說」：自動化的是任務，不是目的</a></h3>
-<div class="src">PC Gamer・TechCrunch｜COMPUTEX / GTC Taipei 2026-06 月初</div>
-<p class="fact"><span class="label">事實</span>黃仁勳在台北 COMPUTEX／GTC 舞台直言「有人說 AI 會減少工作——complete nonsense（徹底胡說）」，並稱 AI 正讓更多軟體工程師被僱用：「如果一位工程師能創造 9 兆美元的產出、薪資成本 3 兆，你為什麼不僱更多？」他用放射科醫師舉例：AI 自動化的是「讀片」這個任務，醫師的目的是「照顧病人」——任務被自動化，目的反而被抬升。</p>
-<p class="hook"><span class="label">Hook</span>「任務 vs 目的」是給主管的好框架：盤點團隊工作時，先分清哪些是任務（可自動化）、哪些是目的（人的價值所在）。主管是教練不是球員——你的工作目的從來不是「做事」，是「成就人」，這部分 AI 拿不走。</p>
-<div class="links"><a href="https://www.pcgamer.com/hardware/people-talk-about-ai-reducing-jobs-complete-nonsense-nvidias-jensen-huang-criticises-economic-doomerism-on-gtc-stage/" target="_blank">PC Gamer</a><a href="https://techcrunch.com/2026/05/04/as-workers-worry-about-ai-nvidias-jensen-huang-says-ai-is-creating-an-enormous-number-of-jobs/" target="_blank">TechCrunch</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">黃仁勳在台北的舞台上又講了重話：「有人說 AI 會減少工作，complete nonsense。」
-
-他的論證是經濟學的：如果一位工程師能創造出遠超過薪資成本的產值，企業為什麼不僱用更多工程師？
-
-這個論述我持保留態度，因為它成立的前提是需求無限。但他舉的另一個例子，我覺得是真正值得收藏的框架。
-
-他說，放射科醫師的工作不是讀片，是照顧病人。AI 自動化的是「讀片」這個任務，醫師「照顧病人」的目的反而被抬升了。
-
-任務（task）跟目的（purpose），是兩件事。
-
-帶團隊的人可以用這個框架做一次盤點：你團隊的每一項工作，哪些是任務，哪些是目的？任務會被 AI 一項項接走，目的不會。
-
-主管的目的從來不是分派工作，是成就人。如果你的價值都建立在任務上，那才是真正該焦慮的事。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">10</span><a href="https://www.sec.gov/Archives/edgar/data/0001679788/000167978826000049/coin-20260505.htm" target="_blank">Coinbase 再裁 700 人（14%）：8-K 直白寫著「為 AI 時代優化營運」</a></h3>
-<div class="src">SEC 8-K 申報文件｜2026-05-05 公告、Q2 認列</div>
-<p class="fact"><span class="label">事實</span>Coinbase 向 SEC 申報重組計畫：裁減約 700 人、占全球員工 14%，預估認列 5,000–6,000 萬美元重組費用（幾乎全為遣散與離職給付），絕大部分在 2026 Q2 認列。8-K 載明目的：「因應市場條件管理營運費用，並為 AI 時代優化公司營運。」這是繼年初管理層改組為 AI-Native pods 後的下一步。</p>
-<p class="hook"><span class="label">Hook</span>裁員理由正式從「景氣」改寫成「為 AI 優化」，而且白紙黑字進了證交會文件。值得追問的是：被優化的是成本結構，還是工作設計？如果只是砍人沒有重設流程，那 AI 只是遮羞布——半年後見真章。</p>
-<div class="links"><a href="https://www.sec.gov/Archives/edgar/data/0001679788/000167978826000049/coin-20260505.htm" target="_blank">SEC 8-K</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">之前分享過 Coinbase 的裁員信，現在 8-K 文件出來了。
-
-裁減約 700 人，占全球員工的 14%，認列 5,000 到 6,000 萬美元的重組費用。文件裡寫的目的是：因應市場條件管理營運費用，並「為 AI 時代優化公司營運」。
-
-注意這句話，它被白紙黑字寫進了證交會的正式申報文件。
-
-裁員的理由正在改朝換代。以前寫的是景氣、是市場逆風，現在直接寫「為 AI 優化」。我相信接下來幾年，這句話會出現在愈來愈多公司的 8-K 裡。
-
-但有一個問題值得持續追蹤：被優化的到底是成本結構，還是工作設計？
-
-如果只是把人砍掉，工作流程原封不動，那 AI 只是一塊遮羞布，省下的錢半年後就會用加班與品質問題還回去。
-
-真正的優化是重新設計工作，讓留下來的人用完全不同的方式做事。做到的公司會跑出來，做不到的，明年還會再裁一次。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">11</span><a href="https://www.cheapism.com/2026-layoffs-major-american-companies/" target="_blank">Disney 新 CEO 上任先動刀：再砍 1,000 人，接班重組進入下一階段</a></h3>
-<div class="src">Cheapism 2026 裁員追蹤｜2026-06 月初</div>
-<p class="fact"><span class="label">事實</span>Disney 正準備裁減最多 1,000 個職位，是新任 CEO Josh D'Amaro 接班後最新一波成本削減，被視為其重組路線的下一階段。Disney 過去三年已歷經多輪組織瘦身，這次動刀發生在串流業務轉盈、樂園投資擴大的轉折點上。</p>
-<p class="hook"><span class="label">Hook</span>新官上任的裁員有雙重功能：止血與立威。接班者用人事案宣示「我的時代開始了」，市場通常買單——但文化帳要兩年後才結算：留下來的人記得的不是數字，是過程公不公道。</p>
-<div class="links"><a href="https://www.cheapism.com/2026-layoffs-major-american-companies/" target="_blank">Cheapism 裁員清單</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Disney 準備再裁最多 1,000 人，這是新 CEO Josh D'Amaro 接班後的最新一波。
-
-新官上任先動刀，這幾乎是接班劇本的標配了。因為裁員對接班者來說有雙重功能：一個是止血，一個是立威。
-
-止血是給董事會跟市場看的：我有魄力處理前任不敢處理的問題。
-
-立威是給組織內部看的：我的時代開始了，遊戲規則重新訂。
-
-市場通常會買單，股價短期也多半有反應。但我的觀察是，這種開局的文化代價要兩年後才會結算。
-
-留下來的人記得的不是裁了幾個百分點，而是過程公不公道：有沒有講清楚為什麼、走的人有沒有被好好對待、留下的人知不知道接下來何去何從。
-
-刀好不好，看的不是砍下去的力道，是收刀之後的人心。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">12</span><a href="https://www.benzinga.com/markets/tech/26/05/52590488/metas-ai-chief-rejects-incorrect-claims-of-mark-zuckerbergs-big-money-talent-poaching-people-joined-because" target="_blank">Meta AI 掌門人否認「天價挖角」敘事：「人是為了使命來的，不是為了錢」</a></h3>
-<div class="src">Benzinga｜2026-05 月底–06 月初</div>
-<p class="fact"><span class="label">事實</span>Meta 首席 AI 主管公開反駁「Zuckerberg 用巨額薪酬挖人」的說法是「不正確的」，強調人才加入是因為相信 Meta 的 AI 路線。背景：Meta 以 143 億美元「acquihire」Scale AI 並讓創辦人 Alexandr Wang 出任 Chief AI Officer，外界盛傳 Meta 曾開出 15 億美元等級的天價 offer 遭拒；同週 Meta 又因傳出考慮增資籌 AI 資金而股價下挫。</p>
-<p class="hook"><span class="label">Hook</span>否認本身就是訊號：當薪酬軍備競賽打到頂，雇主品牌的最後護城河只剩使命感。錢買得到人，買不到 alignment——頂級人才市場的定價邏輯，已經從 package 轉向 purpose。</p>
-<div class="links"><a href="https://www.benzinga.com/markets/tech/26/05/52590488/metas-ai-chief-rejects-incorrect-claims-of-mark-zuckerbergs-big-money-talent-poaching-people-joined-because" target="_blank">Benzinga</a><a href="https://www.tipranks.com/news/why-meta-stock-sank-today-june-5-2026" target="_blank">TipRanks</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Meta 的 AI 掌門人出來否認「天價挖角」的說法了，他說這些報導是不正確的，人才加入是因為相信 Meta 的 AI 路線。
-
-背景補一下：Meta 用 143 億美元把 Scale AI 連人帶公司買進來，外界又盛傳 Zuckerberg 開過 15 億美元等級的 offer 被拒絕。
-
-「人是為了使命來的，不是為了錢。」這句話在開出十億 offer 的公司嘴裡說出來，多少有點微妙。
-
-但這個否認本身就是個值得玩味的訊號。
-
-當所有玩家的口袋都深不見底，錢就失去了鑑別度。第一流的人才哪裡都給得起頂薪，最後決定去留的，反而是「我相不相信你要做的事」。
-
-所以連 Meta 都得出來經營「我們是使命驅動」的敘事，因為薪酬軍備競賽打到頂之後，雇主品牌的最後一道護城河只剩使命感。
-
-錢買得到人，買不到 alignment。這在搶 AI 人才的時代，會愈來愈明顯。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+能定義規則的人最強大，但也最需要被看著。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 </section>
-<!-- ================= AI × 工作方式 ================= -->
+<!-- ================= 領導・組織 ================= -->
 <section class="tier tier1">
-<div class="tier-head"><h2>🤖 AI × 工作方式</h2><span class="count">8 篇｜Agent・組織・人才・商業模式</span></div>
+<div class="tier-head"><h2>🧭 領導・組織・工作方式</h2><span class="count">3 篇｜今早排程未收的新題材（全非 AI）</span></div>
 <article class="card">
-<h3><span class="num">13</span><a href="https://news.microsoft.com/annual-work-trend-index-2026/" target="_blank">微軟 2026 Work Trend Index：「轉型悖論」——員工準備好了，組織沒有</a></h3>
-<div class="src">Microsoft Work Trend Index 年度報告｜2026-06 月初發布</div>
-<p class="fact"><span class="label">事實</span>報告核心發現：組織因素（文化、主管支持、人才制度）解釋了 67% 的 AI 影響，個人心態與行為只占 32%。65% 的 AI 使用者害怕不快點適應就會落後，但 45% 覺得「守住現有目標」比「用 AI 重新設計工作」更安全——微軟稱之為「轉型悖論」。另一項 1,800 人研究：當主管為實驗創造心理安全感，員工成為高頻 agentic AI 使用者的機率高 1.4 倍。</p>
-<p class="hook"><span class="label">Hook</span>AI 轉型的瓶頸被量化了：不在工具、不在員工，在主管行為。「心理安全感＝1.4 倍採用率」這個數字，等於替教練式領導開出了 ROI 證明——主管的新 KPI 不是自己多會用 AI，是團隊敢不敢實驗。</p>
-<div class="links"><a href="https://news.microsoft.com/annual-work-trend-index-2026/" target="_blank">Microsoft WTI 2026</a><a href="https://c5insight.com/microsoft-work-trend-index-2026-summary/" target="_blank">C5 Insight 重點摘要</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">微軟的 2026 Work Trend Index 出來了，裡面有一組數字，我覺得所有帶團隊的人都該看一眼。
+<h3><span class="num">16</span><a href="https://www.consultancy.eu/news/12408/middle-manager-burnout-demands-more-than-just-lighter-workloads" target="_blank">中階主管的「沉默燃燒」：75% 極度倦怠、四分之一想走，只有 44% 受過正式管理訓練</a></h3>
+<div class="src">Consultancy.eu・Simon Sinek Optimism Company 調查・Lyra Health｜2026 年</div>
+<p class="fact"><span class="label">事實</span>Simon Sinek 旗下 Optimism Company 對 971 名中階主管的調查發現，75% 回報極度倦怠與失聯感，超過四分之一正計畫離開管理職。主管敬業度 2022–2025 年間從 31% 掉到 22%——而主管恰恰解釋了團隊敬業度 70% 的變異。根本問題之一：全球只有 44% 的主管受過任何正式的管理訓練，等於有一半以上「沒被教過怎麼帶人」的人，正被要求去支撐員工度過長期壓力。</p>
+<p class="hook"><span class="label">Hook</span>我們對中階主管的期待近乎殘酷：往上承壓、往下扛責、左右協調，還要當教練、當情緒容器。但超過一半的人從沒被教過怎麼做這些。把一個沒受訓的人丟上火線、再怪他撐不住，不公平。火種要先被照顧，才燒得旺。</p>
+<div class="links"><a href="https://www.consultancy.eu/news/12408/middle-manager-burnout-demands-more-than-just-lighter-workloads" target="_blank">Consultancy.eu</a><a href="https://www.lyrahealth.com/resources/articles/beyond-training-backing-middle-managers-on-the-front-lines/" target="_blank">Lyra Health</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">一份對近千名中階主管的調查，數字看了讓人心疼：75% 回報極度倦怠，超過四分之一正計畫離開管理職。
 
-組織因素（文化、主管支持、人才制度）解釋了 67% 的 AI 影響，個人的心態與行為只解釋 32%。
+更值得注意的是另一個數字：全球只有 44% 的主管，受過任何正式的管理訓練。
 
-另一份 1,800 人的研究更直接：當主管為「實驗」創造心理安全感時，員工成為高頻 AI 使用者的機率高出 1.4 倍。
+也就是說，有超過一半的中階主管，是「沒被教過怎麼帶人」，就被推上了帶人的位子。
 
-報告把現況稱為「轉型悖論」：65% 的員工怕自己不快點適應 AI 就會落後，但同時有 45% 覺得守住現有目標比重新設計工作來得安全。
+我覺得這兩個數字擺在一起，把中階主管的處境，講得很透徹。
 
-員工又焦慮又不敢動，這個卡點不在工具，也不在員工，在主管。
+▊ 我們對中階主管的期待，近乎殘酷
 
-過去我們談教練式領導，常被當成一種風格偏好，好像只是「比較溫和的管理方式」。現在它有 ROI 數據了：心理安全感等於 1.4 倍的採用率。
+中階主管是組織裡最難當的位子。
 
-主管的新 KPI 不是自己多會用 AI，而是你的團隊敢不敢在你面前把事情搞砸。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+往上，他要承接高層的壓力跟目標；往下，他要扛起整個團隊的績效跟死活；左右，他還要跟其他部門協調、搶資源。除了這些，現在我們還要求他當教練、當部屬的情緒容器、當變革的推手。
+
+這個角色被賦予的期待，幾乎是全方位的。但弔詭的是，這麼難的一個位子，超過一半的人，上任前根本沒受過相關訓練。
+
+我們是怎麼產生中階主管的？通常是這樣：一個人因為「業務做得好」「技術很強」，就被升上來帶人。但「會做事」跟「會帶人」，是兩套完全不同的能力。前者你很強，不代表後者你會。
+
+結果就是，我們把一個很會打仗的士兵，直接升成指揮官，卻沒教過他怎麼指揮，然後丟到最慘烈的火線上，再回頭怪他「怎麼帶不好團隊」「怎麼自己先垮了」。
+
+這不公平。
+
+▊ 火種要先被照顧，才燒得旺
+
+我之前就很有感觸：我們一直要求中階主管去點燃團隊、去賦能員工、去當那個給能量的人。但很少人問：誰來給這群中階主管能量？誰來照顧他們？
+
+他們夾在中間，上面覺得「你是主管，這些本來就該扛」，下面覺得「你是管理層，跟我們不一樣」。兩頭都要他負責，兩頭都不把他當成需要被支持的人。
+
+於是就出現了最諷刺的局面：我們要求一群火種自己快熄掉的人，去點燃別人。
+
+我認為，組織如果真的在乎團隊的狀態，第一件該做的事，不是再對中階主管喊話、再給他們更多責任，而是反過來——投資他們、訓練他們、支持他們。
+
+給他們真正的管理訓練，讓他們知道怎麼帶人、怎麼授權、怎麼處理衝突，而不是讓他們瞎子摸象、自己撞得頭破血流。給他們情緒上的支持，讓他們也有可以喘息、可以求助的地方。
+
+研究裡也說了，受過教練訓練的主管，團隊績效能提升兩三成。投資中階主管，是投報率最高、卻最常被忽略的一件事。
+
+照顧好那群帶團隊的人，團隊才照顧得好。你不能要求一個自己都快撐不住的人，源源不絕地給別人能量。這個道理很簡單，但太多組織視而不見。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">14</span><a href="https://news.microsoft.com/source/asia/2026/06/03/infosys-tcs-and-wipro-scale-microsoft-365-copilot-to-over-300000-employees/" target="_blank">30 萬名員工同時開 Copilot：印度三大外包巨頭的 AI 豪賭</a></h3>
-<div class="src">Microsoft Source Asia｜2026-06-03</div>
-<p class="fact"><span class="label">事實</span>Infosys、TCS、Wipro 三家印度 IT 服務巨頭宣布將 Microsoft 365 Copilot 部署規模擴大到合計超過 30 萬名員工，是迄今最大規模的企業 Copilot 導入案之一。IT 服務業同時是「按人月計費」商業模式受 AI 衝擊最直接的產業。</p>
-<p class="hook"><span class="label">Hook</span>最弔詭的畫面：靠賣工時賺錢的公司，自己掏錢讓 30 萬人提高人效。這不是矛盾，是求生——與其等客戶發現「同樣產出不需要這麼多人月」，不如自己先轉成按成果計價。商業模式的轉型，永遠比工具導入難十倍。</p>
-<div class="links"><a href="https://news.microsoft.com/source/asia/2026/06/03/infosys-tcs-and-wipro-scale-microsoft-365-copilot-to-over-300000-employees/" target="_blank">Microsoft Source Asia</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Infosys、TCS、Wipro 三家印度 IT 服務巨頭，宣布把 M365 Copilot 部署到合計超過 30 萬名員工身上。
+<h3><span class="num">17</span><a href="https://www.crmbuyer.com/story/as-annual-reviews-fall-short-companies-rethink-the-process-177626.html" target="_blank">年度考核退場中：只剩 54% 公司還用（十年前 82%），轉向「隨時回饋」的持續對話</a></h3>
+<div class="src">CRM Buyer・15Five・Confirm｜2026 年</div>
+<p class="fact"><span class="label">事實</span>2026 年只剩 54% 的公司還在用傳統年度考核（2016 年是 82%），企業正轉向「持續績效管理」——用隨時、即時的回饋，及早處理問題。67% 的 Z 世代員工偏好「全年隨時的建設性回饋」勝過年度考核；72% 的員工想要即時回饋。做得好的公司把流程「變輕、不是變重」：每月 15 分鐘、幾個結構化問題的 check-in，取代一年一次 90 分鐘的大考核。</p>
+<p class="hook"><span class="label">Hook</span>年度考核最大的問題，是把「回饋」這件該隨時發生的事，攢到一年一次才算總帳。等到年底才告訴一個人他哪裡該改，黃花菜都涼了。好的回饋像即時導航，不是年終審判——它的目的是幫人即時修正，不是秋後算帳。</p>
+<div class="links"><a href="https://www.crmbuyer.com/story/as-annual-reviews-fall-short-companies-rethink-the-process-177626.html" target="_blank">CRM Buyer</a><a href="https://www.15five.com/blog/performance-management-trends-to-watch-in-2026" target="_blank">15Five</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一個趨勢數字：2026 年，只剩 54% 的公司還在用傳統的年度考核，十年前這個數字是 82%。越來越多公司，轉向「隨時回饋」的持續對話。
 
-乍看是一則平凡的採購新聞，但想深一層，這個畫面其實很弔詭：
+我蠻認同這個方向的。因為年度考核這個制度，有一個很根本的設計缺陷。
 
-靠賣工時賺錢的公司，自己掏錢讓 30 萬人提高人效。
+▊ 把「回饋」攢到一年一次，本身就錯了
 
-人效提高，同樣的案子需要的人月就變少，帳面收入理論上是萎縮的。那他們為什麼還要做？
+回饋這件事，本質上應該是「即時」的。
 
-因為這不是效率題，是生存題。與其等客戶自己發現「這個案子根本不需要這麼多人月」，不如自己先轉型，把計價方式從投入改成產出，從人月改成成果。
+一個人做了一件很好的事，當下被肯定，他才知道「喔，這樣做是對的，要保持」；一個人做了一件需要調整的事，當下被提醒，他才能馬上修正，不會在錯的路上越走越遠。
 
-自己革自己的命很痛，但總比被客戶革命好。
+但年度考核做了什麼？它把這些該隨時發生的回饋，全部攢起來，憋到一年一次，才一股腦地倒給你。
 
-這對所有賣時間的行業都是同一道題：顧問、設計、行銷代理、教育訓練都一樣。當 AI 讓投入與產出脫鉤，按投入計價的生意模式就站在斷層帶上。
+這會造成兩個問題。
 
-你的報價單，還是用小時跟人天在算嗎？</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+第一，太晚了。年初做的某件事如果有問題，要等到年底考核才被告知，那這一整年，他都在用一個有問題的方式工作，等發現的時候，黃花菜都涼了，傷害也造成了。
+
+第二，太重了。因為一年只有這一次，這次考核就被賦予了過重的份量——它連動著加薪、升遷、去留。於是考核變成一場高壓的「審判」，主管緊張、員工更緊張，雙方都防衛，根本沒辦法好好對話。
+
+▊ 好的回饋，像即時導航，不是年終審判
+
+我很喜歡研究裡的一個觀念：把回饋的流程「變輕，而不是變重」。
+
+與其一年一次 90 分鐘、讓人皮皮挫的大考核，不如每個月花 15 分鐘，問幾個簡單的問題，輕鬆地聊一聊：最近怎麼樣？有什麼卡住的？有什麼我可以幫忙的？
+
+當回饋變成一件日常、輕鬆、頻繁的事，它的性質就完全變了。它不再是「秋後算帳」，而是「即時導航」——像開車時導航隨時告訴你該轉彎，幫你即時修正方向，而不是等你開到目的地（或開錯地方）才跟你說「你剛剛那裡轉錯了」。
+
+這種即時、低壓的回饋，員工不會排斥，因為它的出發點是「幫你變好」，不是「評斷你好不好」。
+
+我自己帶人、教學的經驗也是這樣。最有效的回饋，從來不是在某個正式場合的長篇大論，而是在事情發生的當下，那句即時的「這裡很好」或「這裡可以這樣試試」。
+
+當然，我得補一句：持續回饋不是要完全廢掉正式的考核，該有的績效盤點、該連動的獎酬，還是需要一個機制。重點是別把「回饋」跟「考核」綁死，讓回饋回到它該有的樣子——頻繁、即時、以成長為目的。
+
+別等到年底才告訴一個人他該改什麼。好的領導者，是隨時都在輕輕地幫人校準方向的那個人。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">15</span><a href="https://www.hcamag.com/us/news/general/the-great-flattening-is-costing-more-than-organizations-bargained-for/577002" target="_blank">「大扁平化」的帳單來了：37% 員工失去方向、近半高管自疑撐不住</a></h3>
-<div class="src">HRD America・Lepaya・Training Industry｜2026-06 月初</div>
-<p class="fact"><span class="label">事實</span>砍中階主管的後遺症開始有數據：37% 員工表示沒了主管後「失去方向感」，近半數資深高管懷疑自己無法消化落到頭上的管理量。分析指出，組織砍掉層級卻沒有重新設計溝通、教練、決策與文化的支撐系統，省下的成本正以倦怠、角色混亂、發展停滯與信任流失的形式回流。</p>
-<p class="hook"><span class="label">Hook</span>砍掉中階主管省下的錢，正在用 burnout 付利息。組織能刪掉的是「層級」，刪不掉的是「教練、脈絡、決策翻譯」這些功能——它們不會消失，只會被迫找新宿主。扁平化之前先問：這些功能誰接？</p>
-<div class="links"><a href="https://www.hcamag.com/us/news/general/the-great-flattening-is-costing-more-than-organizations-bargained-for/577002" target="_blank">HRD America</a><a href="https://www.lepaya.com/blog/insights-great-flattening-middle-management-ai" target="_blank">Lepaya</a><a href="https://trainingindustry.com/articles/workforce-development/the-disappearing-middle-how-ai-is-flattening-organizational-structures/" target="_blank">Training Industry</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">去年大家都在談「大扁平化」，用 AI 砍掉中階主管。現在第一批帳單寄到了。
+<h3><span class="num">18</span><a href="https://admiredleadership.substack.com/p/making-the-most-of-one-on-one-meetings" target="_blank">一對一會議的「翻轉」：最好的主管，把這 30 分鐘交給部屬主導，而不是自己報告進度</a></h3>
+<div class="src">Admired Leadership・Asana・SHRM｜2026 年</div>
+<p class="fact"><span class="label">事實</span>2026 年關於一對一會議的最佳實務指出：最好的領導者會「翻轉腳本」，要求由團隊成員來主導與擁有這場對話，把一對一定位成「這是部屬的時間」，讓他談自己需要什麼，而非主管查勤、要進度。搭配的研究也顯示，91% 的美國 HR 高管把「授權」列為對領導者的期待行為，而有效授權的關鍵是「講清楚誰負責拍板、誰只是提供建議」，別讓人搞不清自己是在決策還是在建言。</p>
+<p class="hook"><span class="label">Hook</span>多數一對一開成了「進度查核會」——主管問、部屬答，本質是上對下的監督。但翻轉過來、把這時間還給部屬，訊息就完全不同：這是「我在支持你」，不是「我在盯你」。同一個會議，誰主導，決定了它是賦能還是控制。</p>
+<div class="links"><a href="https://admiredleadership.substack.com/p/making-the-most-of-one-on-one-meetings" target="_blank">Admired Leadership</a><a href="https://www.shrm.org/executive-network/insights/6-ways-to-improve-your-delegation-skills-as-a-leader" target="_blank">SHRM</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一篇談一對一會議的文章，講了一個很簡單、但很多主管沒做對的觀念：最好的領導者，會把這場會議「翻轉」過來，交給部屬主導，而不是自己在那裡查進度。
 
-37% 的員工說，沒了主管之後失去方向感。將近一半的資深高管，懷疑自己消化不了落到頭上的管理量。
+我覺得這個「誰主導」的差別，看似很小，但決定了一對一這件事的本質。
 
-省下來的薪資成本，正在用倦怠、角色混亂、發展停滯、信任流失的形式回流。
+▊ 多數的一對一，其實是「進度查核會」
 
-我之前就說過，科層組織裡確實有很多不具生產力的「管理代理人」，這類角色被處理掉並不可惜。
+很多主管的一對一是怎麼開的？
 
-但中階主管這個「層級」消失，不代表他承載的「功能」會消失。整合資訊、傳遞脈絡、教練團隊、翻譯決策，這些事還是得有人做。
+主管問：「上週那個案子進度如何？」「這個什麼時候可以好？」「那個問題解決了沒？」部屬一條一條回報。整場會議，本質上是主管在查勤、在確認部屬有沒有把事情做完。
 
-砍掉層級卻沒有重新設計這些功能的去處，它們就會被迫找新宿主：一部分往上塞爆高管，一部分往下壓垮資深員工，剩下的就直接斷裂。
+這種一對一，方向是「由上往下」的監督。它傳遞給部屬的訊息是：這是主管在盯我。久了，部屬會把一對一當成一種要應付的考核，能閃則閃，講話也會有所保留——因為他知道，他講的每句話，都可能被拿來評斷。
 
-扁平化不是把中間抽掉就好。先回答「這些功能誰接、用什麼方式接」，再動刀也不遲。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">16</span><a href="https://www.newsweek.com/list-of-companies-calling-workers-back-to-office-in-2026-11242468" target="_blank">RTO 2026 新一波：微軟三天制、Instagram 五天「打造贏的文化」，員工用「quiet thriving」回應</a></h3>
-<div class="src">Newsweek・Archie RTO Tracker・WebProNews｜2026-06 月更新</div>
-<p class="fact"><span class="label">事實</span>2026 年 RTO 再緊縮：微軟自 2/23 起要求辦公室附近員工每週進辦公室三天（從 Puget Sound 起跑）；Instagram 美國多數員工 2/2 起五天進辦公室，理由是打造「winning culture」；Paramount Skydance 全面召回。但 64% 美國員工偏好遠距或混合、64% 遠距工作者表示若被取消會求去；現場出現「quiet thriving」：經理人無視公司命令、私下核准彈性安排。</p>
-<p class="hook"><span class="label">Hook</span>政策與執行之間隔著一層中階主管——RTO 是「制度 vs 信任」的天然實驗。高層買到的是出席率，買不到投入度；而主管私下放水，說明組織的真實文化從來不在公告裡，在主管的日常裁量裡。</p>
-<div class="links"><a href="https://www.newsweek.com/list-of-companies-calling-workers-back-to-office-in-2026-11242468" target="_blank">Newsweek</a><a href="https://archieapp.co/blog/rto-companies-tracker/" target="_blank">Archie Tracker</a><a href="https://www.webpronews.com/remote-work-endures-in-2026-despite-office-mandates/" target="_blank">WebProNews</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">2026 的 RTO 又收緊了一輪。微軟要求住在辦公室附近的員工每週進來三天，Instagram 更直接，五天全進，給的理由是要打造「winning culture」。
+▊ 翻轉過來，訊息就完全不同了
 
-但數據的另一面是：64% 的美國員工偏好遠距或混合，64% 的遠距工作者說如果被取消就會開始找工作。
+而研究建議的做法是：把這場會議，定位成「部屬的時間」。
 
-更有趣的是出現了一個新詞，quiet thriving：公司政策歸政策，經理人私下睜一隻眼閉一隻眼，繼續讓團隊保有彈性。
+主動權交給他。讓他來決定要聊什麼、讓他談他遇到的困難、他需要的支持、他想發展的方向。主管的角色，從「問問題的考官」，變成「傾聽跟支援的後盾」。
 
-政策與執行之間，隔著一整層中階主管。
+同樣是 30 分鐘的會議，當主導權翻轉過來，它傳遞的訊息就從「我在盯你」，變成了「我在支持你」。
 
-這件事讓 RTO 變成了一場「制度 vs 信任」的天然實驗。高層用門禁刷卡數字證明政策成功，主管用默許彈性留住人才，兩邊都覺得自己在做對的事。
+這是賦能跟控制的差別。
 
-進辦公室可以量化，投入度不行。你買得到出席率，買不到全心全意。
+一個被「盯」的部屬，會變得防衛、被動，只做被交代的事；一個被「支持」的部屬，會更願意敞開、會主動把真正的問題攤出來、會把這個主管當成可以求助的對象。後者長出來的，是信任跟主動。
 
-而組織的真實文化，從來不在公告裡，在主管的日常裁量裡。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">17</span><a href="https://www.pymnts.com/artificial-intelligence-2/2026/cfos-scramble-as-ai-pricing-breaks-traditional-saas-billing-model/" target="_blank">AI Agent 把 SaaS 計費逼到牆角：CFO 的軟體預算表正在重寫</a></h3>
-<div class="src">PYMNTS・Deloitte TMT Predictions 2026｜2026-06 月初</div>
-<p class="fact"><span class="label">事實</span>多家 SaaS 公司在最近一季財報坦承成長放緩：客戶因 AI 增效而「減 seat」不加 seat。Agent 可以處理數百萬次互動而不增加任何一個座位，軟體支出正從「誰在用」轉向「模型被操多兇」；計價實驗百花齊放——按動作、按任務、按 token、按結果。對 CFO 的直接衝擊是帳單從固定變浮動，FinOps 與用量治理成為新顯學。</p>
-<p class="hook"><span class="label">Hook</span>訂閱制賣的是「存取權」，agent 時代要賣「成果」。這題不只 SaaS 業要答——對照你自己的服務：你收費的單位是時間、席位，還是價值？凡是按投入計價的生意，都站在同一條斷層帶上。</p>
-<div class="links"><a href="https://www.pymnts.com/artificial-intelligence-2/2026/cfos-scramble-as-ai-pricing-breaks-traditional-saas-billing-model/" target="_blank">PYMNTS</a><a href="https://www.deloitte.com/us/en/insights/industry/technology/technology-media-and-telecom-predictions/2026/saas-ai-agents.html" target="_blank">Deloitte TMT</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">好幾家 SaaS 公司在最近一季的財報坦承成長放緩，原因不是客戶流失，而是客戶在「減 seat」。
+▊ 這背後，其實是「授權」的同一套心法
 
-AI 讓一個人能做過去三五個人的事，授權數自然往下掉。而 agent 更狠，它可以處理數百萬次互動，卻不增加任何一個座位。
+文章也提到授權。有效授權的關鍵，是「講清楚誰負責拍板、誰只是建議」，別讓部屬搞不清自己到底是在做決定，還是只是在給意見。
 
-per-seat 計價的根基正在被抽掉，市場上的計價實驗百花齊放：按動作、按任務、按 token、按結果。
+我覺得這跟一對一翻轉是同一個精神：把責任跟空間，真正地交給對方。
 
-另一端，CFO 們開始頭痛。以前軟體支出是固定月費，預算好編；現在變成隨用量浮動的帳單，跟水電費一樣難預測。FinOps 突然變成顯學。
+授權不是把工作丟出去就好，是清楚地把「決定權」交出去，並讓對方知道「這件事你來定，我支持你」。一對一翻轉也一樣，是把「這場對話」的主導權交出去，讓部屬知道「這個時間是你的，你來主導」。
 
-之前我寫過工具型 SaaS 會愈來愈難生存，這是同一條故事線的下一章：產品被取代是第一波，計價模式被瓦解是第二波。
+兩者的核心，都是領導者願不願意從「中心」往後退一步，把舞台讓給部屬。
 
-訂閱制的本質是為「存取權」付費，agent 時代的客戶只想為「成果」付費。
+我一直相信主管是教練不是球員。教練的價值，不是自己在場上發光，是讓場上每個球員，都能發揮、都能成長。連一場小小的一對一會議，誰來主導，都藏著你到底是想當教練、還是想當監工的選擇。
 
-這題不只 SaaS 業要答。你賣的是時間、席位，還是成果？所有按投入計價的生意，都該重想一次。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">18</span><a href="https://technews.tw/2026/06/05/ai-impact-working-mode/" target="_blank">TechNews：Anthropic 工程師自述「Claude 正在瓦解職場文化」——每季交付量暴增 8 倍的代價</a></h3>
-<div class="src">TechNews 科技新報｜2026-06-05</div>
-<p class="fact"><span class="label">事實</span>報導引述 Anthropic 內部狀況：5 月超過 80% 程式碼非人類撰寫，每位工程師每季提交的程式碼量已是 2021–2025 平均的 8 倍；但工程師觀察，點對點的開發者協作正被非同步的 agent 通訊系統性取代，傳統職場協作明顯退化——「人類價值與職場文化也在被摧毀」。</p>
-<p class="hook"><span class="label">Hook</span>當同事變成 agent，組織最先斷裂的是「隱性知識的傳遞鏈」：資深者的判斷不再透過 code review 與討論流向新人。產能 8 倍是看得見的紅利，學習鏈斷裂是看不見的負債——決定團隊存亡的將是學習設計，不是工具採購。</p>
-<div class="links"><a href="https://technews.tw/2026/06/05/ai-impact-working-mode/" target="_blank">TechNews</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">TechNews 有篇報導很值得看，講 Anthropic 內部的工作現場。
-
-5 月份他們超過 80% 的程式碼不是人寫的，每位工程師每季提交的程式碼量，是前幾年的 8 倍。
-
-但報導裡的工程師說了一句很重的話：點對點的協作正在被非同步的 agent 通訊取代，職場文化正在被摧毀。
-
-8 倍的產出是看得見的紅利，但有一條看不見的鏈正在斷裂：隱性知識的傳遞。
-
-以前資深工程師的判斷力，是透過 code review、結對討論、會議上的交鋒，一點一滴流向新人的。現在大家各自指揮自己的 agent，人跟人的高頻接觸消失了。
-
-老手的經驗出不去，新手的成長斷了糧。
-
-這半年我自己用 AI 開發的體感也是如此，產出快到不可思議，但我很清楚，我能駕馭 AI 是因為過去二十年累積的判斷力。下一代的判斷力要從哪裡長出來？
-
-接下來決定團隊強弱的，不是工具採購，是學習設計。誰能在 agent 時代重建知識傳遞的機制，誰的團隊才走得遠。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">19</span><a href="https://technews.tw/2026/06/05/software-company-impact-by-ai/" target="_blank">AI 衝擊的另一端：Teradata 全員凍薪 5,000 人、TTEC 停繳 401(k) 到年底</a></h3>
-<div class="src">TechNews 科技新報｜2026-06-05</div>
-<p class="fact"><span class="label">事實</span>老牌資料倉儲公司 Teradata 宣布約 5,000 名員工凍薪、資源全數轉投 AI 開發——該公司自 2023 年底以來已裁員 21%（約 1,400 人）。商業流程外包商 TTEC 則暫停美國員工 401(k) 退休金提撥至 2026 年底。兩家都是被 AI 顛覆而非受惠的企業樣本。</p>
-<p class="hook"><span class="label">Hook</span>K 型分化的殘酷對照組：AI 紅利端的人才薪資溢價 56%，被顛覆端連退休金都停繳。個人的避險策略只有一條——把自己掛在成長曲線上，而不是公司名字上。你的技能組合，在曲線的哪一端？</p>
-<div class="links"><a href="https://technews.tw/2026/06/05/software-company-impact-by-ai/" target="_blank">TechNews</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">兩則放在一起看很有感的新聞。
-
-老牌資料倉儲公司 Teradata 宣布約 5,000 名員工全面凍薪，資源轉投 AI，而這家公司從 2023 年底以來已經裁了 21% 的人。外包商 TTEC 更直接，暫停美國員工的 401(k) 退休金提撥，一路停到年底。
-
-同一時間，市場上 AI 人才的薪資溢價是 56%，AI 工程師的職缺一年成長 143%。
-
-一邊連退休金都繳不出來，一邊用天價搶人。K 型分化不是未來式，是現在進行式，而且分化的單位不是產業，是公司，甚至是個人。
-
-在 K 的下行段，再努力都是逆水行舟；在上行段，平庸都能被浪推著走。
-
-所以個人的避險策略其實只有一條：把自己掛在成長曲線上，而不是掛在公司名字上。
-
-公司名字會褪色，曲線不會。每隔一段時間問自己一次：我現在累積的技能，是在哪一段曲線上？</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">20</span><a href="https://www.prnewswire.com/news-releases/global-talent-shortage-reaches-turning-point-as-ai-skills-claim-top-spot-302698509.html" target="_blank">ManpowerGroup：AI 技能首度登上「全球最難找的人才」榜首，供需比 3.2 : 1</a></h3>
-<div class="src">PRNewswire（ManpowerGroup 2026 人才短缺調查）｜2026-06 月初</div>
-<p class="fact"><span class="label">事實</span>ManpowerGroup 2026 調查：AI 技能首度成為全球雇主最難招聘的能力，72% 雇主回報招聘困難。全球 AI 人才需求與供給比為 3.2:1——超過 160 萬個職缺對上約 51.8 萬名合格人選；AI Engineer 是美國成長最快職稱，職缺年增 143%。</p>
-<p class="hook"><span class="label">Hook</span>「AI 取代人」與「AI 人才荒」同時為真，因為被取代的是技能組合，不是人。外面 3.2 個缺搶一個人，意味著企業內訓的 ROI 從沒這麼高過——與其加價搶人，不如把自己人練起來。學習力就是這個時代的招聘力。</p>
-<div class="links"><a href="https://www.prnewswire.com/news-releases/global-talent-shortage-reaches-turning-point-as-ai-skills-claim-top-spot-302698509.html" target="_blank">PRNewswire</a><a href="https://www.herohunt.ai/blog/fastest-growing-ai-roles-in-2026-data-and-rankings/" target="_blank">HeroHunt 數據</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">ManpowerGroup 的 2026 人才短缺調查出來了，AI 技能第一次登上「全球最難招聘的能力」榜首，72% 的雇主說找不到人。
-
-全球 AI 人才的供需比是 3.2 : 1，超過 160 萬個職缺，對上大約 52 萬名合格人選。
-
-「AI 會取代人」跟「AI 人才荒」這兩件事同時成立，很多人覺得矛盾，其實一點都不。
-
-因為被取代的從來不是「人」，是「技能組合」。市場不缺人，缺的是裝著新技能的人。
-
-對企業來說，這組數字指向一個很清楚的結論：外面 3.2 個缺搶一個人，搶人的成本只會愈來愈高，那為什麼不把力氣花在自己人身上？
-
-企業內訓的 ROI，從來沒有像現在這麼高過。
-
-對個人來說也一樣。與其焦慮被取代，不如把焦慮換算成學習時數。技能荒的時代，學習力就是議價力。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+把時間還給部屬，你會發現，他能告訴你的，比你能查到的，多太多了。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 </section>
 <!-- ================= 第二級 ================= -->
 <section class="tier tier2">
-<div class="tier-head"><h2>🟡 開發實務 × 台灣科技圈 × 人才</h2><span class="count">10 篇</span></div>
+<div class="tier-head"><h2>🟡 第二級：台灣科技圈 × 職涯 × 知識變現</h2><span class="count">2 篇｜今早排程未收的新題材</span></div>
 <article class="card">
-<h3><span class="num">21</span><a href="https://learn.build-school.com/claude-code-workflow-best-practices/" target="_blank">Claude Code 之父 Boris Cherny 的 12 個實戰技巧：規劃模式、教訓筆記、多 Agent 並行</a></h3>
-<div class="src">Build School Learn｜近期發布</div>
-<p class="fact"><span class="label">事實</span>整理 Claude Code 創建者 Boris Cherny 的日常工作流：①用 CLAUDE.md 記錄所有規範、偏好與「過去犯過的錯」，讓每次啟動都先讀這本教訓筆記，越用越聰明；②不直接叫 AI 寫程式，先進 Plan Mode 來回討論到雙方滿意才放手執行；③同時開多個視窗讓多個 agent 分工不同任務。</p>
-<p class="hook"><span class="label">Hook</span>看懂了嗎？這三招根本是管理學：寫文化手冊（CLAUDE.md）、先對齊再授權（Plan Mode）、分工與編組（多 agent）。帶 AI 跟帶人是同一門課——briefing 的品質決定產出的品質，怪工具之前先檢討自己的交辦。</p>
-<div class="links"><a href="https://learn.build-school.com/claude-code-workflow-best-practices/" target="_blank">Build School</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看了一篇整理 Claude Code 創建者 Boris Cherny 工作流的文章，裡面的技巧我自己幾乎都驗證過，挑三個講。
+<h3><span class="num">19</span><a href="https://edm.managertoday.com.tw/future-manager/" target="_blank">經理人「2026 未來經理人年會：AI for Impact」7/21 登場：選對賽道 × 重構流程 × 人才新職能</a></h3>
+<div class="src">經理人月刊・Event Go｜年會 2026-07-21（TICC）</div>
+<p class="fact"><span class="label">事實</span>《經理人月刊》主辦的「2026 未來經理人年會：AI for Impact」訂 7/21 在台北國際會議中心（TICC）登場，主軸三條：選對賽道、重構流程、人才新職能。內容含四大產業的管理案例（流程優化、知識管理建構、創新專案落地），並首發《2026 職場學習趨勢報告》。早鳥票（6/10 前）3,800 元、團體 3,300 元、原價 5,200 元。鎖定推動數位創新的主管與想升級的專業工作者。</p>
+<p class="hook"><span class="label">Hook</span>年會主題從「AI 是什麼」進化到「AI for Impact」——重點不再是工具炫不炫，而是「怎麼用它做出實際成果」。這跟導入任何新東西的道理一樣：擁有不等於發生，能落地、能產生影響，才是真本事。「人才新職能」這條線尤其值得追。</p>
+<div class="links"><a href="https://edm.managertoday.com.tw/future-manager/" target="_blank">經理人年會</a><a href="https://eventgo.bnextmedia.com.tw/event/detail/e73059u69be4bff89add" target="_blank">Event Go</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">經理人的「2026 未來經理人年會」要在 7 月 21 日登場，主題叫「AI for Impact」。
 
-一，他用 CLAUDE.md 記錄所有規範、偏好，還有「過去犯過的錯」。每次啟動 AI 都先讀這份檔案，等於幫 AI 建了一本教訓筆記，愈用愈聰明。
+我看到這個主題命名，覺得蠻有意思的。它反映了這一兩年，企業對 AI 的態度，正在進入一個新階段。
 
-二，他從不直接叫 AI 寫程式，一定先進規劃模式，來回討論到雙方都滿意，才放手讓它執行。
+▊ 從「AI 是什麼」到「AI for Impact」
 
-三，多視窗多 agent 並行，各管各的任務。
+前兩年，大家談 AI，重點還停在「這是什麼、它能做什麼、好厲害」的探索與焦慮上。各種研討會、各種文章，都在介紹工具、展示可能性。
 
-看出來了嗎？這三件事根本不是技術技巧，是管理學。
+但「AI for Impact」這個命名，把焦點移到了後面那個字：Impact，影響、成果。
 
-寫文化手冊、先對齊再授權、分工與編組。帶 AI 跟帶人是同一門課。
+它在問的，不再是「AI 多炫」，而是「你到底用它做出了什麼實際的成果」。年會的三條主軸——選對賽道、重構流程、人才新職能——也都很務實，講的全是怎麼把 AI 真正落地到經營裡。
 
-我自己的經驗也是如此，AI 產出的品質，八成取決於你交辦的品質。怪 AI 不好用之前，先回頭看看自己的 briefing 及格了沒。
+我認為這個轉向是對的，也是必然的。
 
-以前我們說主管的基本功是把事交代清楚，現在這句話的適用範圍變大了而已。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+▊ 擁有不等於發生
+
+我一直強調一個觀念：擁有一個工具，跟這個工具真正在你的工作裡產生作用，是兩回事。
+
+很多企業這兩年買了一堆 AI 工具、訂了一堆服務，帳面上「我們有在做 AI」。但真正打開來看，多少是擺著好看、用不起來的？多少是員工裝了卻沒在用的？
+
+工具買回來只是「擁有」。要讓它真正改變流程、提升效率、創造價值，那是「發生」。而從擁有到發生之間，隔著的是一整套的功夫：流程要重新設計、人要重新培訓、組織習慣要重新養成。
+
+這也是為什麼年會把「重構流程」跟「人才新職能」放進主軸。因為大家慢慢發現，AI 導入的瓶頸，從來不是技術本身，而是「人跟組織能不能跟上」。
+
+▊ 「人才新職能」這條線，我特別有感
+
+當 AI 接手了越來越多的執行工作，人的價值會往哪裡移動？這是「人才新職能」要回答的問題，也是我覺得最值得每個工作者想清楚的事。
+
+我的觀察是，會往「判斷、設計、整合、帶人」這些 AI 還做不到的地方移動。會用工具是基本門檻，但真正稀缺的，是那種能定義問題、能做好取捨、能把人跟 AI 組織起來一起把事做成的能力。
+
+這類年會、這類趨勢報告，我覺得對工作者的價值，不在於聽到多少新名詞，而在於逼自己去想：在這個被 AI 重新洗牌的局裡，我的不可取代性，要建立在哪裡？
+
+工具會一直換，但「怎麼學、怎麼判斷、怎麼帶人做出成果」這些底層能力，才是真正能跟著你走、不會被淘汰的東西。
+
+AI for Impact，說到底，比的不是誰的 AI 強，是誰更會用它，做出真正的影響。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">22</span><a href="https://www.blocktempo.com/claude-code-routine-tutorial-15-min-step-by-step-2/" target="_blank">15 分鐘建一套 Claude Code Routine：每天自動執行的程式維護流</a></h3>
-<div class="src">動區 BlockTempo｜近期發布</div>
-<p class="fact"><span class="label">事實</span>教學示範 Claude Code Routines 定時任務功能：15 分鐘設定一套每日自動執行的維護流程，涵蓋自動化測試、Issue 分類到 PR 審查，把重複性的程式碼照護工作完全交給排程化的 agent。</p>
-<p class="hook"><span class="label">Hook</span>自動化的下一層是「無人值守」：不是你用 AI 做事，是 AI 在你睡覺時做事。把重複決策變成排程，是個人槓桿的新形態——每個知識工作者都該問：我有哪三件事可以今天就排進 Routine？</p>
-<div class="links"><a href="https://www.blocktempo.com/claude-code-routine-tutorial-15-min-step-by-step-2/" target="_blank">BlockTempo</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一篇教學，15 分鐘設定一套 Claude Code Routine，讓 AI 每天定時自動跑：測試、issue 分類、PR 審查，全部無人值守。
+<h3><span class="num">20</span><a href="https://www.ithome.com.tw/news/167005" target="_blank">國科會揭 2026 科技布局：1,800 億預算押「主權 AI」，靠人才培育、中小企補助、AI 基本法三路並進</a></h3>
+<div class="src">iThome・國科會｜2026 年</div>
+<p class="fact"><span class="label">事實</span>國科會公布 2026 年度科技發展布局，以約 1,800 億元預算，續推五大信賴產業與國家希望工程（如淨零科技、台灣晶片計畫），並要建立台灣的「主權 AI」——透過人才培育、補助中小企業導入、推動「AI 基本法」立法、建置媒合平台等多管齊下。背景是台灣 AI 人才供需的結構性失衡：能用工具的人不缺，缺的是企業真正需要的 AI 能力。</p>
+<p class="hook"><span class="label">Hook</span>「主權 AI」這個詞點出一個國家級的焦慮：在 AI 時代，如果關鍵能力全靠別人，等於把命脈交出去。但政策能補硬體、補資金、補法規，最難補的是「人」——人才不是錢砸下去就長得出來的，它需要時間與教育體系的長期投入。</p>
+<div class="links"><a href="https://www.ithome.com.tw/news/167005" target="_blank">iThome</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">國科會公布了 2026 的科技布局，用約 1,800 億的預算，其中一個重點是建立台灣的「主權 AI」——透過人才培育、補助中小企業、推動 AI 基本法等多管齊下。
 
-這跟我最近的使用習慣完全對上。我現在每天睡前的功課，就是找一個值得 AI 跑好幾個小時的任務交給他，早上起床驗收。
+「主權 AI」這個詞，我覺得值得多想一下。它背後是一種國家級的焦慮。
 
-自動化有兩個層次，很多人還停在第一層。
+▊ 關鍵能力靠別人，等於把命脈交出去
 
-第一層是「你用 AI 做事」：你下指令，它執行，你在旁邊等。效率提升有限，因為你還是被綁著。
+在 AI 變成下一個基礎設施的時代，如果一個國家的關鍵 AI 能力——從模型、算力到人才——全部都依賴別人，那是很危險的。等於把未來幾十年的競爭力命脈，握在別人手裡。
 
-第二層是「AI 在你不在的時候做事」：把重複出現的判斷與流程變成排程，讓它自己跑，出狀況才來找你。
+所以「主權 AI」的核心訴求是：我們要有自己掌握得住的關鍵能力，不能在這場變局裡，淪為單純的使用者跟附庸。
 
-從第一層到第二層，差的不是工具，是你願不願意把「例行決策」明文化。寫得出規則的事，就排得進 Routine。
+這個方向我是認同的。它跟我之前談的「供應鏈自主」「不要把命脈交給單一對象」，是同一個邏輯，只是放大到國家層級。
 
-每個知識工作者都可以問自己：我手上有哪三件事，可以今天就排進排程，從此不再親自做？</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">23</span><a href="https://www.bnext.com.tw/article/91080/claude-cowork-skills" target="_blank">數位時代打包 38 篇 Claude 教學：Cowork、Skills、省 Token 秘訣全收錄</a></h3>
-<div class="src">數位時代 BusinessNext｜近期發布</div>
-<p class="fact"><span class="label">事實</span>數位時代彙整 38 篇 Claude 實戰教學，涵蓋 Cowork 桌面協作、Skills 技能包、省 Token 技巧等主題，做成一站式的中文學習入口。</p>
-<p class="hook"><span class="label">Hook</span>主流財經媒體開始做「AI 使用素養」的內容打包，代表市場從嘗鮮期進入普及期——「會用」的紅利正在消失，「用得深」才是新的分水嶺。對內容經營者的提示：工具教學會過時,但「工作流設計」的內容會增值。</p>
-<div class="links"><a href="https://www.bnext.com.tw/article/91080/claude-cowork-skills" target="_blank">數位時代</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">數位時代把 38 篇 Claude 教學打包成一個專題，從 Cowork、Skills 到省 token 的技巧都有。
+▊ 但最難補的，從來是「人」
 
-內容本身不錯，但我更在意這個現象：主流財經媒體開始系統性地做「AI 使用素養」的內容整理。
+政策工具裡，砸錢補硬體、補資金、訂法規，這些相對快、相對可控。蓋資料中心、補助企業導入、推動立法，有預算有決心，幾年內看得到進度。
 
-這代表市場已經從嘗鮮期走進普及期。
+但「主權 AI」最難的一塊，是人才。而人才，剛好是錢最難買到、最快不來的東西。
 
-普及期有一個殘酷的特性：紅利會重新分配。早期「會用 AI」就是優勢，因為別人不會。現在教學滿街都是，會用的門檻趨近於零，「會用」本身不再值錢。
+新聞背景裡有個很關鍵的觀察：台灣 AI 人才的供需是「雙向失衡」——會用 AI 工具的人不缺，缺的是「企業真正需要的那種 AI 能力」。
 
-接下來的分水嶺是「用得深」：你有沒有把 AI 接進自己的工作流，有沒有讓它替你做判斷前的整理，有沒有建立自己的原則庫讓它愈用愈懂你。
+這個落差很值得玩味。它說明，培養人才不是「教大家會用 ChatGPT」這麼簡單。真正稀缺的，是那種能把 AI 跟產業 know-how 結合、能解決企業實際問題、能做判斷跟整合的深度能力。而這種能力，要靠教育體系長期、紮實的投入，急不來。
 
-工具教學會過時，工作流設計不會。
+▊ 對個人，這是個機會的訊號
 
-學任何東西都一樣，紅利永遠在曲線的前段。當一項能力人人都有，你要嘛比別人深，要嘛去找下一條曲線。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">24</span><a href="https://www.bnext.com.tw/article/91123/taiwanmobile-it-self-developed-ai-transformation" target="_blank">台灣大哥大讓 IT 重掌自研力：終結客服外包、自練語音模型</a></h3>
-<div class="src">數位時代 BusinessNext｜近期發布</div>
-<p class="fact"><span class="label">事實</span>台灣大哥大的 AI 轉型路徑：IT 部門重新掌握自研能力，終結客服外包、自行訓練語音模型，把過去交給外部廠商的能力收回內部建立。</p>
-<p class="hook"><span class="label">Hook</span>「外包回收」是 AI 時代的新趨勢：當 AI 讓自建成本低於外包管理成本，組織的 make-or-buy 答案整個翻轉。二十年外包潮把能力外移，AI 正在把能力收回來——你的組織還有哪些「其實可以自己做了」的外包？</p>
-<div class="links"><a href="https://www.bnext.com.tw/article/91123/taiwanmobile-it-self-developed-ai-transformation" target="_blank">數位時代</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">台灣大哥大的案例很值得看：IT 部門重新拿回自研能力，終結客服外包，連語音模型都自己練。
+換個角度，國家級的「人才缺口」，對個人來說，往往就是機會的所在。
 
-過去二十年，企業的主旋律是外包。非核心的功能都往外丟，因為自建的成本太高，養一個團隊不如買一個服務。
+當整個社會都在喊「缺的是企業真正需要的 AI 能力」，那意味著，誰能把自己鍛鍊成那種人，誰就站在了需求的浪頭上。
 
-但 AI 把這筆帳整個翻過來了。
+而這種能力，不是去考個證照、上個速成班就有的。它需要你把 AI 工具的掌握，跟你原本的專業領域深度結合，長出那種「既懂工具、又懂這個產業真實問題」的判斷力。
 
-當 AI 讓自建的成本低於「外包的管理成本」，make or buy 的答案就反轉了。以前是養不起所以外包，現在是外包的溝通成本、整合成本、資料風險，反而比自己做更貴。
+政策能搭橋、能補助、能創造環境，但最終把自己變成稀缺人才的，還是只能靠每個人自己。國家的主權 AI 要靠人才撐起，而每個人的「個人主權」，也一樣要靠那個不可被取代的能力撐起。
 
-我最近聽到的類似案例愈來愈多，換掉外部系統、收回外包流程、自建內部工具的企業，目前都活得不錯。
-
-這對企業是個提醒：你手上那些「當年因為做不起所以外包」的東西，值得重新盤一次。
-
-對外包服務商則是個警訊：客戶突破技術黑箱之後，你能收的錢，正在一項項消失。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">25</span><a href="https://www.bnext.com.tw/article/90968/us-corporate-layoffs-2026-tech-ai-restructuring" target="_blank">圖解 2026 裁員潮：全美年減 50%、科技業卻逆勢 +33%，「邊裁邊招」成新常態</a></h3>
-<div class="src">數位時代 BusinessNext｜近期發布</div>
-<p class="fact"><span class="label">事實</span>數據圖解：2026 全美整體裁員年減 50%，但科技業裁員逆勢成長 33%；白領主管職也難逃；同時企業「邊裁邊招」，一邊削減舊職能、一邊高薪搶 AI 人才，換血而非縮編成為主旋律。</p>
-<p class="hook"><span class="label">Hook</span>「邊裁邊招」說明這不是景氣問題，是技能組合的汰換——組織在換掉「昨天的技能」。主管最重要的責任從來不是保住誰的位子,而是讓團隊成員今天就長出明天的技能。等公司幫你轉型，不如自己先動。</p>
-<div class="links"><a href="https://www.bnext.com.tw/article/90968/us-corporate-layoffs-2026-tech-ai-restructuring" target="_blank">數位時代</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">數位時代這篇圖解有一組很反直覺的數字：2026 年全美整體裁員年減 50%，但科技業的裁員反而逆勢成長 33%。
-
-景氣在好轉，科技業卻在加速裁人。而且這些公司一邊裁員、一邊開缺，「邊裁邊招」成了新常態。
-
-看懂這組數字，就看懂了現在的就業市場：這不是縮編，是換血。
-
-公司不是養不起人，是不想再養「昨天的技能」。同一個預算，把舊職能的人請走，把 AI 技能的人請進來，帳面人數沒什麼變化，但組織的技能結構整個換掉了。
-
-所以白領主管職也難逃，因為換血換的不是層級，是能力組合。
-
-帶團隊的人，我覺得這時代的責任清單上要加一條：讓你的團隊成員，今天就開始長出明天的技能。
-
-等公司啟動轉型再學就太慢了。換血名單出來的時候，不會有人問你願不願意學。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">26</span><a href="https://technews.tw/2026/06/02/sk-hynix-chey-tae-won-computex-2026/" target="_blank">SK 會長崔泰源 COMPUTEX 喊話：晶圓產能翻倍、深化與台積電合作</a></h3>
-<div class="src">TechNews 科技新報｜2026-06-02</div>
-<p class="fact"><span class="label">事實</span>SK 集團會長崔泰源在 COMPUTEX 期間表示看好台灣 AI 生態系，SK 海力士目標將晶圓產能翻倍，並深化與台積電等台廠的合作。背景是 HBM 記憶體已成 AI 算力擴張的關鍵瓶頸。</p>
-<p class="hook"><span class="label">Hook</span>記憶體從 commodity 變成 AI 時代的瓶頸資產，台灣供應鏈的議價地位處在歷史高點。但要看清楚：韓國巨頭來台灣談的是「生態系」——護城河從來不是單一公司的製程，是整個聚落的協作密度。</p>
-<div class="links"><a href="https://technews.tw/2026/06/02/sk-hynix-chey-tae-won-computex-2026/" target="_blank">TechNews</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">SK 集團會長崔泰源在 COMPUTEX 期間說了兩件事：SK 海力士的晶圓產能目標翻倍，以及深化與台積電等台廠的合作。
-
-韓國的半導體巨頭，親自飛來台北談合作，這個畫面本身就是訊息。
-
-記憶體以前是個 commodity 生意，景氣好壞看週期，殺價搶單是日常。但 AI 把 HBM 變成了瓶頸資產，誰拿得到產能，誰的 AI 晶片才出得了貨。商品變瓶頸，地位就完全不同了。
-
-而瓶頸資產的供應鏈在哪裡？很大一塊在台灣。
-
-但我想提醒一件事：崔泰源來談的不是某一家公司，是「生態系」。
-
-台灣真正的護城河，從來不是單一公司的製程領先，而是整個聚落的協作密度：設計、製造、封測、設備、材料，開車兩小時內全部到位。
-
-單點的領先會被追上，密度很難被複製。經營企業也是同一個道理，能讓你活得久的，往往不是某個明星產品，是整個系統的厚度。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">27</span><a href="https://edm.managertoday.com.tw/future-manager/" target="_blank">2026 未來經理人年會「AI for Impact」：全台最大管理盛會聚焦組織重塑與人機協作</a></h3>
-<div class="src">經理人月刊｜2026 年會宣傳啟動</div>
-<p class="fact"><span class="label">事實</span>經理人月刊年度大會以「AI for Impact」為主題，議程涵蓋企業策略選擇、管理架構重塑、組織流程設計、人才洞察、人機協作方法與 Agentic AI 實戰——台灣最大的管理者學習場域全面轉向 AI 議題。</p>
-<p class="hook"><span class="label">Hook</span>管理年會全面 AI 化是個市場訊號：中階主管的轉型焦慮已經大到能撐起一個產業。「AI 時代怎麼當主管」的內容供給仍遠小於需求——對教育者與內容創作者，這是接下來三年最確定的賽道之一。</p>
-<div class="links"><a href="https://edm.managertoday.com.tw/future-manager/" target="_blank">經理人年會</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">經理人的年度大會今年主題是「AI for Impact」，議程從策略選擇、管理架構重塑、組織流程設計，一路排到 Agentic AI 實戰。
-
-全台最大的管理者學習場域，整套議程全面 AI 化。
-
-這是一個市場訊號：中階主管的轉型焦慮，已經大到能撐起一整個內容產業了。
-
-我在第一線的體感也是如此。這一年來被問最多的問題，已經從「我的團隊要怎麼用 AI」變成「AI 都能做了，那我這個主管的價值在哪」。
-
-第一個問題是工具題，第二個是存在題。存在題比工具題難答得多，也痛得多。
-
-但我始終認為答案是清楚的：AI 接走的是主管的「球員」部分（自己做事、審核、跟催），接不走的是「教練」部分（識人、培養、對齊、扛責任）。
-
-被淘汰的不會是主管這個角色，是只剩行政功能的主管。
-
-這個轉型期，誰能把「怎麼當 AI 時代的主管」講清楚、教明白，誰就抓住了未來幾年最確定的學習需求。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">28</span><a href="https://productside.com/top-ai-product-manager-skills-in-2026/" target="_blank">2026 的 AI PM 分四種：會做原型的 PM 拿走工作，判斷力是唯一稀缺</a></h3>
-<div class="src">Productside・Ant Murphy (Medium)｜近期發布</div>
-<p class="fact"><span class="label">事實</span>產業分析把 2026 的 AI PM 分四型：顧客端 LLM 介面 PM、內部平台 PM、ML 功能 PM、內部工具 PM。市場數據：全球 AI PM 職缺超過 1.4 萬個，美國薪資中位數約 19.8 萬–30.5 萬美元。共同結論：面試中能直接 demo 原型的人勝出；「會寫 Jira ticket＋會丟 prompt」的 PM 職涯最脆弱；真正稀缺的是判斷力，不是工具熟練度。</p>
-<p class="hook"><span class="label">Hook</span>「工具民主化之後，判斷力是唯一稀缺」——這句話對所有知識工作者都成立。AI 把「做出來」的門檻砍掉了，於是「該不該做、為誰做、做到什麼程度」的判斷成為新的專業壁壘。別把判斷力外包出去。</p>
-<div class="links"><a href="https://productside.com/top-ai-product-manager-skills-in-2026/" target="_blank">Productside</a><a href="https://antmurphy.medium.com/how-product-is-changing-in-2026-78a08f150aca" target="_blank">Ant Murphy</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看了幾篇講 2026 年 AI PM 的分析，有幾個點值得記下來。
-
-市場很熱：全球 AI PM 的職缺超過 1.4 萬個，美國的薪資中位數落在 20 到 30 萬美元之間。
-
-但熱市場裡有一句冷話：「會寫 ticket、會丟 prompt」的 PM，職涯最脆弱。
-
-文章裡的觀察是，在 AI PM 的面試裡，能當場 demo 一個自己做的原型的人，幾乎都贏過只會講概念的人。AI 把「做出來」的門檻砍掉之後，「我有想法」變得一文不值，因為想法到原型只要一個下午。
-
-而真正被反覆強調的能力，是判斷力（judgment）。
-
-這跟我之前談「品味」的想法是同一件事。品味就是分辨好壞優劣的能力，AI 可以給你十個方案，但哪個該做、做到什麼程度、為誰而做，這些判斷沒辦法外包。
-
-工具民主化之後，判斷力是唯一稀缺。
-
-所有知識工作者都適用：讓 AI 替你做事沒問題，但千萬別讓它替你思考。判斷力一旦外包出去，就很難要回來了。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">29</span><a href="https://www.books.com.tw/web/books_nbtopm_02" target="_blank">新書《一人千軍：AI CEO 的全能實戰手冊》：8 位作者寫給一人公司的 AI 兵法</a></h3>
-<div class="src">博客來商業理財新書｜2026-06-01 出版</div>
-<p class="fact"><span class="label">事實</span>6/1 上市的《一人千軍：AI CEO 的全能實戰手冊》由劉維立等 8 位作者合著，主打用 AI 把個人放大成「千軍」的商業實戰：從定位、營運到增長，示範一個人如何指揮一支 AI 軍團經營事業。同期書市還有《工作者的 AI 共智模式》強調建立跨工具的底層思維框架。</p>
-<p class="hook"><span class="label">Hook</span>「一人公司」正在升級成「一人千軍」——AI 把組織能力裝進個人，知識變現的單位經濟學被改寫：過去個人賣時間、公司賣規模，現在個人也能賣規模。差別只剩你會不會「當自己的 CEO」。</p>
-<div class="links"><a href="https://www.books.com.tw/web/books_nbtopm_02" target="_blank">博客來新書榜</a><a href="https://www.books.com.tw/products/0011046448" target="_blank">工作者的 AI 共智模式</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一本新書的書名取得很好：《一人千軍：AI CEO 的全能實戰手冊》，八位作者合著，談一個人怎麼指揮一支 AI 軍團經營事業。
-
-「一人公司」這個概念正在升級成「一人千軍」。
-
-以前的一人公司，本質上是把事業規模縮到一個人能扛的範圍：你賣專業、賣時間，營收的天花板就是你的工時。
-
-但 AI 改變了單位經濟學。組織能力第一次可以被裝進個人：你可以有研究員、設計師、工程師、行銷、客服，他們都是 agent，都不用發薪水。
-
-過去個人賣時間、公司賣規模，現在個人也能賣規模了。
-
-不過我要補一句，這個模式真正的瓶頸不在 AI，在那個「CEO」。
-
-千軍易得，主帥難當。當執行都交給 AI，你剩下的工作全是 CEO 的工作：定方向、做取捨、扛結果。而這些恰恰是最難的部分。
-
-AI 放大的是你的判斷，不是替代你的判斷。判斷錯了，千軍只會讓你錯得更快。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
-<article class="card">
-<h3><span class="num">30</span><a href="https://raymondhouch.com/lifehacker/digital-workflow/claude-code-tutorial/" target="_blank">非工程師的 Claude Code 完整入門：終端機正在變成新的 Office</a></h3>
-<div class="src">Raymond Houch 部落格｜近期發布</div>
-<p class="fact"><span class="label">事實</span>一份面向非工程師的 Claude Code 入門指南，把 CLI 工具包裝成一般知識工作者的「AI 程式助手」：從安裝、基本指令到把日常數位工作流（檔案整理、資料處理、自動化）交給 agent 執行。</p>
-<p class="hook"><span class="label">Hook</span>當非工程師開始學 CLI 工具，意義不在寫程式，在「指揮權」轉移：Office 時代你親手操作軟體，agent 時代你下達意圖。比 vibe coding 更值得佈局的是全員 vibe working——這會是企業培訓的下一個主戰場。</p>
-<div class="links"><a href="https://raymondhouch.com/lifehacker/digital-workflow/claude-code-tutorial/" target="_blank">原文</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一篇寫給非工程師的 Claude Code 完整入門，從安裝、基本指令，到把日常的檔案整理、資料處理交給 agent 執行。
-
-非工程師學 CLI 工具，這件事比看起來有意義得多。
-
-重點不是學寫程式，是「指揮權」的轉移。
-
-Office 時代，你親手操作軟體，每個動作都自己來，滑鼠點到手痠。Agent 時代，你下達意圖，它去執行，你驗收結果。
-
-前陣子我用 Claude Code 處理高鐵票報銷，過去一小時的工作十分鐘做完，人都神清氣爽了起來。那種感覺不是「效率變好」，是「這件事從此不歸我做了」。
-
-所以我認為比 vibe coding 更值得佈局的是「全員 vibe working」：讓組織裡每個人都學會把工作交辦給 AI。
-
-這也會是企業培訓的下一個主戰場。教 Excel 的時代教的是操作，接下來要教的是交辦：怎麼把一件事的脈絡、目標、驗收標準講清楚。
-
-講不清楚的人，以前苦的是同事，以後卡的是自己。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+時代給的缺口，是留給願意把自己練成「對的人」的那些人的。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 </section>
 <!-- ================= 生活版 ================= -->
 <section class="tier tier3">
-<div class="tier-head"><h2>🟢 生活版</h2><span class="count">5 篇｜遊戲・健身・投資・心理・親子</span></div>
+<div class="tier-head"><h2>🟢 生活版：心理・親子・內在安頓</h2><span class="count">5 篇｜心理 1＋親子 2＋健身 1＋魂系遊戲 1</span></div>
 <article class="card">
-<h3><span class="num">31</span><a href="https://gamerant.com/fromsoftware-new-games-updates-2026-duskbloods/" target="_blank">FromSoftware 雙線確認：《The Duskbloods》與《艾爾登法環 Tarnished Edition》都將在 2026 年內推出</a></h3>
-<div class="src">Game Rant・Vice・theGeek｜Kadokawa 財報確認、2026-05 底–06 月初報導</div>
-<p class="fact"><span class="label">事實</span>Kadokawa 財報文件確認宮崎英高執導的《The Duskbloods》（Switch 2 獨佔、8 人 PvPvE、吸血鬼題材）與《艾爾登法環 Tarnished Edition》均維持 2026 年內推出，前者傳出落在 10 月之後；外媒預期 6 月的 Nintendo Direct 可能公布確切日期。沉寂一年多的 Duskbloods 也釋出新 gameplay 片段。</p>
-<p class="hook"><span class="label">Hook</span>FromSoftware 的 IP 經營學：本傳 → 黑夜君臨（多人化）→ 桌遊（實體化）→ Duskbloods（新 IP 試驗）——同一套世界觀資產，沿不同維度變現。內容創作者該偷學的是這個：一魚多吃的前提，是先把「世界觀」做深。</p>
-<div class="links"><a href="https://gamerant.com/fromsoftware-new-games-updates-2026-duskbloods/" target="_blank">Game Rant</a><a href="https://www.vice.com/en/article/the-duskbloods-release-window-confirmed-by-fromsoftware-after-long-silence/" target="_blank">Vice</a><a href="https://thegeek.games/2026/05/14/the-duskbloods-has-been-quiet-for-months-but-fromsoftwares-switch-2-exclusive-is-still-on-track-for-2026/" target="_blank">theGeek</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">Kadokawa 的財報文件確認了兩件事：宮崎英高的新作《The Duskbloods》跟《艾爾登法環 Tarnished Edition》，都會在 2026 年內推出。
+<h3><span class="num">21</span><a href="https://www.ccpa-accp.ca/wp-content/uploads/2026/01/Revitalizing-Resilience-Linking-Burnout-and-Self-Compassion-1.pdf" target="_blank">研究：對自己好一點（自我疼惜）能擋下倦怠惡化成憂鬱，比硬逼自己「振作」更有效</a></h3>
+<div class="src">JD-R 框架研究（2026-06-04 發表）・CCPA｜2026 年</div>
+<p class="fact"><span class="label">事實</span>一份 6/4 發表、以「工作要求–資源（JD-R）」框架分析的研究發現：「自我疼惜（self-compassion）」——用善意對待自己——能調節時間壓力、課業/工作壓力、社會比較等需求對倦怠的影響，並可能阻斷倦怠惡化成憂鬱的進程。研究指出，培養自我疼惜與感恩等正向心理特質，與更低的倦怠相關。</p>
+<p class="hook"><span class="label">Hook</span>很多人對抗倦怠的方式是更用力鞭策自己——「別軟弱、撐住、再努力一點」。但研究說反了：對自己狠，常常加速崩潰；對自己好一點，反而是復原的關鍵。自我疼惜不是放縱，是把對待好朋友的那份體諒，也給自己一份。</p>
+<div class="links"><a href="https://www.ccpa-accp.ca/wp-content/uploads/2026/01/Revitalizing-Resilience-Linking-Burnout-and-Self-Compassion-1.pdf" target="_blank">CCPA 研究</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">一份研究說，「自我疼惜」——也就是用善意對待自己——能擋下倦怠惡化成憂鬱，效果比硬逼自己振作還好。
 
-Duskbloods 沉寂了一年多終於有消息，傳出的時間點是 10 月之後，外媒在賭 6 月的任天堂直面會公布確切日期。
+我覺得這個發現，戳破了一個很多人（包括以前的我）都有的迷思。
 
-身為魂系玩家，期待是肯定的。但我也注意到 FromSoftware 這幾年的佈局很有意思。
+我們對抗低潮、對抗倦怠的直覺，常常是「對自己更狠」。覺得累了、撐不下去了，第一反應是罵自己：怎麼這麼軟弱？別人都可以，你為什麼不行？再撐一下、再努力一點！
 
-本傳之後是黑夜君臨，把魂系公式多人化；然後桌遊，把 IP 實體化；現在 Duskbloods，用 PvPvE 開新戰場。
+我們以為這種自我鞭策，是一種上進、一種堅強。
 
-同一套世界觀資產，沿著不同維度變現，而且每一步都不是炒冷飯，是真的把玩法重做一次。
+但研究說，這往往是加速崩潰的催化劑。
 
-做內容的人可以偷學這一手：一魚多吃的前提，是先把世界觀做深。皮可以換，魂不能散。
+你已經快沒電了，還拼命踩油門、還在心裡罵自己不夠好，結果就是把自己更快地逼向耗竭。對自己狠，不會讓你變強，只會讓你倒得更快。
 
-至於遊戲本身，宮崎英高加吸血鬼題材，光這個組合我就先預購了。希望今年的受苦額度還夠用。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+而「自我疼惜」是反過來的。它是說，當你累了、卡住了、表現不如預期的時候，試著用對待一個好朋友的方式，來對待自己。
+
+如果今天是你最好的朋友來跟你說他撐不下去了，你會罵他軟弱嗎？不會吧。你會說：你已經很努力了、會累是正常的、先休息一下沒關係。
+
+自我疼惜，就是把這份你很自然會給別人的體諒，也分一份給自己。
+
+我想特別澄清一個常見的誤解：自我疼惜不是放縱、不是找藉口擺爛。它不是「我就爛、無所謂」，而是「我承認我現在很累、我接納這個狀態、然後我溫柔地、不帶自責地，陪自己慢慢恢復」。
+
+接納，反而是復原的起點。當你不再花力氣去對抗、去責備自己，那些力氣才能拿來真正地休息跟修復。
+
+我自己病後這幾年，學到最重要的一課，大概就是這個。年輕的時候信奉的是咬牙硬撐，覺得對自己越狠越厲害。後來才慢慢懂，對自己好一點，不是軟弱，是一種更可持續的力量。
+
+油箱空了，要做的不是更用力踩油門，是停下來加油。對自己疼惜一點，才走得遠。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">32</span><a href="https://www.sciencedaily.com/releases/2026/05/260515002126.htm" target="_blank">新研究：每週 30 分鐘運動，就足以帶來可觀的健康改變</a></h3>
-<div class="src">ScienceDaily｜2026-05-15 發布</div>
-<p class="fact"><span class="label">事實</span>研究指出，即使每週只有 30 分鐘的運動量，也能對健康產生顯著改善——重點不在達標多少分鐘，而在「從零到有」的那一步效益最大，為忙碌族群提供了更務實的最低有效劑量。</p>
-<p class="hook"><span class="label">Hook</span>健身的複利第一課：頻率先於強度，開始先於完美。「最小可行習慣」勝過最完美的計畫——這條原則在學習、寫作、運動上通用。別問「多少才夠」，先問「今天動了沒」。</p>
-<div class="links"><a href="https://www.sciencedaily.com/releases/2026/05/260515002126.htm" target="_blank">ScienceDaily</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一份研究說，每週只要 30 分鐘的運動，就能對健康帶來顯著的改變。
+<h3><span class="num">22</span><a href="https://prevention.psu.edu/publication/who-benefits-from-autonomy-supportive-parenting-considering-individual-difference-in-adolescent-emotional-reactivity/" target="_blank">教養研究的反直覺發現：「支持自主」對多數孩子有益，但對高情緒敏感的孩子可能反成壓力</a></h3>
+<div class="src">Penn State 預防研究中心｜近期</div>
+<p class="fact"><span class="label">事實</span>一份研究檢視「支持自主的教養（autonomy-supportive parenting）」對青少年的影響：整體而言，較高的支持自主與 12 個月後更高的「蓬勃發展」、更低的焦慮與負向情緒相關。但有一個反直覺的例外——對「情緒反應特別強烈」的青少年，支持自主反而可能是風險因子，與正向情緒、蓬勃發展的下降相關。教養沒有一體適用的萬靈丹。</p>
+<p class="hook"><span class="label">Hook</span>「放手讓孩子自主」是好教養，但這研究提醒：同一套方法，對不同氣質的孩子，效果可能相反。高敏感的孩子，面對太多自主可能感到不安，他需要的或許是更多的陪伴與框架。因材施教不是口號，是承認每個孩子需要的劑量不一樣。</p>
+<div class="links"><a href="https://prevention.psu.edu/publication/who-benefits-from-autonomy-supportive-parenting-considering-individual-difference-in-adolescent-emotional-reactivity/" target="_blank">Penn State</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一份教養研究，有個反直覺的發現，我覺得很值得記下來。
 
-30 分鐘，一集影集的時間。
+「支持自主的教養」——也就是放手讓孩子自己做選擇、尊重他的主導權——整體來說對孩子是好的，跟更高的幸福感、更低的焦慮相關。這個我們都知道，放手是好事。
 
-這類研究最有價值的地方，不是告訴你 30 分鐘就夠（當然不夠，練愈多效益愈高），而是告訴你：效益最大的那一段，是從零到有。
+但研究發現了一個例外：對「情緒反應特別強烈、特別敏感」的孩子，太多的自主，反而可能變成一種壓力，跟正向情緒的下降有關。
 
-很多人不運動的原因，是把標準訂得太高。要練就要一週四天、一次一小時、課表開好開滿，然後因為做不到，乾脆不開始。
+換句話說，同一套「好教養」，用在不同氣質的孩子身上，效果可能是相反的。
 
-結果計畫很完美，執行是零。
+我覺得這個發現，戳破了教養裡一個很常見的陷阱：以為有一套「標準正確答案」。
 
-我自己病後重新把運動撿回來的心得是：頻率先於強度，開始先於完美。先讓身體習慣「我是個會運動的人」，強度是後面的事。
+我們很容易聽到一個說法——「要放手」「要支持自主」「不要過度控制」——就把它當成放諸四海皆準的真理，然後套用在每個孩子身上。
 
-這個道理在學習、寫作、任何習慣上都通用。最小可行習慣，勝過最完美的計畫。
+但孩子不是標準化的產品。
 
-別問多少才夠，先問今天動了沒。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+一個天生大膽、情緒穩定的孩子，你給他很大的自主空間，他會如魚得水、會長出自信。但一個天生敏感、容易焦慮的孩子，你一下子給他太多自主、太多「自己決定」，他可能反而會慌——因為對他來說，太多的不確定性，是一種負擔，他需要的是更多的陪伴、更多的安全框架，讓他在安心的範圍內，慢慢練習自主。
+
+這就是「因材施教」真正的意思。它不是一句口號，而是承認一個事實：每個孩子需要的「劑量」是不一樣的。
+
+同樣是放手，有的孩子需要一次放很多，有的孩子需要一點一點來。同樣是引導，有的孩子推一把就好，有的孩子需要你多扶一段。
+
+其實這跟帶團隊也是一模一樣的。我帶人的時候很有感——有的部屬，你給他空間、放手讓他衝，他會發揮得淋漓盡致；但有的部屬，你一下子放太多，他會焦慮、會無所適從，他需要的是更明確的方向跟更多的支持。
+
+好的父母跟好的主管，共通點都是：先看清楚眼前這個「人」是什麼樣子，再決定要用什麼方式對待他。而不是抓著一套「正確方法」，不管對象是誰，一視同仁地套上去。
+
+愛要有方法，而方法，要因人而異。看見每個孩子、每個人的不同，本身就是一種很深的愛。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">33</span><a href="https://www.bloomberg.com/news/articles/2026-06-03/ai-capex-rush-seen-as-continuing-as-market-stresses-bubble-up" target="_blank">AI 資本支出撐住美國經濟，也養大系統性風險：Mag 7 市值占比已達網路泡沫峰值</a></h3>
-<div class="src">Bloomberg・Fortune・Goldman Sachs｜2026-06-03</div>
-<p class="fact"><span class="label">事實</span>五大巨頭（Amazon、Alphabet、Meta、Microsoft、Oracle）2026 年合計 AI capex 約 7,250 億美元，全球 AI 支出估 2.53 兆、2031 年前累計上看 7.6 兆。哈佛經濟學家 Furman 估算 2025 上半年美國 GDP 成長有 92% 來自 AI 相關基建——「沒有 AI 投資，美國可能已在衰退」。Mag 7 占 S&amp;P 500 市值 35%，集中度與 dot-com 泡沫峰值相當；Fed 已把 AI capex 視為總體穩定議題。</p>
-<p class="hook"><span class="label">Hook</span>整個美國經濟正在 all-in 同一個敘事——這不只是投資人的功課，也是每個職涯決策者的功課：你的收入、你的持股、你的技能，有多少比例押在同一條 AI 曲線上？分散的不該只是資產，還有依賴。</p>
-<div class="links"><a href="https://www.bloomberg.com/news/articles/2026-06-03/ai-capex-rush-seen-as-continuing-as-market-stresses-bubble-up" target="_blank">Bloomberg</a><a href="https://fortune.com/2026/05/10/global-economy-largest-capital-spending-cycle-ever-5-trillion-dollars-energy-transition-ai/" target="_blank">Fortune</a><a href="https://www.goldmansachs.com/insights/articles/tracking-trillions-the-assumptions-shaping-scale-of-the-ai-build-out" target="_blank">Goldman Sachs</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">幾個總經數字放在一起看，會看出一點冷汗。
+<h3><span class="num">23</span><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4839741/" target="_blank">有趣的腦科學：父母的「讚美習慣」，竟與孩子大腦特定區域的灰質量有關</a></h3>
+<div class="src">PMC（父母讚美與腦島皮質研究）｜研究綜整</div>
+<p class="fact"><span class="label">事實</span>一份腦科學研究發現，父母「讚美孩子的態度」與孩子的人格特質（盡責性、開放性）相關，且頻繁的父母讚美，與孩子「後腦島皮質」的灰質量增加有關——顯示父母的回饋方式，可能在生理層面影響孩子大腦的發展。研究也呼應更廣的發現：父母自身的情緒調節能力，是孩子心理健康的促進或風險因子。</p>
+<p class="hook"><span class="label">Hook</span>讚美會在孩子大腦留下生理痕跡，這提醒我們：父母的每一句話，分量比想像中重。但讚美也有學問——讚「你好聰明」養出怕失敗的固定型心態，讚「你很努力」才養出敢挑戰的成長型心態。怎麼讚，跟讚不讚一樣重要。</p>
+<div class="links"><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4839741/" target="_blank">PMC</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">看到一份蠻有趣的腦科學研究：父母讚美孩子的習慣，竟然跟孩子大腦特定區域（後腦島皮質）的灰質量有關，也跟孩子的人格特質相關。
 
-五大巨頭 2026 年的 AI 資本支出合計約 7,250 億美元，全球 AI 支出估 2.53 兆，往 2031 看累計上看 7.6 兆。
+簡單說，父母的回饋方式，可能不只是影響孩子的心情，而是在生理層面，實實在在地參與了孩子大腦的塑造。
 
-哈佛經濟學家 Furman 估算，2025 上半年美國 GDP 成長有九成來自 AI 相關的基建投資。換句話說，把 AI 投資拿掉，美國可能已經在衰退邊緣。
+這個發現提醒我一件事：父母的每一句話，分量比我們以為的重很多。
 
-Mag 7 占 S&amp;P 500 市值的 35%，集中度跟 2000 年網路泡沫的峰值相當。連 Fed 都開始把 AI 資本支出當成總體穩定議題在看。
+我們隨口的一句評價，對孩子來說，可能不是「過耳即忘」的話，而是會沉澱下來、慢慢長進他大腦跟人格裡的東西。這想起來，蠻讓人謹慎的。
 
-是不是泡沫，老實說沒人知道，每一輪都有人提早看空十年，也有人滿手抱到最後。
+不過，我想補一個很重要的點：讚美是好的，但「怎麼讚」，跟「讚不讚」一樣關鍵。
 
-但有一件事是確定的：整個美國經濟正在 all-in 同一個敘事。
+這就要提到史丹佛 Carol Dweck 那個很經典的研究了。她發現，讚美的方式，會養出兩種完全不同的孩子。
 
-這不只是投資人的功課，也是每個工作者的功課。你的薪水、你的持股、你的技能，有多少比例押在同一條 AI 曲線上？
+如果你常讚孩子「你好聰明」「你好有天分」——讚的是他的「天賦」——孩子會養出一種「固定型心態」。他會把成功歸因於天生的聰明，於是為了維持「我很聰明」的形象，他會變得害怕失敗、害怕挑戰，因為一旦失敗，就等於否定了他的天分。他會傾向選簡單的、有把握的，不敢冒險。
 
-要分散的不只是資產，還有依賴。曲線向上時這個問題不重要，曲線轉彎時，這是唯一重要的問題。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+但如果你讚的是他的「努力」「策略」「過程」——「你剛剛很堅持」「你想了好幾種方法，很棒」——孩子會養出「成長型心態」。他會相信能力是可以透過努力長出來的，於是他不怕失敗，因為失敗只是還沒成功、只是需要再試。他敢挑戰難的東西。
+
+你看，同樣是讚美，一個養出怕失敗的孩子，一個養出敢挑戰的孩子，差別就在你讚的是「他這個人」，還是「他做的事」。
+
+我自己對孩子（也對團隊）都儘量提醒自己這件事。少說「你好聰明」，多說「我看到你很努力、很用心」。前者捧的是結果跟天賦，後者肯定的是過程跟選擇——而過程跟選擇，才是他真正能掌控、能一直複製的東西。
+
+當然，這不是要大家變成精算每句話的機器人，那也太累 XD。教養還是要自然、要有愛。但心裡知道這個原則，在脫口而出之前，稍微轉個方向，長期下來，給孩子的會很不一樣。
+
+父母的話會在孩子心裡（甚至腦裡）留下痕跡。既然如此，那就盡量留下「你的努力有被看見」這種，能讓他更勇敢的痕跡吧。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">34</span><a href="https://www.sciencedaily.com/releases/2026/01/260106224623.htm" target="_blank">16–24 歲研究：週末補眠的年輕人，憂鬱症狀顯著較低</a></h3>
-<div class="src">ScienceDaily（奧勒岡大學・SUNY Upstate）｜2026 年初發布</div>
-<p class="fact"><span class="label">事實</span>奧勒岡大學與紐約州立上州醫學大學研究發現：16–24 歲族群中，週末有補眠習慣者回報憂鬱症狀的比例顯著較低——對長期睡眠不足的青年世代，週末補眠可能是最簡單可得的心理保護因子。</p>
-<p class="hook"><span class="label">Hook</span>睡眠是情緒的基礎建設。給高壓工作者與家有青少年的人同一個提醒：談自律、談效率、談學習之前，先把睡眠修好——內在安頓的第一步，常常是生理的，不是心理的。</p>
-<div class="links"><a href="https://www.sciencedaily.com/releases/2026/01/260106224623.htm" target="_blank">ScienceDaily</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">一份針對 16 到 24 歲族群的研究發現：週末有補眠習慣的人，回報憂鬱症狀的比例顯著較低。
+<h3><span class="num">24</span><a href="https://www.cambridge.org/core/journals/proceedings-of-the-nutrition-society/article/dietary-protein-recommendations-to-support-healthy-muscle-ageing-in-the-21st-century-and-beyond-considerations-and-future-directions/A60A684B6FA52A6C5BFC315A98BF8146" target="_blank">熟齡肌力保衛戰：蛋白質吃不夠會加速肌肉流失，30% 男性、50% 高齡女性攝取不足</a></h3>
+<div class="src">Proceedings of the Nutrition Society・Cambridge｜研究綜整</div>
+<p class="fact"><span class="label">事實</span>營養學研究指出：對醫療狀況穩定的高齡者，蛋白質攝取低於每公斤體重 0.8 克的建議量，會加劇與年齡相關的肌肉量、品質與功能下降。美國 71 歲以上族群中，約 30% 男性、50% 女性蛋白質攝取不足，原因包括腸道功能改變、食慾下降、牙齒缺損、經濟與社交孤立。最佳策略是「阻力訓練＋足量蛋白質」併進。</p>
+<p class="hook"><span class="label">Hook</span>肌肉是老後的退休金，而蛋白質是存這筆退休金的「本金」——光練不吃，等於沒本金硬要複利。年紀越大越要吃夠蛋白質，但偏偏越老越容易吃不夠。這件事知道得越早、開始得越早越好。</p>
+<div class="links"><a href="https://www.cambridge.org/core/journals/proceedings-of-the-nutrition-society/article/dietary-protein-recommendations-to-support-healthy-muscle-ageing-in-the-21st-century-and-beyond-considerations-and-future-directions/A60A684B6FA52A6C5BFC315A98BF8146" target="_blank">Cambridge</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">接續之前聊過的「肌肉是老後退休金」的話題，這份營養研究補了一塊很關鍵的拼圖：光練還不夠，你得吃夠蛋白質。
 
-以前流行一種說法，補眠沒用，睡眠debt還不了。這份研究至少說明，對長期睡不夠的年輕人來說，週末多睡一點是有保護效果的。
+研究說，高齡者如果蛋白質攝取不足，會加速肌肉的流失。而現實是，美國 71 歲以上的人裡，約 30% 的男性、50% 的女性，蛋白質都吃不夠。原因很實際——年紀大了，食慾差、牙口不好、腸道吸收變差，甚至因為經濟或獨居，就懶得好好準備。
 
-我自己的體感很直接：睡不好的日子，情緒的閾值整個往下掉。平常不在意的小事會煩，平常能扛的壓力會重，看什麼都不順眼。
+我覺得這裡面有個很值得記住的觀念：如果說重訓是在「複利」你的肌肉，那蛋白質就是那筆複利的「本金」。
 
-不是世界變糟了，是處理世界的硬體降頻了。
+光有複利的機制、拼命運動，但本金（蛋白質）不夠，那等於沒東西可以滾，效果會大打折扣。練了半天，身體沒有足夠的原料去修復、去長肌肉，那些訓練的成效就出不來。
 
-睡眠是情緒的基礎建設。地基不穩的時候，上面蓋什麼都晃。
+而最弔詭、也最該警惕的是：人偏偏是越老，越需要蛋白質，卻又越容易吃不夠。
 
-很多人焦慮、內耗、靜不下來，第一反應是找方法調心態，看書、冥想、寫日記。這些都好，但有時答案沒那麼玄：先把睡眠修好，再談自律與安頓。
+年輕的時候，隨便吃都過量；老了之後，明明更需要，卻因為各種生理跟生活的原因，反而吃不足。這個剪刀差，正是很多長輩肌肉快速流失、最後走向衰弱的隱形殺手。
 
-家裡有青少年的也記一下這份研究。他們賴床的時候，也許不是懶，是身體在自我修復。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+所以這件事，跟運動一樣，知道得越早、開始得越早越好。
+
+不是等老了、等肌肉開始明顯流失了才來補，而是趁現在還年輕、習慣還好養成的時候，就把「吃夠蛋白質」變成日常的一部分。每餐有沒有足夠的蛋白質、會不會因為忙就用一堆精緻澱粉打發，這些小習慣，累積幾十年，差距是巨大的。
+
+我自己現在會比較刻意地注意這件事。不是要變成什麼健身狂、斤斤計較每一克，而是很務實地想：我希望老的時候，還能自己走、自己動、自己照顧自己，不要成為家人的負擔。那麼從現在起，把肌肉的「本金」（蛋白質）跟「複利」（訓練）都顧好，就是給未來那個老去的自己，最實在的準備。
+
+吃夠、動夠，這六個字聽起來無聊，但它可能是你能為幾十年後的自己，做的最划算的投資。本金備好，複利才滾得起來。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 <article class="card">
-<h3><span class="num">35</span><a href="https://www.sciencenews.org/article/parenting-teen-development-vacation" target="_blank">教養研究：青少年需要「自己搞定世界」的練習空間，常見的過度介入恐妨礙發展</a></h3>
-<div class="src">Science News・C.S. Mott 兒童醫院全國調查｜近期發布</div>
-<p class="fact"><span class="label">事實</span>Science News 報導指出，一項常見的教養做法可能正在妨礙青少年發展；同期密西根 C.S. Mott 兒童醫院對逾千名家長（子女 13–18 歲）的全國調查也呼應：青少年需要足夠的自由度，去發展「我能自己搞定世界」的信心——父母的持續介入會剝奪這個練習過程。</p>
-<p class="hook"><span class="label">Hook</span>教養跟帶人是同一門課：主管是教練不是球員，父母也是。過度介入買到的是短期的「不出錯」，賠掉的是長期的「我可以」。放手不是放生——是把犯錯的成本控制在可承受範圍內，然後忍住不出手。</p>
-<div class="links"><a href="https://www.sciencenews.org/article/parenting-teen-development-vacation" target="_blank">Science News</a></div>
-<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">最近的兩份教養研究指向同一個結論。
+<h3><span class="num">25</span><a href="https://gamerant.com/elden-ring-nightreign-ttrpg/" target="_blank">魂系玩家筆記：《黑夜君臨》要出「桌上 RPG」6/19 在日發售，FromSoftware 2026 雙作續推進</a></h3>
+<div class="src">Game Rant・Screen Rant・CBR｜2026 年</div>
+<p class="fact"><span class="label">事實</span>《艾爾登法環 黑夜君臨》要推出紙筆桌上角色扮演版（TTRPG），6/19 發售（目前確認僅日本），由曾改編《黑暗靈魂》《艾爾登法環》《機戰傭兵》的日本桌遊出版社 Group SNE 操刀。《黑夜君臨》是 2025 年 5 月上線、三人一組、三夜循環的 roguelike 多人衍生作。FromSoftware 2026 還有兩款：登 Switch 2 的《Tarnished Edition》與獨佔的多人作《The Duskbloods》。</p>
+<p class="hook"><span class="label">Hook</span>一個電玩 IP 延伸成桌遊，看似只是周邊，其實是「把單人沉浸體驗，轉成圍著桌子一起玩」的社交化嘗試。魂系一向是孤獨的修行，現在要變成跟朋友面對面的協作——這個轉向，本身就蠻有意思的。</p>
+<div class="links"><a href="https://gamerant.com/elden-ring-nightreign-ttrpg/" target="_blank">Game Rant</a><a href="https://screenrant.com/elden-ring-trpg-june-2026-release-date/" target="_blank">Screen Rant</a></div>
+<details class="mycomment"><summary>💬 我的評論（點擊展開）</summary><div class="post-body">身為魂系老粉，看到一個有趣的消息：《艾爾登法環 黑夜君臨》要出「桌上角色扮演」版了，6 月 19 日在日本發售。就是那種一群人圍著桌子、擲骰子、靠想像力一起冒險的紙筆 RPG。
 
-一份報導指出，父母某些習以為常的介入方式，可能正在妨礙青少年的發展；另一份對上千名家長的調查說得更直白：青少年需要足夠的自由，去長出「我能自己搞定世界」的信心。
+把一個電玩 IP 做成桌遊，乍看只是個周邊商品，但我覺得這個轉向，蠻有意思的。
 
-持續的監控與介入，剝奪的正是這個練習過程。
+魂系遊戲，本質上是一種「孤獨的修行」。
 
-這跟帶人是同一門課。
+它的精髓，就在你一個人，反覆挑戰一個強到不行的 Boss，死了一次又一次，每一次都更熟悉它的攻擊節奏、更精進自己的操作，直到某一刻，你終於把它打倒，那種成就感，是你獨自一人、用無數次失敗換來的。那是一種很私密、很個人的體驗。
 
-主管是教練不是球員，父母也是。看到孩子快出錯就出手，跟看到部屬卡關就搶過來自己做，是同一種病：用短期的「不出錯」，換掉長期的「我可以」。
+而桌遊，是完全相反的東西。它是社交的、是協作的、是一群人面對面、有說有笑、一起出主意的。
 
-你省下的是一次錯誤，孩子失去的是一次「原來我能處理」的證據。信心不是稱讚出來的，是這些證據一筆筆累積出來的。
+把一個「孤獨修行」的遊戲，變成「圍著桌子一起玩」的東西，這個轉換本身就很值得玩味。它等於是把一種很內向的體驗，外向化、社交化了。
 
-放手不是放生。真正的功夫是把犯錯的成本控制在可承受的範圍內，然後，忍住不出手。
+我在想，這會不會反而失去了魂系那個「孤獨對抗」的核心魅力？還是說，它能創造出一種全新的樂趣——把那個殘酷的世界觀，變成跟朋友一起吐槽、一起想辦法、一起在絕境裡求生的共同回憶？
 
-對主管來說最難的是這個「忍」字，對父母來說，更難。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
+老實說我也不知道，得玩了才知道（而且目前還只在日本出，我這個海外玩家只能先流口水 XD）。
+
+不過這也讓我想到，好的內容、好的世界觀，是有延展性的。一個夠扎實的 IP，可以從單機遊戲，長出多人遊戲、桌遊、甚至各種衍生。核心夠強，就能用不同的形式，接觸到不同的人、創造不同的體驗。
+
+FromSoftware 今年其實動作很多，除了這個桌遊，還有要上 Switch 2 的《Tarnished Edition》跟多人新作《The Duskbloods》。一個工作室能把自己的世界觀經營到這種程度，讓它在這麼多種載體上都活著，這份內容的厚度，我是佩服的。
+
+至於我會不會手滑去買那套桌遊……如果有出英文版，大概很難忍住。（家裡那位應該又要搖頭了 XD）
+
+孤獨的修行，要變成熱鬧的協作了。是好是壞我不確定，但我願意給它一個機會。</div><button class="copybtn" onclick="cpost(this)">複製全文</button></details></article>
 </section>
 <footer>
-<p><strong>產出規則</strong>：依《游舒帆興趣輪廓分析（2026-06-07 更新）》第七節企業追蹤名單產出。配比：企業動態 12（閱讀切角：組織設計、人才薪酬、領導者言行、企業文化事件、商業模式轉變）＋ AI × 工作方式 8 ＋ 第二級 10 ＋ 生活版 5。本期為 2026-06-07 <strong>第 2 期</strong>，已透過「已發內容索引」排除今晨第 1 期與 6/6 日報之全部選文；同一持續事件（SpaceX IPO、科技裁員潮等）僅收錄新進展並聚焦增量。</p>
-<p><strong>已過濾主題</strong>：敏捷/Scrum、數位轉型、電商、選舉政治（科技政策與勞動議題除外）、純股價財報新聞、中國企業動態。部分研究類內容（生活版）發布日期早於 48 小時，因符合長期興趣且未曾收錄而保留，特此註記。</p>
+<p><strong>產出規則</strong>：依《游舒帆興趣輪廓分析（2026-06-12 二次更新）》產出。本期為 <strong>2026-06-13 第 2 期（手動補跑）</strong>，主要目的是上線新的「🍔 餐飲・飲料產業」獨立區塊（每日 10 篇，橘棕 tier4）。閱讀切角：組織設計、加盟 vs 直營、人才與薪酬、領導者決策與接班、企業文化事件、商業模式轉變、教練式領導、內在安頓。</p>
+<p><strong>關於篇數</strong>：今早 08:06 排程已自動發過一份 2026-06-13 日報（35 則、舊版型、無餐飲區，含 Nike 改組、Intel 砍管理層、OpenAI DeployCo、四天工作週、接班五轉向等）。本期為同日手動補跑，依「去重」規則，企業/領導/第二級僅收今早<strong>未涵蓋</strong>的新題材，故這幾區刻意少收（企業 5、領導 3、第二級 2）；餐飲區為全新題材，足額 10 篇；生活版 5 篇（心理/親子 3）。寧缺勿濫，不重複既有事件。</p>
+<p><strong>已過濾主題</strong>：敏捷/Scrum、數位轉型、電商、選舉政治（科技政策與勞動議題除外）、純股價財報、中國企業動態（餐飲飲料區亦排除霸王茶姬/蜜雪冰城/海底撈等）、台灣餐飲集團（本次未選）、以及索引中已發內容。<strong>明早 08:06 起，排程將以新版型五區齊發。</strong></p>
 </footer>
 </div>
 <script>
@@ -762,5 +979,49 @@ function cpost(btn){
   navigator.clipboard.writeText(t).then(function(){
     btn.textContent='已複製 ✓'; setTimeout(function(){btn.textContent='複製全文';},1500);
   });
-}</script></body>
+}</script>
+<script>
+/* 標註（👍 感興趣 / 👎 不感興趣）＋ 匯出成檔案，供排程自動讀取學習 */
+(function(){
+  var REPORT="2026-06-13_第2期";
+  var KEY="cdigest_votes_"+REPORT, votes={};
+  try{ votes=JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ votes={}; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(votes)); }catch(e){} count(); }
+  document.querySelectorAll("article.card").forEach(function(card){
+    var id=(card.querySelector(".num")||{}).textContent ? card.querySelector(".num").textContent.trim() : "";
+    var a=card.querySelector("h3 a"), title=a?a.textContent.trim():"";
+    var sec=card.closest("section"), h2=sec?sec.querySelector("h2"):null, cat=h2?h2.textContent.trim():"";
+    var bar=document.createElement("div"); bar.className="votebar";
+    var lbl=document.createElement("span"); lbl.className="vlbl"; lbl.textContent="這篇：";
+    var up=document.createElement("button"); up.className="vbtn up"; up.textContent="👍 感興趣";
+    var dn=document.createElement("button"); dn.className="vbtn down"; dn.textContent="👎 不感興趣";
+    function render(){ up.classList.toggle("on",votes[id]&&votes[id].v===1); dn.classList.toggle("on",votes[id]&&votes[id].v===-1); }
+    up.onclick=function(){ if(votes[id]&&votes[id].v===1){delete votes[id];}else{votes[id]={v:1,t:title,c:cat};} save(); render(); };
+    dn.onclick=function(){ if(votes[id]&&votes[id].v===-1){delete votes[id];}else{votes[id]={v:-1,t:title,c:cat};} save(); render(); };
+    bar.appendChild(lbl); bar.appendChild(up); bar.appendChild(dn);
+    var det=card.querySelector("details.mycomment");
+    if(det){ card.insertBefore(bar,det); } else { card.appendChild(bar); }
+    render();
+  });
+  var hint=document.createElement("div"); hint.className="exporthint";
+  hint.textContent="已下載「內容回饋_"+REPORT+".json」。請把它放進 FB Memory 資料夾（或裡面的「回饋」子資料夾），明早排程會自動讀取並調整日報內容。";
+  document.body.appendChild(hint);
+  var fab=document.createElement("div"); fab.className="exportbar";
+  var c=document.createElement("span"); c.className="vcount";
+  var btn=document.createElement("button"); btn.className="exportbtn"; btn.textContent="📥 匯出標註";
+  function count(){ c.textContent="已標註 "+Object.keys(votes).length+" 篇"; }
+  btn.onclick=function(){
+    var keys=Object.keys(votes);
+    if(!keys.length){ alert("還沒有標註任何內容。先按每張卡片下的 👍 或 👎 吧。"); return; }
+    var out={report:REPORT, date:"2026-06-13", exported_at:new Date().toISOString(),
+      marks:keys.map(function(k){return {id:k, vote:votes[k].v, title:votes[k].t, cat:votes[k].c};})};
+    var blob=new Blob([JSON.stringify(out,null,1)],{type:"application/json"});
+    var url=URL.createObjectURL(blob), link=document.createElement("a");
+    link.href=url; link.download="內容回饋_"+REPORT+".json"; document.body.appendChild(link); link.click();
+    document.body.removeChild(link); setTimeout(function(){URL.revokeObjectURL(url);},2000);
+    hint.classList.add("show"); setTimeout(function(){hint.classList.remove("show");},9000);
+  };
+  fab.appendChild(c); fab.appendChild(btn); document.body.appendChild(fab); count();
+})();
+</script></body>
 </html>

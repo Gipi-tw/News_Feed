@@ -1,4 +1,4 @@
-import { getInterestProfile, getStyleGuide } from "@/lib/config";
+import { getDigestConfig, getInterestProfile, getStyleGuide } from "@/lib/config";
 import { prisma } from "@/lib/db";
 import { readConfigFile } from "@/lib/config";
 import SettingsForm from "@/components/SettingsForm";
@@ -6,7 +6,9 @@ import SettingsForm from "@/components/SettingsForm";
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  const [profile, guide] = await Promise.all([getInterestProfile(), getStyleGuide()]);
+  // getDigestConfig() first: it upgrades an outdated DB copy, so the editor
+  // never shows (and re-saves) a stale config version.
+  const [profile, guide] = await Promise.all([getInterestProfile(), getStyleGuide(), getDigestConfig()]);
   // Load raw digest_config JSON (string) so the user edits the literal file.
   const row = await prisma.setting.findUnique({ where: { key: "digest_config" } });
   const config = row?.value ?? readConfigFile("digest_config.json");

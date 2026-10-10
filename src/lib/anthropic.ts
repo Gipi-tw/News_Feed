@@ -8,6 +8,8 @@ import { requireAnthropicKey } from "./env";
 export const MODELS = {
   select: "claude-haiku-4-5-20251001",
   summarize: "claude-haiku-4-5-20251001",
+  // Claude web_search mode — verified working on Haiku 4.5 (2026-06-20).
+  research: "claude-haiku-4-5-20251001",
   dedup: "claude-haiku-4-5-20251001",
   comment: "claude-haiku-4-5-20251001",
 } as const;

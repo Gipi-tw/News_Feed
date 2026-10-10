@@ -5,6 +5,7 @@
   --t1: #c0392b; --t1-bg: #fdf0ee;
   --t2: #b9770e; --t2-bg: #fdf6e8;
   --t3: #1e8449; --t3-bg: #edf7f0;
+  --t4: #d35400; --t4-bg: #fdf2e9;
   --ink: #1c2733; --muted: #6b7a88; --line: #e4e9ee; --link: #1a5fb4;
 }
 * { box-sizing: border-box; }
@@ -27,6 +28,7 @@ section.tier { margin-top: 36px; }
 .tier1 .tier-head { border-color: var(--t1); background: var(--t1-bg); }
 .tier2 .tier-head { border-color: var(--t2); background: var(--t2-bg); }
 .tier3 .tier-head { border-color: var(--t3); background: var(--t3-bg); }
+.tier4 .tier-head { border-color: var(--t4); background: var(--t4-bg); }
 .tier-head h2 { margin: 0; font-size: 20px; }
 .tier-head .count { color: var(--muted); font-size: 13px; }
 
@@ -44,6 +46,8 @@ article.card { background: #fff; border: 1px solid var(--line); border-radius: 1
 .links a { color: var(--link); text-decoration: none; margin-right: 14px; }
 .links a:hover { text-decoration: underline; }
 footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 14px; }
+footer .notes { margin: 0 0 12px; padding-left: 20px; }
+footer .notes li { margin: 2px 0; }
 
 details.mycomment { margin-top: 12px; border-top: 1px dashed var(--line); padding-top: 10px; }
 details.mycomment summary { cursor: pointer; font-size: 13.5px; font-weight: 700; color: #7d3c98; list-style: none; display: flex; align-items: center; gap: 6px; user-select: none; }
