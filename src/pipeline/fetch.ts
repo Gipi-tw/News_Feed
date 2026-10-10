@@ -1,12 +1,14 @@
 import { Readability } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
 import type { Candidate, SearchHit } from "../lib/types";
+import { isGoogleNewsLink } from "../collect/gnews";
 
 // Best-effort full-text extraction. Falls back to the search snippet when the
 // URL isn't fetchable (mock URLs, paywalls, timeouts) so the pipeline never
 // stalls on a single bad source.
 async function fetchFullText(url: string): Promise<string | undefined> {
-  if (!/^https?:\/\//i.test(url)) return undefined;
+  // An unresolved Google News redirect would "extract" the Google News page.
+  if (!/^https?:\/\//i.test(url) || isGoogleNewsLink(url)) return undefined;
   try {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), 12_000);

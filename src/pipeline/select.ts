@@ -90,7 +90,7 @@ ${list}
 
 請依重要性排序，列出最多 ${tier.count + SPARE} 則值得收錄的候選（前 ${tier.count} 則是首選，其餘是配額超標時的備選）。
 每則回傳 url（必須是候選清單中的原始 url）、title、一句挑選理由、tags。
-shortfallNote：若夠格的候選少於 ${tier.count} 則，用一句話說明原因（例如「窗口內沒有某某主題的新內容」）；足額則留空字串。`;
+shortfallNote：若夠格的候選少於 ${tier.count} 則，用 30 字內一句話說明原因（例如「窗口內沒有跨國飲料大廠的新消息」）；足額則留空字串。`;
 
   const result = await generateJSON<SelectResult>({
     model: MODELS.select,

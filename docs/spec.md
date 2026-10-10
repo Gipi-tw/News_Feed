@@ -35,9 +35,17 @@
 - 配比與去重規則。
 - **關於篇數**：少收的區塊列出「實收／目標」與原因（含配額造成的取捨），以及全份 AI 主軸篇數。
 
+## 來源（第 2 步）
+
+- 收集每 4 小時一次（出日報前也會先跑），來源清單在 `digest_config.sources`，可在設定頁編輯。
+- RSS：woshipm、INSIDE、TechCrunch、極客公園、Bloomberg Tech、WIRED（含 Gear）、Gizmodo、InfoQ、iThome、Slashdot、The Verge、Fast Company、HBR（http）、Lifehacker、MIT SMR、TechNews、PsyPost、NRN，加上 Cowork 實際常用的 Fortune、Restaurant Dive、Food Dive、HR Dive。
+- Google News：沒有 RSS 的站用 `site:` 查（數位時代、經理人、親子天下、Restaurant Business）；追蹤企業／人物各一條（企業區 11 條、餐飲區 9 條）。連結是 Google 轉址，選中後才解回原文網址。
+- 篩選：專屬來源一律評分；綜合來源要命中關鍵字／人名才評分。Haiku 只看標題＋摘要給「區塊＋0–10 分」；只對選中的文章抓全文。
+- 某區候選不足（< 名額 × 2）時，用該區 `queries` 跑 Google News 補搜尋。
+- 暫不收：36氪、機器之心、新智元、微軟研究院AI頭條（找不到 feed、幾乎全是 AI）；VentureBeat（429）；Just Drinks（403）。
+
 ## 尚未做（依開發順序）
 
-- 第 2 步：RSS／Google News 收集，出日報時先從收集到的文章選，不夠才用搜尋補。
 - 第 3 步：🎬 影音重點（YouTube 逐字稿摘要，不佔 45 篇名額）。
 - 第 4 步：👍👎 存進資料庫、依回饋調整選文（規則見 `config/feedback_rules.md`），頁尾加「本期已套用回饋」。
 - 第 5 步：「💬 我的評論」草稿。
