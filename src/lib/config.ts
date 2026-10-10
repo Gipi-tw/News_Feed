@@ -44,7 +44,17 @@ export async function getStyleGuide(): Promise<string> {
 
 export async function getDigestConfig(): Promise<DigestConfig> {
   const raw = await getSetting("digest_config", "digest_config.json");
-  return JSON.parse(raw) as DigestConfig;
+  const cfg = JSON.parse(raw) as DigestConfig;
+  // The DB copy is editable from /settings, so it normally wins. But when the
+  // bundled config's version is newer (a spec change shipped in a deploy),
+  // replace the DB copy — keeping the old one under a backup key.
+  const bundled = JSON.parse(readConfigFile("digest_config.json")) as DigestConfig;
+  if ((cfg.configVersion ?? 1) < (bundled.configVersion ?? 1)) {
+    await setSetting(`digest_config_backup_v${cfg.configVersion ?? 1}`, raw);
+    await setDigestConfig(bundled);
+    return bundled;
+  }
+  return cfg;
 }
 
 export async function setDigestConfig(cfg: DigestConfig): Promise<void> {

@@ -10,7 +10,7 @@
 - **Prisma + SQLite** — 單一使用者，DB 在持久卷
 - **Anthropic API** — 選文／摘要用 `claude-sonnet-4-6`，口吻評論用 `claude-opus-4-8`
 - **搜尋層可抽換** — Brave（主）／Serper（繁中備援）／Mock（離線）
-- **部署** — Docker → Fly.io；排程用 GitHub Actions 打 `/api/cron`
+- **部署** — Docker → Fly.io；每日排程由 app 自己在 prod 主機上觸發（`src/lib/scheduler.ts`）
 
 ## 本機開發
 
@@ -34,7 +34,7 @@ npm run dev                   # 啟動網站 http://localhost:3000
 |---|---|
 | `interest_profile` | 興趣輪廓（主題權重、人物、企業名單） |
 | `style_guide` | 口吻風格指南 + 自我檢核清單 |
-| `digest_config` (JSON) | 各區篇數配比 12/8/10/5、全域排除規則、查詢字串、搜尋來源、排程 cron |
+| `digest_config` (JSON) | 5 區配比 10/10/10/8/7、標籤配額（AI 上限等）、全域排除規則、查詢字串、搜尋來源、排程 cron。`configVersion` 比 DB 新時，部署後會自動換新並備份舊版 |
 
 ## 環境變數
 
@@ -59,12 +59,11 @@ fly deploy
 
 ## 排程（每日 08:00 台北）
 
-用 GitHub Actions（`.github/workflows/daily-digest.yml`，UTC `0 0 * * *` = 台北 08:00）打 `/api/cron`。在 repo Secrets 設：
+prod 主機常駐（`auto_stop_machines = "off"`），由 app 內建排程每分鐘檢查一次：到了 `digest_config.scheduleCron`（預設 `0 8 * * *`，時區 `timezone`）就跑當天的日報，每天只試一次。主機在 08:00 之後 4 小時內重啟，也會補跑當天這一期。只在 production 啟動（`next dev` 不會跑），設 `DIGEST_SCHEDULER=off` 可關閉。
 
-- `APP_BASE_URL`（如 `https://gipi-digest.fly.dev`）
-- `CRON_SECRET`（與 Fly secret 相同）
+不用 GitHub Actions 排程的原因：6 月實測每次晚 60–80 分鐘才觸發，而且公開 repo 60 天沒有 commit 會被自動停用。`.github/workflows/daily-digest.yml` 只留手動觸發，打 `/api/cron`（repo Secrets：`APP_BASE_URL`、`CRON_SECRET`，與 Fly secret 相同）。
 
-`/api/cron` 以 `Authorization: Bearer $CRON_SECRET` 自我驗證；失敗會記在 `RunLog` 並（若設定）發 email。cron 失敗時也可在首頁按「⚡ 立即產生今日日報」補跑。
+`/api/cron` 以 `Authorization: Bearer $CRON_SECRET` 自我驗證；失敗會記在 `RunLog` 並（若設定）發 email。排程失敗時也可在首頁按「⚡ 立即產生今日日報」補跑。
 
 ## Pipeline 架構
 

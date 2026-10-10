@@ -1,6 +1,6 @@
 import { prisma } from "./db";
 import { getDigestConfig } from "./config";
-import type { LintReport, TierKey } from "./types";
+import type { LintReport, TierConfig, TierKey } from "./types";
 
 export interface ArticleView {
   id: string;
@@ -12,6 +12,7 @@ export interface ArticleView {
   factSummary: string;
   opinionHook: string;
   urls: string[];
+  tags: string[];
   myComment: string;
   commentStatus: "draft" | "edited" | "published";
   lintReport: LintReport | null;
@@ -24,6 +25,7 @@ export interface DigestView {
   title: string;
   status: string;
   createdAt: Date;
+  notes: string[];
   articles: ArticleView[];
 }
 
@@ -37,6 +39,7 @@ function parseArticle(a: {
   factSummary: string;
   opinionHook: string;
   urls: string;
+  tags: string;
   myComment: string;
   commentStatus: string;
   lintReport: string | null;
@@ -55,19 +58,29 @@ function parseArticle(a: {
     factSummary: a.factSummary,
     opinionHook: a.opinionHook,
     urls,
+    tags: parseList(a.tags),
     myComment: a.myComment,
     commentStatus: a.commentStatus as ArticleView["commentStatus"],
     lintReport: lint,
   };
 }
 
+function parseList(json: string): string[] {
+  try {
+    const v = JSON.parse(json);
+    return Array.isArray(v) ? v.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
 function toView(d: {
   id: string; date: string; edition: number; title: string; status: string;
-  createdAt: Date; articles: Parameters<typeof parseArticle>[0][];
+  createdAt: Date; notes: string; articles: Parameters<typeof parseArticle>[0][];
 }): DigestView {
   return {
     id: d.id, date: d.date, edition: d.edition, title: d.title,
-    status: d.status, createdAt: d.createdAt,
+    status: d.status, createdAt: d.createdAt, notes: parseList(d.notes),
     articles: d.articles.map(parseArticle).sort((a, b) => a.position - b.position),
   };
 }
@@ -122,8 +135,17 @@ export async function searchArticles(q: string): Promise<
   }));
 }
 
-/** Tier metadata (emoji/label/class) for rendering, from the active config. */
-export async function getTierMeta() {
+// Tiers that no longer exist in the config but appear in old digests.
+const LEGACY_TIERS: TierConfig[] = [
+  {
+    key: "ai_work", emoji: "🤖", label: "AI × 工作方式", subtitle: "Agent・組織・人才・未來工作",
+    count: 8, tierClass: "tier1", scope: "", queries: [],
+  },
+];
+
+/** Tier metadata (emoji/label/class) for rendering: active config, then legacy. */
+export async function getTierMeta(): Promise<TierConfig[]> {
   const cfg = await getDigestConfig();
-  return cfg.tiers;
+  const active = new Set(cfg.tiers.map((t) => t.key));
+  return [...cfg.tiers, ...LEGACY_TIERS.filter((t) => !active.has(t.key))];
 }

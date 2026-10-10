@@ -2,13 +2,15 @@ import { prisma } from "../lib/db";
 import { env } from "../lib/env";
 import { getDigestConfig, getInterestProfile } from "../lib/config";
 import { todayInTz } from "../lib/date";
-import type { BuiltArticle, Candidate, SearchHit, SelectedArticle, TierKey } from "../lib/types";
+import type { BuiltArticle, Candidate, SearchHit, SelectedArticle, TierConfig, TierKey } from "../lib/types";
 import { runSearches } from "../lib/search";
 import { enrichCandidates } from "./fetch";
 import { getRecentEntries, hardFilter } from "./dedup";
 import { selectForTier } from "./select";
 import { summarizeTier } from "./summarize";
 import { researchTier } from "./research";
+import { enforceQuotas } from "./quota";
+import { buildNotes, type TierOutcome } from "./notes";
 import { nextEdition, saveDigest } from "./assemble";
 import { notifyDigestReady } from "./notify";
 import { estimateCostUSD, resetUsage, usage } from "../lib/anthropic";
@@ -24,9 +26,19 @@ export interface RunResult {
 
 type Logger = (msg: string) => void;
 
+const errMsg = (e: unknown) => (e instanceof Error ? e.message : String(e)).slice(0, 200);
+
+/** Ranked, tagged pool for one tier (before quota enforcement). */
+interface TierPool<T> {
+  tier: TierConfig;
+  ranked: T[];
+  shortfallNote: string;
+  error?: string;
+}
+
 /**
- * The full daily pipeline (SPEC §1): search → select → fetch → summarize →
- * comment (+lint retry) → assemble → dedup index → notify.
+ * The full daily pipeline (SPEC §1): search → rank+tag per tier → enforce
+ * quotas → fetch → summarize → assemble (+footer notes) → dedup index → notify.
  */
 export async function runDigest(opts?: {
   trigger?: "cron" | "manual";
@@ -69,27 +81,39 @@ export async function runDigest(opts?: {
 
     const mode = env.searchProviderOverride || cfg.search.provider;
     let articlesFlat: SelectedArticle[];
+    let outcomes: TierOutcome[];
 
     if (mode === "claude") {
       // ── Claude-native path: web_search does search+select+summarize per tier.
       await progress("搜尋中（Claude web_search）…");
       // Sequential per tier: web_search payloads are token-heavy, and running
       // tiers in parallel exceeds the org's per-minute input-token limit.
-      const perTier: SelectedArticle[][] = [];
+      const pools: TierPool<SelectedArticle>[] = [];
       for (let i = 0; i < cfg.tiers.length; i++) {
         const tier = cfg.tiers[i];
-        const arts = await researchTier({ tier, recentTitles, interestProfile, today, cfg });
-        perTier.push(arts);
+        try {
+          const r = await researchTier({ tier, recentTitles, interestProfile, today, cfg });
+          // Backstop URL hard-dedup against the last `windowDays` (SPEC §4.3).
+          const ranked = r.ranked.filter((a) => a.urls[0] && !knownUrls.has(a.urls[0]));
+          pools.push({ tier, ranked, shortfallNote: r.shortfallNote });
+        } catch (err) {
+          log(`分區失敗（${tier.key}）：${errMsg(err)}`);
+          pools.push({ tier, ranked: [], shortfallNote: "", error: errMsg(err) });
+        }
         await progress(
-          `已完成 ${i + 1}/${cfg.tiers.length} 分區（${tier.label.split("：")[0]}，${arts.length} 篇）`,
+          `已完成 ${i + 1}/${cfg.tiers.length} 分區（${tier.label.split("：")[0]}，候選 ${pools[i].ranked.length} 篇）`,
         );
       }
-      // Backstop URL hard-dedup against the last `windowDays` (SPEC §4.3).
-      articlesFlat = perTier
-        .flat()
-        .filter((a) => a.urls[0] && !knownUrls.has(a.urls[0]));
+      assertSomeTierWorked(pools);
+
+      const enforced = enforceQuotas(
+        pools.map((p) => ({ key: p.tier.key, ranked: p.ranked, count: p.tier.count, rules: p.tier.rules })),
+        cfg.globalRules,
+      );
+      articlesFlat = enforced.flatMap((r) => r.picked);
+      outcomes = pools.map((p, i) => ({ ...p, ...enforced[i] }));
       detail.mode = "claude";
-      await progress(`研究完成：${articlesFlat.length} 篇，開始生成評論…`);
+      await progress(`研究完成：${articlesFlat.length} 篇，存檔中…`);
     } else {
       // ── Third-party provider path (Brave/Serper/mock).
       const hits = await runSearches(cfg);
@@ -104,34 +128,53 @@ export async function runDigest(opts?: {
         const t = (h.tier ?? "tier2") as TierKey;
         (byTierHits.get(t) ?? byTierHits.set(t, []).get(t)!).push(h);
       }
-      const selections = await Promise.all(
-        cfg.tiers.map((tier) =>
-          selectForTier({
-            tier,
-            candidates: byTierHits.get(tier.key) ?? [],
-            recentTitles,
-            interestProfile,
-            today,
-            cfg,
-          }).then((picked) => ({ tier, picked })),
-        ),
+      const pools: TierPool<SearchHit & { tags: string[] }>[] = await Promise.all(
+        cfg.tiers.map(async (tier) => {
+          try {
+            const s = await selectForTier({
+              tier,
+              candidates: byTierHits.get(tier.key) ?? [],
+              recentTitles,
+              interestProfile,
+              today,
+              cfg,
+            });
+            return { tier, ranked: s.ranked.map((h) => ({ ...h, tags: h.tags ?? [] })), shortfallNote: s.shortfallNote };
+          } catch (err) {
+            log(`選文失敗（${tier.key}）：${errMsg(err)}`);
+            return { tier, ranked: [], shortfallNote: "", error: errMsg(err) };
+          }
+        }),
       );
-      log(`選文完成：共選 ${selections.reduce((n, s) => n + s.picked.length, 0)} 則`);
+      assertSomeTierWorked(pools);
 
-      const allPicked = selections.flatMap((s) => s.picked);
+      const enforced = enforceQuotas(
+        pools.map((p) => ({ key: p.tier.key, ranked: p.ranked, count: p.tier.count, rules: p.tier.rules })),
+        cfg.globalRules,
+      );
+      log(`選文完成：共選 ${enforced.reduce((n, r) => n + r.picked.length, 0)} 則`);
+
+      const allPicked = enforced.flatMap((r) => r.picked);
       const enriched = await enrichCandidates(allPicked);
       const enrichedByUrl = new Map<string, Candidate>(enriched.map((c) => [c.url, c]));
 
       const summaries = await Promise.all(
-        selections.map((s) =>
-          summarizeTier({
-            tier: s.tier,
-            selected: s.picked.map((h) => enrichedByUrl.get(h.url) ?? { ...h }),
-            today,
-          }),
-        ),
+        pools.map(async (p, i) => {
+          try {
+            return await summarizeTier({
+              tier: p.tier,
+              selected: enforced[i].picked.map((h) => enrichedByUrl.get(h.url) ?? { ...h }),
+              today,
+            });
+          } catch (err) {
+            log(`摘要失敗（${p.tier.key}）：${errMsg(err)}`);
+            p.error = errMsg(err);
+            return [];
+          }
+        }),
       );
       articlesFlat = summaries.flat();
+      outcomes = pools.map((p, i) => ({ ...p, ...enforced[i] }));
       detail.mode = mode;
       log(`摘要完成：${articlesFlat.length} 篇`);
     }
@@ -151,11 +194,12 @@ export async function runDigest(opts?: {
       };
     });
 
-    const failures = 0; // no comment lint in pure-curation mode
+    const failures = outcomes.filter((o) => o.error).length;
     const byTier: Record<string, number> = {};
     for (const a of finalArticles) byTier[a.tier] = (byTier[a.tier] ?? 0) + 1;
     detail.byTier = byTier;
-    await progress(`研究完成：${finalArticles.length} 篇，存檔中…`);
+    const notes = buildNotes(cfg, outcomes, finalArticles);
+    detail.notes = notes;
 
     // 8. Persist + dedup index.
     const digestId = await saveDigest({
@@ -163,6 +207,7 @@ export async function runDigest(opts?: {
       edition,
       title: `內容摘要日報`,
       articles: finalArticles,
+      notes,
     });
 
     // Cost accounting ("先量再砍"): record token/search usage + USD estimate so
@@ -180,7 +225,7 @@ export async function runDigest(opts?: {
         status: "success",
         finishedAt: new Date(),
         digestId,
-        message: `${finalArticles.length} 篇｜估算 $${costUSD.toFixed(4)}`,
+        message: `${finalArticles.length} 篇${failures ? `（${failures} 區失敗）` : ""}｜估算 $${costUSD.toFixed(4)}`,
         detail: JSON.stringify(detail),
       },
     });
@@ -204,5 +249,16 @@ export async function runDigest(opts?: {
     });
     log(`失敗 ✗ ${message}`);
     throw err;
+  }
+}
+
+/**
+ * A tier failing is noted in the footer, but if every tier failed the run
+ * itself is broken (bad API key, no credit…) — fail loudly instead of saving
+ * an empty digest.
+ */
+function assertSomeTierWorked(pools: TierPool<unknown>[]): void {
+  if (pools.length && pools.every((p) => p.error)) {
+    throw new Error(`所有分區都失敗：${pools[0].error}`);
   }
 }

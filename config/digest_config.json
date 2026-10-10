@@ -1,12 +1,16 @@
 {
+  "configVersion": 2,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
-    "provider": "google",
-    "fallbackProvider": "serper",
+    "provider": "claude",
     "freshnessHours": 48,
     "resultsPerQuery": 10,
-    "languages": ["zh-hant", "en"]
+    "languages": [
+      "zh-hant",
+      "en"
+    ],
+    "maxSearchesPerTier": 1
   },
   "dedup": {
     "windowDays": 30
@@ -18,13 +22,20 @@
     "lifeMaxChars": 800,
     "maxRetries": 2
   },
+  "globalRules": [
+    {
+      "tag": "ai",
+      "desc": "以 AI 為主軸：AI 技術、模型、AI 產品或 AI 對組織／工作的影響是文章核心（只是順帶提到 AI 不算）",
+      "max": 15
+    }
+  ],
   "tiers": [
     {
       "key": "corp",
       "emoji": "🏢",
       "label": "企業動態：國際科技巨頭",
       "subtitle": "組織・人才・領導・商業模式",
-      "count": 12,
+      "count": 10,
       "tierClass": "tier0",
       "scope": "國際科技巨頭限定：Google、Musk 系（Tesla/SpaceX/X）、Apple、Microsoft、OpenAI、Anthropic、NVIDIA（含黃仁勳言論）、Meta、Amazon、Netflix、Uber、Disney、Intel、Salesforce、Coinbase。切角：組織設計與重組、人才與薪酬制度、領導者決策與言論、企業文化事件（裁員信、工會、紀律通報、dogfooding）、商業模式轉變。排除純財報股價新聞。",
       "queries": [
@@ -34,22 +45,60 @@
         "Microsoft OR Meta OR Amazon layoffs OR reorg OR dogfooding",
         "Tesla OR SpaceX OR Musk compensation OR governance",
         "Apple OR Netflix OR Uber OR Disney OR Intel OR Salesforce OR Coinbase organizational change"
+      ],
+      "rules": [
+        {
+          "tag": "ai",
+          "desc": "以 AI 為主軸",
+          "max": 5
+        }
       ]
     },
     {
-      "key": "ai_work",
-      "emoji": "🤖",
-      "label": "AI × 工作方式",
-      "subtitle": "Agent・組織・人才・未來工作",
-      "count": 8,
-      "tierClass": "tier1",
-      "scope": "AI Agent 企業應用與 ROI、AI 對組織與中階主管的影響、AI 人才與技能、SaaS 商業模式變化、未來工作型態（RTO/遠距）、AI coding 重大進展。模型發布只挑最重大 1-2 則。",
+      "key": "food",
+      "emoji": "🍔",
+      "label": "餐飲・飲料產業",
+      "subtitle": "跨國餐飲集團・飲料・精品咖啡與烈酒",
+      "count": 10,
+      "tierClass": "tier4",
+      "scope": "跨國餐飲集團（Restaurant Brands International／漢堡王／Tim Hortons／Popeyes、McDonald's、Yum! Brands、Chipotle、Domino's、Darden、Compass／Aramark）、跨國飲料與酒（AB InBev、Coca-Cola、PepsiCo、Nestlé、Diageo、Keurig Dr Pepper、Monster）、精品咖啡與烈酒（LVMH Moët Hennessy、Red Bull、Pernod Ricard、Rémy Cointreau、Brown-Forman、Blue Bottle、% Arabica、Starbucks Reserve）。切角同企業動態：組織設計與重組、加盟 vs 直營、人才與薪酬、領導者決策與接班、企業文化事件（工會、裁員、勞動條件）、商業模式轉變、規模化 vs 精品感的取捨。排除純財報股價、台灣餐飲集團、中國品牌（除非與國際巨頭直接相關）。",
       "queries": [
-        "AI agent enterprise ROI OR adoption",
-        "AI impact on middle managers OR org design",
-        "AI talent OR skills OR future of work RTO remote",
-        "AI coding breakthrough OR vibe coding",
-        "SaaS business model AI disruption"
+        "McDonald's OR Starbucks OR Chipotle franchisees OR union OR CEO",
+        "Restaurant Brands International OR Yum Brands OR Domino's leadership OR restructuring",
+        "AB InBev OR Coca-Cola OR PepsiCo OR Nestlé CEO OR reorganization",
+        "Diageo OR Pernod Ricard OR Moët Hennessy OR Brown-Forman succession OR strike",
+        "Red Bull OR Blue Bottle OR Starbucks Reserve specialty coffee expansion"
+      ],
+      "rules": [
+        {
+          "tag": "ai",
+          "desc": "以 AI 為主軸",
+          "max": 2
+        }
+      ]
+    },
+    {
+      "key": "leadership",
+      "emoji": "🧭",
+      "label": "領導・組織・工作方式",
+      "subtitle": "教練式領導・中階主管・組織設計・人才發展",
+      "count": 10,
+      "tierClass": "tier1",
+      "scope": "以「非 AI」角度為主的領導與組織管理：教練式領導、中階主管、授權、團隊建立、組織設計與文化、人才發展與績效、商業思維、未來工作型態（RTO／遠距／四天工作週）。研究型內容（HBR、MIT SMR、學術研究、大型調查）優先，要有具體數據或研究設計。",
+      "queries": [
+        "coaching leadership study OR research",
+        "middle managers survey OR study",
+        "organizational culture research Harvard Business Review OR MIT Sloan",
+        "performance management OR talent development study",
+        "return to office OR four-day work week study",
+        "領導 管理 研究 經理人"
+      ],
+      "rules": [
+        {
+          "tag": "ai",
+          "desc": "以 AI 為主軸",
+          "max": 4
+        }
       ]
     },
     {
@@ -57,7 +106,7 @@
       "emoji": "🟡",
       "label": "第二級：開發實務 × 台灣科技圈 × 人才",
       "subtitle": "vibe coding・產品・職涯・知識變現",
-      "count": 10,
+      "count": 8,
       "tierClass": "tier2",
       "scope": "vibe coding / Claude Code 開發實務、台灣科技商業（INSIDE、數位時代、TechNews、經理人）、企業培訓與學習、產品經理、職涯、知識變現、中文新書。",
       "queries": [
@@ -66,22 +115,43 @@
         "經理人 領導 OR 管理 OR 學習",
         "產品經理 OR 職涯 OR 知識變現 個人品牌",
         "企業培訓 OR 線上課程 趨勢"
+      ],
+      "rules": [
+        {
+          "tag": "ai_dev",
+          "desc": "AI 開發實務：vibe coding、Claude Code、AI coding 工具或 agent 實作",
+          "max": 2
+        }
       ]
     },
     {
       "key": "life",
       "emoji": "🟢",
       "label": "生活版",
-      "subtitle": "遊戲・健身・投資・心理・親子",
-      "count": 5,
+      "subtitle": "心理・親子為主，遊戲・健身・投資為輔",
+      "count": 7,
       "tierClass": "tier3",
-      "scope": "艾爾登法環《黑夜君臨》/ 魂系遊戲、健身與運動科學、投資理財與總經、心理學（焦慮、內在安頓）、親子教育。語氣較輕鬆。",
+      "scope": "心理學（焦慮、內耗、情緒調節、內在安頓的研究與新書）與親子教育（青少年發展、教養研究）為主；艾爾登法環《黑夜君臨》／魂系遊戲、健身與運動科學、投資理財與總經為輔。語氣較輕鬆。",
       "queries": [
+        "心理學 焦慮 OR 內在安頓 研究",
+        "親子教育 OR 青少年發展 研究",
+        "anxiety OR emotion regulation study",
+        "parenting OR adolescent development study",
         "Elden Ring Nightreign OR 魂系遊戲 更新",
         "運動科學 OR 健身 研究",
-        "投資理財 OR 總經 觀點",
-        "心理學 焦慮 OR 內在安頓",
-        "親子教育 研究"
+        "投資理財 OR 總經 觀點"
+      ],
+      "rules": [
+        {
+          "tag": "psych_parenting",
+          "desc": "心理學或親子教育／青少年發展",
+          "min": 4
+        },
+        {
+          "tag": "life_other",
+          "desc": "魂系遊戲、健身與運動科學、投資理財等其他生活題材",
+          "max": 3
+        }
       ]
     }
   ],

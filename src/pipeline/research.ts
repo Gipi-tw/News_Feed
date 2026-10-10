@@ -1,5 +1,6 @@
 import { MODELS, client, recordUsage } from "../lib/anthropic";
 import type { DigestConfig, SelectedArticle, TierConfig } from "../lib/types";
+import { rulesPrompt, tagsSchema } from "./rules-prompt";
 
 // Claude-native research stage: instead of a separate search provider, Claude's
 // server-side web_search tool finds + reads recent news, then returns the
@@ -7,38 +8,46 @@ import type { DigestConfig, SelectedArticle, TierConfig } from "../lib/types";
 // collapses search → select → fetch → summarize into one agentic call per tier
 // and removes the dependency on a paid third-party search API.
 
-const SUBMIT_TOOL = {
-  name: "submit_selection",
-  description:
-    "提交本區塊最終選出並摘要好的文章清單。只在完成搜尋與閱讀後呼叫一次。",
-  input_schema: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      articles: {
-        type: "array",
-        items: {
-          type: "object",
-          additionalProperties: false,
-          properties: {
-            title: { type: "string", description: "精準有力、不誇大的標題" },
-            sourceName: { type: "string", description: "來源媒體名" },
-            sourceDate: { type: "string", description: "原始發布日期 YYYY-MM-DD" },
-            factSummary: { type: "string", description: "客觀事實摘要，含具體數據與雙方立場" },
-            opinionHook: { type: "string", description: "一句話觀點切角，連結 Gipi 的關注脈絡" },
-            urls: {
-              type: "array",
-              items: { type: "string" },
-              description: "原始來源 URL（主來源在前），須為搜尋到的真實連結",
+const SPARE = 2; // extra ranked articles beyond `count`, for quota backfill
+
+function submitTool(tier: TierConfig, cfg: DigestConfig) {
+  return {
+    name: "submit_selection",
+    description: "提交本區塊最終選出並摘要好的文章清單。只在完成搜尋與閱讀後呼叫一次。",
+    input_schema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        articles: {
+          type: "array",
+          items: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              title: { type: "string", description: "精準有力、不誇大的標題" },
+              sourceName: { type: "string", description: "來源媒體名" },
+              sourceDate: { type: "string", description: "原始發布日期 YYYY-MM-DD" },
+              factSummary: { type: "string", description: "客觀事實摘要，含具體數據與雙方立場" },
+              opinionHook: { type: "string", description: "一句話觀點切角，連結 Gipi 的關注脈絡" },
+              urls: {
+                type: "array",
+                items: { type: "string" },
+                description: "原始來源 URL（主來源在前），須為搜尋到的真實連結",
+              },
+              tags: { ...tagsSchema(tier, cfg), description: "符合的主題標籤，可零個或多個" },
             },
+            required: ["title", "sourceName", "sourceDate", "factSummary", "opinionHook", "urls", "tags"],
           },
-          required: ["title", "sourceName", "sourceDate", "factSummary", "opinionHook", "urls"],
+        },
+        shortfallNote: {
+          type: "string",
+          description: "夠格的文章少於名額時，一句話說明原因；足額則空字串",
         },
       },
+      required: ["articles", "shortfallNote"],
     },
-    required: ["articles"],
-  },
-};
+  };
+}
 
 interface SubmitInput {
   articles: {
@@ -48,7 +57,9 @@ interface SubmitInput {
     factSummary: string;
     opinionHook: string;
     urls: string[];
+    tags?: string[];
   }[];
+  shortfallNote?: string;
 }
 
 export async function researchTier(opts: {
@@ -57,7 +68,7 @@ export async function researchTier(opts: {
   interestProfile: string;
   today: string;
   cfg: DigestConfig;
-}): Promise<SelectedArticle[]> {
+}): Promise<{ ranked: SelectedArticle[]; shortfallNote: string }> {
   const { tier, recentTitles, interestProfile, today, cfg } = opts;
 
   const system =
@@ -67,17 +78,20 @@ export async function researchTier(opts: {
     cfg.search.freshnessHours +
     " 小時內、最符合本區塊定位、最值得 Gipi 評論的新聞。" +
     "嚴格遵守區塊定位與全域排除規則；同一事件（不同來源）只收一則，持續事件只收新進展。" +
+    "寧缺勿濫：找不到夠好的內容就少收，並說明原因。" +
     "為每篇產出：客觀事實摘要（含具體數據）＋ 一句觀點 Hook（連結商業思維／教練式領導／學習成長／AI 改變組織／長線複利）。" +
     "完成後呼叫 submit_selection 回傳，繁體中文。英文來源請以繁中摘要。";
 
   const user = `# 本區塊：${tier.emoji} ${tier.label}
 定位與切角：${tier.scope}
-需要選出：${tier.count} 則（盡量足額）
+本區名額：${tier.count} 則
 建議查詢方向（可自行調整、可中英並用）：
 ${tier.queries.map((q) => `- ${q}`).join("\n")}
 
 # 全域排除規則（命中不選）
 ${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
+
+${rulesPrompt(tier, cfg)}
 
 # 興趣輪廓（節錄，判斷相關性用）
 ${interestProfile.slice(0, 1500)}
@@ -85,18 +99,22 @@ ${interestProfile.slice(0, 1500)}
 # 近 30 天已發過的標題（避免重複；同事件僅收新進展）
 ${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n") : "（無）"}
 
-請先用 web_search 搜尋並閱讀，挑出最多 ${tier.count} 則，最後呼叫 submit_selection 提交。`;
+請先用 web_search 搜尋並閱讀，依重要性排序挑出最多 ${tier.count + SPARE} 則（前 ${tier.count} 則是首選，其餘是配額超標時的備選），最後呼叫 submit_selection 提交。`;
 
   const tools = [
     // COST GUARD: web_search result payloads are large input tokens (and the
     // _20260209 dynamic-filtering version runs server-side code execution).
-    // Cap searches hard — this mode is convenient but pricey; prefer a cheap
-    // search provider (Brave free tier) for routine use. max_uses=1 keeps the
-    // server-tool fee at ~$0.01/tier (4 tiers ≈ $0.04/run).
+    // Cap searches hard (cfg.search.maxSearchesPerTier) — this mode is
+    // convenient but pricey.
     // allowed_callers=["direct"]: Haiku 4.5 doesn't support programmatic tool
     // calling, so web_search must be invoked directly by the model.
-    { type: "web_search_20260209", name: "web_search", max_uses: 1, allowed_callers: ["direct"] },
-    SUBMIT_TOOL,
+    {
+      type: "web_search_20260209",
+      name: "web_search",
+      max_uses: cfg.search.maxSearchesPerTier ?? 1,
+      allowed_callers: ["direct"],
+    },
+    submitTool(tier, cfg),
   ];
 
   const messages: { role: "user" | "assistant"; content: unknown }[] = [
@@ -110,8 +128,8 @@ ${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n"
     const res = await client().messages.create({
       // Haiku 4.5 does not support `thinking: adaptive` or output_config.effort
       // (those were Sonnet/Opus features). Plain call keeps cost minimal.
-      model: MODELS.summarize,
-      max_tokens: 6000,
+      model: MODELS.research,
+      max_tokens: 8000,
       system,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tools: tools as any,
@@ -125,15 +143,19 @@ ${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n"
     );
     if (submit && submit.type === "tool_use") {
       const input = submit.input as SubmitInput;
-      return input.articles.slice(0, tier.count).map((a) => ({
-        tier: tier.key,
-        title: a.title,
-        sourceName: a.sourceName,
-        sourceDate: a.sourceDate,
-        factSummary: a.factSummary,
-        opinionHook: a.opinionHook,
-        urls: (a.urls ?? []).filter(Boolean),
-      }));
+      return {
+        ranked: input.articles.slice(0, tier.count + SPARE).map((a) => ({
+          tier: tier.key,
+          title: a.title,
+          sourceName: a.sourceName,
+          sourceDate: a.sourceDate,
+          factSummary: a.factSummary,
+          opinionHook: a.opinionHook,
+          urls: (a.urls ?? []).filter(Boolean),
+          tags: a.tags ?? [],
+        })),
+        shortfallNote: input.shortfallNote ?? "",
+      };
     }
 
     // Continue the server-tool loop, or nudge toward submitting.
@@ -146,5 +168,5 @@ ${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n"
     }
   }
 
-  return [];
+  return { ranked: [], shortfallNote: "搜尋後沒有提交結果" };
 }

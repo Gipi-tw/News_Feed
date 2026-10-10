@@ -16,8 +16,9 @@ export async function saveDigest(opts: {
   edition: number;
   title: string;
   articles: BuiltArticle[];
+  notes?: string[];
 }): Promise<string> {
-  const { date, edition, title, articles } = opts;
+  const { date, edition, title, articles, notes = [] } = opts;
 
   const digest = await prisma.digest.create({
     data: {
@@ -25,6 +26,7 @@ export async function saveDigest(opts: {
       edition,
       title,
       status: "complete",
+      notes: JSON.stringify(notes),
       articles: {
         create: articles.map((a) => ({
           tier: a.tier,
@@ -35,6 +37,7 @@ export async function saveDigest(opts: {
           factSummary: a.factSummary,
           opinionHook: a.opinionHook,
           urls: JSON.stringify(a.urls),
+          tags: JSON.stringify(a.tags ?? []),
           myComment: a.myComment,
           commentStatus: "draft",
           lintReport: JSON.stringify(a.lintReport),
