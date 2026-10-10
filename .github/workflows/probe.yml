@@ -15,10 +15,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Probe sources and Supadata
+      - name: Probe
         env:
           SUPADATA_API_KEY: ${{ secrets.SUPADATA_API_KEY }}
-        run: node scripts/probe/cloud-probe.mjs
+        run: node scripts/probe/supadata-lang.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
