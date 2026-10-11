@@ -53,7 +53,17 @@ function date(...candidates: Node[]): Date | null {
   return null;
 }
 
-export function parseFeed(xml: string): FeedEntry[] {
+/** Absolute URL, resolving relative item links (HBR) against the site link. */
+function absolute(link: string, base: string | undefined): string {
+  if (/^https?:\/\//i.test(link) || !base) return link;
+  try {
+    return new URL(link, base).toString();
+  } catch {
+    return link;
+  }
+}
+
+export function parseFeed(xml: string, feedUrl?: string): FeedEntry[] {
   const doc = parser.parse(xml) as Record<string, Record<string, unknown>>;
   const rss = doc.rss?.channel as Record<string, unknown> | undefined;
   const items: Record<string, unknown>[] = [
@@ -61,11 +71,13 @@ export function parseFeed(xml: string): FeedEntry[] {
     ...asArray(doc.RDF?.item as Record<string, unknown>[]), // RSS 1.0
     ...asArray(doc.feed?.entry as Record<string, unknown>[]), // Atom
   ];
+  const siteLink = doc.feed ? atomLink(doc.feed.link) : text(rss?.link as Node);
+  const base = /^https?:\/\//i.test(siteLink) ? siteLink : feedUrl;
 
   const out: FeedEntry[] = [];
   for (const it of items) {
     const rawLink = typeof it.link === "object" || Array.isArray(it.link) ? atomLink(it.link) : text(it.link as Node);
-    const link = rawLink || text(it.guid as Node);
+    const link = absolute(rawLink || text(it.guid as Node), base);
     const publisher = it.source ? decodeEntities(text(it.source as Node)).trim() || undefined : undefined;
     const title = stripPublisherSuffix(htmlToText(text(it.title as Node)), publisher);
     if (!title || !/^https?:\/\//i.test(link)) continue;

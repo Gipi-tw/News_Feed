@@ -43,7 +43,7 @@ async function fetchFeed(url: string): Promise<FeedEntry[]> {
     signal: AbortSignal.timeout(20_000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return parseFeed(await res.text());
+  return parseFeed(await res.text(), url);
 }
 
 const errText = (e: unknown) => (e instanceof Error ? e.message : String(e)).slice(0, 120);

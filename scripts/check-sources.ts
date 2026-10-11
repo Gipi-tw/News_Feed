@@ -29,7 +29,7 @@ async function main() {
     try {
       const res = await fetch(s.url, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(20_000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const entries = parseFeed(await res.text());
+      const entries = parseFeed(await res.text(), s.url);
       const recent = entries.filter((e) => (e.publishedAt?.getTime() ?? Date.now()) >= since);
       const hinted = recent.filter((e) => tierHints(s.tiers, `${e.title} ${e.summary}`, match).length);
       const newest = entries.reduce((m, e) => Math.max(m, e.publishedAt?.getTime() ?? 0), 0);

@@ -35,6 +35,20 @@ test("Atom with a namespace prefix (HBR serves ns6:entry)", () => {
   assert.equal(e.publishedAt?.toISOString(), "2026-10-09T14:38:00.000Z");
 });
 
+test("Atom relative entry links resolve against the feed's site link (real HBR shape)", () => {
+  const xml = `<ns6:feed xmlns:ns6="http://www.w3.org/2005/Atom">
+    <ns6:link href="http://hbr.org" rel="alternate" type="text/html"/>
+    <ns6:link href="site.hostname/x.xml" rel="self"/>
+    <ns6:entry><ns6:title>Risk Preparedness</ns6:title>
+      <ns6:link href="/2026/10/risk-preparedness" rel="alternate" type="text/html"/>
+      <ns6:summary><![CDATA[<p>How companies can use disclosures.</p>]]></ns6:summary>
+      <ns6:published>2026-10-09T12:15:25Z</ns6:published></ns6:entry>
+  </ns6:feed>`;
+  const [e] = parseFeed(xml, "http://feeds.hbr.org/harvardbusiness");
+  assert.equal(e.link, "http://hbr.org/2026/10/risk-preparedness");
+  assert.equal(e.summary, "How companies can use disclosures.");
+});
+
 test("RSS 1.0 / RDF (Slashdot) with dc:date", () => {
   const xml = `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel><title>Slashdot</title></channel>
