@@ -41,7 +41,7 @@ function submitTool(tier: TierConfig, cfg: DigestConfig) {
         },
         shortfallNote: {
           type: "string",
-          description: "夠格的文章少於名額時，一句話說明原因；足額則空字串",
+          description: "夠格的文章少於名額時，用 30 字內一句話說明原因；足額則空字串",
         },
       },
       required: ["articles", "shortfallNote"],
@@ -136,7 +136,7 @@ ${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n"
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       messages: messages as any,
     });
-    recordUsage(res.usage);
+    recordUsage(res.usage, MODELS.research);
 
     const submit = res.content.find(
       (b) => b.type === "tool_use" && b.name === "submit_selection",

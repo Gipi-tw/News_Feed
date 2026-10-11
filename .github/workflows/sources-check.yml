@@ -1,0 +1,26 @@
+name: Sources check
+
+# Fetches and parses every configured RSS feed / Google News query from a
+# cloud IP and posts a table to the run summary. No DB, no LLM, no secrets.
+# Note: a few sites block GitHub's IPs but not Fly's (e.g. Gizmodo), so a ❌
+# here is a hint to check from prod, not proof the source is dead.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "config/digest_config.json"
+      - "src/collect/**"
+      - "scripts/check-sources.ts"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx tsx scripts/check-sources.ts

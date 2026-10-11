@@ -14,6 +14,12 @@ export interface TierOutcome {
 const short = (t: TierConfig) => `${t.emoji} ${t.label.split("：")[0]}`;
 const shortDesc = (r: TagRule) => r.desc.split("：")[0];
 
+/** Model-written shortfall reasons can be long or carry stray quotes. */
+export function cleanNote(s: string, max = 80): string {
+  const t = s.replace(/\s+/g, " ").trim().replace(/^["'「『]+|["'」』]+$/g, "").trim();
+  return t.length > max ? t.slice(0, max - 1) + "…" : t;
+}
+
 export function buildNotes(
   cfg: DigestConfig,
   outcomes: TierOutcome[],
@@ -33,7 +39,7 @@ export function buildNotes(
     if (n < o.tier.count) {
       const reasons = [
         o.error ? `本區產生失敗（${o.error}）` : "",
-        o.shortfallNote.trim(),
+        cleanNote(o.shortfallNote),
         ...quotaReasons,
       ].filter(Boolean);
       notes.push(`${short(o.tier)} ${n}/${o.tier.count} 篇：${reasons.join("；") || "夠格內容不足，寧缺勿濫"}`);

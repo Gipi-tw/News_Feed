@@ -72,7 +72,7 @@ export async function summarizeTier(opts: {
     system,
     user,
     schema: SUMMARY_SCHEMA as unknown as Record<string, unknown>,
-    maxTokens: 8000,
+    maxTokens: 16000, // Haiku 5.5 thinking counts toward this
   });
 
   // Align back to the selected candidates by url so we keep the full URL list.

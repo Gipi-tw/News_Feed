@@ -1,17 +1,17 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { requireAnthropicKey } from "./env";
 
-// Cost-optimized model roles: the digest is now a pure curation list (no
-// voice-mimicking comment), so every stage runs on Haiku 4.5. The `comment`
-// role is kept only for the optional on-demand single-post path (not used by
-// the daily run); it points at Haiku too so nothing silently bills Opus.
+// Cost-optimized model roles: the digest is a pure curation list (no
+// voice-mimicking comment), so every stage runs on Haiku. Haiku 5.5 is ~10×
+// cheaper than 4.5 and better at instruction following; the Claude web_search
+// research mode stays on 4.5, the only Haiku it was verified with (2026-06-20).
 export const MODELS = {
-  select: "claude-haiku-4-5-20251001",
-  summarize: "claude-haiku-4-5-20251001",
-  // Claude web_search mode — verified working on Haiku 4.5 (2026-06-20).
+  score: "claude-haiku-5-5",
+  select: "claude-haiku-5-5",
+  summarize: "claude-haiku-5-5",
   research: "claude-haiku-4-5-20251001",
-  dedup: "claude-haiku-4-5-20251001",
-  comment: "claude-haiku-4-5-20251001",
+  dedup: "claude-haiku-5-5",
+  comment: "claude-haiku-5-5",
 } as const;
 
 let _client: Anthropic | null = null;
@@ -35,14 +35,22 @@ export interface UsageTotals {
   cacheReadInputTokens: number;
   webSearches: number;
   calls: number;
+  costUSD: number;
 }
 
-// Per-million-token USD prices (Haiku 4.5) + web_search per-call fee. Keep in
-// sync with https://docs.claude.com pricing; used only for the logged estimate.
-export const PRICING = {
-  haiku: { input: 1.0, output: 5.0, cacheWrite: 1.25, cacheRead: 0.1 },
-  webSearchPerCall: 0.01, // $10 / 1k searches
-} as const;
+// Per-million-token USD prices + web_search per-call fee. Keep in sync with
+// the Anthropic pricing page; used only for the logged estimate. Haiku 5.5's
+// rate doubles for prompts over 100K tokens — ours stay well under.
+const PRICES: Record<string, { input: number; output: number; cacheWrite: number; cacheRead: number }> = {
+  "claude-haiku-5-5": { input: 0.1, output: 0.5, cacheWrite: 0.125, cacheRead: 0.01 },
+  "claude-haiku-4-5": { input: 1.0, output: 5.0, cacheWrite: 1.25, cacheRead: 0.1 },
+};
+const WEB_SEARCH_PER_CALL = 0.01; // $10 / 1k searches
+
+function priceFor(model: string) {
+  const key = Object.keys(PRICES).find((k) => model.startsWith(k));
+  return PRICES[key ?? "claude-haiku-4-5"];
+}
 
 export const usage: UsageTotals = newUsage();
 
@@ -54,6 +62,7 @@ export function newUsage(): UsageTotals {
     cacheReadInputTokens: 0,
     webSearches: 0,
     calls: 0,
+    costUSD: 0,
   };
 }
 
@@ -62,33 +71,34 @@ export function resetUsage(): void {
 }
 
 /** Fold one API response's usage block into the running totals. */
-export function recordUsage(u: unknown): void {
+export function recordUsage(u: unknown, model: string): void {
   if (!u || typeof u !== "object") return;
   const x = u as Record<string, unknown>;
-  usage.calls += 1;
-  usage.inputTokens += num(x.input_tokens);
-  usage.outputTokens += num(x.output_tokens);
-  usage.cacheCreationInputTokens += num(x.cache_creation_input_tokens);
-  usage.cacheReadInputTokens += num(x.cache_read_input_tokens);
+  const p = priceFor(model);
+  const input = num(x.input_tokens);
+  const output = num(x.output_tokens);
+  const cacheWrite = num(x.cache_creation_input_tokens);
+  const cacheRead = num(x.cache_read_input_tokens);
   const su = x.server_tool_use as Record<string, unknown> | undefined;
-  if (su) usage.webSearches += num(su.web_search_requests);
+  const searches = su ? num(su.web_search_requests) : 0;
+  usage.calls += 1;
+  usage.inputTokens += input;
+  usage.outputTokens += output;
+  usage.cacheCreationInputTokens += cacheWrite;
+  usage.cacheReadInputTokens += cacheRead;
+  usage.webSearches += searches;
+  usage.costUSD +=
+    (input * p.input + output * p.output + cacheWrite * p.cacheWrite + cacheRead * p.cacheRead) / 1_000_000 +
+    searches * WEB_SEARCH_PER_CALL;
 }
 
 function num(v: unknown): number {
   return typeof v === "number" && Number.isFinite(v) ? v : 0;
 }
 
-/** Estimated USD cost of the accumulated usage (Haiku pricing). */
+/** Estimated USD cost of the accumulated usage. */
 export function estimateCostUSD(u: UsageTotals = usage): number {
-  const p = PRICING.haiku;
-  return (
-    (u.inputTokens * p.input +
-      u.outputTokens * p.output +
-      u.cacheCreationInputTokens * p.cacheWrite +
-      u.cacheReadInputTokens * p.cacheRead) /
-      1_000_000 +
-    u.webSearches * PRICING.webSearchPerCall
-  );
+  return u.costUSD;
 }
 
 /**
@@ -102,20 +112,24 @@ export async function generateJSON<T>(opts: {
   user: string;
   schema: Record<string, unknown>;
   maxTokens?: number;
+  // Haiku 5.5 thinks adaptively by default (effort "medium"); "low" for bulk
+  // classification. Thinking counts toward maxTokens, so keep it roomy.
+  effort?: "low" | "medium" | "high";
 }): Promise<T> {
   const res = await client().messages.create({
-    // Haiku 4.5 rejects `thinking: adaptive` / output_config.effort; keep only
-    // the structured-output format directive.
     model: opts.model,
     max_tokens: opts.maxTokens ?? 16000,
-    output_config: { format: { type: "json_schema", schema: opts.schema } },
+    output_config: {
+      format: { type: "json_schema", schema: opts.schema },
+      ...(opts.effort ? { effort: opts.effort } : {}),
+    },
     system: opts.system,
     messages: [{ role: "user", content: opts.user }],
   });
-  recordUsage(res.usage);
+  recordUsage(res.usage, opts.model);
   const text = res.content.find((b) => b.type === "text");
   if (!text || text.type !== "text") {
-    throw new Error("No text block in structured-output response");
+    throw new Error(`No JSON in response (stop_reason: ${res.stop_reason})`);
   }
   return JSON.parse(text.text) as T;
 }
@@ -131,14 +145,13 @@ export async function generateText(opts: {
   maxTokens?: number;
 }): Promise<string> {
   const stream = client().messages.stream({
-    // Haiku 4.5 rejects `thinking: adaptive` / output_config.effort.
     model: opts.model,
     max_tokens: opts.maxTokens ?? 4000,
     system: opts.system,
     messages: [{ role: "user", content: opts.user }],
   });
   const msg = await stream.finalMessage();
-  recordUsage(msg.usage);
+  recordUsage(msg.usage, opts.model);
   return msg.content
     .filter((b) => b.type === "text")
     .map((b) => (b.type === "text" ? b.text : ""))
