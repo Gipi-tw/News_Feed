@@ -97,7 +97,7 @@ shortfallNote：若夠格的候選少於 ${tier.count} 則，用 30 字內一句
     system,
     user,
     schema: selectSchema(tier, cfg),
-    maxTokens: 6000,
+    maxTokens: 16000, // Haiku 5.5 thinking counts toward this
   });
 
   // Map chosen urls back to the original hits; dedupe; cap the pool.
