@@ -38,7 +38,7 @@ npm run dev                   # 啟動網站 http://localhost:3000
 
 ## 環境變數
 
-見 `.env.example`。重點：`ANTHROPIC_API_KEY`、`BRAVE_API_KEY`/`SERPER_API_KEY`、`AUTH_USERNAME`/`AUTH_PASSWORD_HASH`/`AUTH_SECRET`、`CRON_SECRET`、`DATABASE_URL`、（選）`RESEND_API_KEY`/`NOTIFY_EMAIL`。
+見 `.env.example`。重點：`ANTHROPIC_API_KEY`、`BRAVE_API_KEY`/`SERPER_API_KEY`、`AUTH_USERNAME`/`AUTH_PASSWORD_HASH`/`AUTH_SECRET`、`CRON_SECRET`、`DATABASE_URL`、（選）`RESEND_API_KEY`/`NOTIFY_EMAIL`：每天把整份日報寄到信箱，失敗時寄通知；沒有驗證網域時，Resend 只能寄給開帳號用的那個信箱（見 `docs/spec.md`「📧 每天寄信」）。
 
 ## 部署（Fly.io）
 
@@ -52,7 +52,7 @@ fly secrets set \
   AUTH_USERNAME=gipi AUTH_PASSWORD_HASH='$2b$...' \
   AUTH_SECRET=$(openssl rand -hex 32) \
   CRON_SECRET=$(openssl rand -hex 32) \
-  RESEND_API_KEY=...   # 選用
+  RESEND_API_KEY=... NOTIFY_EMAIL=...   # 選用：每天寄信
 fly deploy
 ```
 

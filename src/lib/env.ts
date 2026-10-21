@@ -14,7 +14,8 @@ export const env = {
   authPasswordHash: process.env.AUTH_PASSWORD_HASH ?? "",
   authSecret: process.env.AUTH_SECRET ?? "dev-insecure-secret-change-me",
   cronSecret: process.env.CRON_SECRET ?? "",
-  notifyEmail: process.env.NOTIFY_EMAIL ?? "",
+  notifyEmail: process.env.NOTIFY_EMAIL ?? "", // comma-separated
+  notifyFrom: process.env.NOTIFY_FROM || "gipi-digest <onboarding@resend.dev>", // needs a Resend-verified domain to change
   resendKey: process.env.RESEND_API_KEY ?? "",
   appBaseUrl: process.env.APP_BASE_URL ?? "http://localhost:3000",
 };

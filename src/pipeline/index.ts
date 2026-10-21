@@ -17,7 +17,7 @@ import { publisherBlocker } from "../collect/blocklist";
 import { runCollect } from "../collect";
 import { attachVideos, unshownVideoCounts } from "../videos";
 import { nextEdition, saveDigest } from "./assemble";
-import { notifyDigestReady } from "./notify";
+import { sendDigestEmail, sendFailureEmail } from "./notify";
 import { estimateCostUSD, resetUsage, usage } from "../lib/anthropic";
 
 export interface RunResult {
@@ -71,11 +71,13 @@ export async function runDigest(opts?: {
     }
   };
 
+  let runDate = ""; // for the failure email
   try {
     const cfg = await getDigestConfig();
     // styleGuide is no longer needed (pure-curation digest writes no comment).
     const interestProfile = await getInterestProfile();
     const today = todayInTz(cfg.timezone);
+    runDate = today;
     const edition = await nextEdition(today);
     await progress(`開始產生 ${today} 第 ${edition} 期`);
 
@@ -263,35 +265,31 @@ export async function runDigest(opts?: {
       `成本估算 ≈ $${costUSD.toFixed(4)}（${usage.calls} 次呼叫｜in ${usage.inputTokens}＋out ${usage.outputTokens} tok｜${usage.webSearches} 次搜尋）`,
     );
 
+    // 9. Email the digest (no-op until Resend is configured; never throws).
+    detail.email = await sendDigestEmail(digestId);
+    log(`寄信：${detail.email}`);
+
     await prisma.runLog.update({
       where: { id: runId },
       data: {
         status: "success",
         finishedAt: new Date(),
         digestId,
-        message: `${finalArticles.length} 篇${failures ? `（${failures} 區失敗）` : ""}｜估算 $${costUSD.toFixed(4)}`,
+        message: `${finalArticles.length} 篇${failures ? `（${failures} 區失敗）` : ""}｜估算 $${costUSD.toFixed(4)}${String(detail.email).startsWith("failed") ? "｜寄信失敗" : ""}`,
         detail: JSON.stringify(detail),
       },
-    });
-
-    // 9. Notify (optional).
-    await notifyDigestReady({
-      date: today,
-      edition,
-      count: finalArticles.length,
-      digestId,
-      failures,
     });
 
     log(`完成 ✓ digestId=${digestId}`);
     return { digestId, date: today, edition, count: finalArticles.length, failures, byTier };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
+    detail.email = await sendFailureEmail(runDate || todayInTz("Asia/Taipei"), message.slice(0, 300));
     await prisma.runLog.update({
       where: { id: runId },
       data: { status: "failed", finishedAt: new Date(), message, detail: JSON.stringify(detail) },
     });
-    log(`失敗 ✗ ${message}`);
+    log(`失敗 ✗ ${message}（寄信：${detail.email}）`);
     throw err;
   }
 }
