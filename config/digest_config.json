@@ -1,5 +1,5 @@
 {
-  "configVersion": 6,
+  "configVersion": 7,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -119,6 +119,11 @@
       ],
       "rules": [
         {
+          "tag": "ai",
+          "desc": "以 AI 為主軸",
+          "max": 4
+        },
+        {
           "tag": "ai_dev",
           "desc": "AI 開發實務：vibe coding、Claude Code、AI coding 工具或 agent 實作",
           "max": 2
@@ -169,6 +174,7 @@
     "minScore": 5,
     "retentionDays": 14,
     "maxItemsPerGoogleNewsQuery": 20,
+    "blockedPublishers": ["36Kr", "36氪", "36kr.com", "MSN", "msn.com", "蕃新聞", "n.yam.com", "CoinMarketCap", "coinmarketcap.com"],
     "feeds": [
       {
         "key": "woshipm",

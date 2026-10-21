@@ -12,6 +12,8 @@ import { researchTier } from "./research";
 import { enforceQuotas } from "./quota";
 import { buildNotes, type TierOutcome } from "./notes";
 import { collectedCandidates, markUsed, resolveLinks } from "./candidates";
+import { dropSameEvent, findSameEvent, type EventItem } from "./same-event";
+import { publisherBlocker } from "../collect/blocklist";
 import { runCollect } from "../collect";
 import { attachVideos, unshownVideoCounts } from "../videos";
 import { nextEdition, saveDigest } from "./assemble";
@@ -37,6 +39,7 @@ interface TierPool<T> {
   ranked: T[];
   shortfallNote: string;
   error?: string;
+  deduped?: number; // dropped as the same event as a better-ranked pick
 }
 
 /**
@@ -93,6 +96,7 @@ export async function runDigest(opts?: {
       // Sequential per tier: web_search payloads are token-heavy, and running
       // tiers in parallel exceeds the org's per-minute input-token limit.
       const pools: TierPool<SelectedArticle>[] = [];
+      const blocked = publisherBlocker(cfg.sources?.blockedPublishers);
       for (let i = 0; i < cfg.tiers.length; i++) {
         const tier = cfg.tiers[i];
         try {
@@ -100,7 +104,11 @@ export async function runDigest(opts?: {
           // Backstop URL hard-dedup against the last `windowDays` (SPEC §4.3),
           // and drop stale finds (web_search happily returns months-old pages).
           const ranked = r.ranked.filter(
-            (a) => a.urls[0] && !knownUrls.has(a.urls[0]) && isFresh(a.sourceDate, cfg.search.freshnessHours * 2),
+            (a) =>
+              a.urls[0] &&
+              !knownUrls.has(a.urls[0]) &&
+              !blocked(a.sourceName, a.urls[0]) &&
+              isFresh(a.sourceDate, cfg.search.freshnessHours * 2),
           );
           pools.push({ tier, ranked, shortfallNote: r.shortfallNote });
         } catch (err) {
@@ -112,6 +120,7 @@ export async function runDigest(opts?: {
         );
       }
       assertSomeTierWorked(pools);
+      await dropSameEventPicks(pools, (a) => ({ title: a.title, sourceName: a.sourceName, snippet: a.factSummary }), log, detail);
 
       const enforced = enforceQuotas(
         pools.map((p) => ({ key: p.tier.key, ranked: p.ranked, count: p.tier.count, rules: p.tier.rules })),
@@ -166,8 +175,10 @@ export async function runDigest(opts?: {
       assertSomeTierWorked(pools);
       if (mode === "collected") {
         await progress("解析 Google News 原文連結…");
-        await resolveLinks(pools, knownUrls);
+        await resolveLinks(pools, knownUrls, cfg.sources?.blockedPublishers);
       }
+      await progress("檢查同一事件重複…");
+      await dropSameEventPicks(pools, (h) => ({ title: h.title, sourceName: h.sourceName, snippet: h.snippet }), log, detail);
 
       const enforced = enforceQuotas(
         pools.map((p) => ({ key: p.tier.key, ranked: p.ranked, count: p.tier.count, rules: p.tier.rules })),
@@ -282,6 +293,31 @@ export async function runDigest(opts?: {
     });
     log(`失敗 ✗ ${message}`);
     throw err;
+  }
+}
+
+/**
+ * Drop same-event duplicates across all tiers before quotas are enforced, so
+ * the spares backfill. Best effort: if the check fails, the picks ship as is.
+ */
+async function dropSameEventPicks<T>(
+  pools: TierPool<T>[],
+  describe: (t: T) => EventItem,
+  log: Logger,
+  detail: Record<string, unknown>,
+): Promise<void> {
+  try {
+    const groups = await findSameEvent(pools.flatMap((p) => p.ranked.map(describe)));
+    const dropped = dropSameEvent(pools, groups);
+    pools.forEach((p, i) => {
+      if (dropped[i]) p.deduped = dropped[i];
+    });
+    detail.sameEvent = groups.map((g) => g.event);
+    if (groups.length) {
+      log(`同一事件重複：${groups.map((g) => g.event).join("、")}（刪 ${dropped.reduce((a, b) => a + b, 0)} 則）`);
+    }
+  } catch (err) {
+    log(`同一事件檢查失敗，略過：${errMsg(err)}`);
   }
 }
 

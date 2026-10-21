@@ -90,6 +90,8 @@ export interface SourcesConfig {
   feeds: FeedSource[];
   googleNews: GoogleNewsQuery[];
   keywords: Partial<Record<TierKey, string[]>>;
+  // Never collected or picked: publisher names (exact, any case) or domains (with a dot).
+  blockedPublishers?: string[];
 }
 
 export interface VideoChannel {
