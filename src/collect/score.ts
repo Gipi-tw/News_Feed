@@ -26,7 +26,7 @@ export async function scoreItems(
   items: ScoreInput[],
   cfg: DigestConfig,
   interestProfile: string,
-): Promise<ScoreOutput[]> {
+): Promise<{ results: ScoreOutput[]; failedBatches: number; lastError?: string }> {
   const tierKeys = cfg.tiers.map((t) => t.key);
   const schema = {
     type: "object",
@@ -70,6 +70,8 @@ ${interestProfile.slice(0, 1500)}`;
   for (let start = 0; start < items.length; start += BATCH) batches.push(items.slice(start, start + BATCH));
 
   const out: ScoreOutput[] = [];
+  let failedBatches = 0;
+  let lastError: string | undefined;
   const scoreBatch = async (batch: ScoreInput[]) => {
     const list = batch
       .map(
@@ -89,7 +91,9 @@ ${interestProfile.slice(0, 1500)}`;
         effort: "low",
       });
     } catch (err) {
-      console.error("[collect] scoring batch failed:", err instanceof Error ? err.message : err);
+      failedBatches++;
+      lastError = (err instanceof Error ? err.message : String(err)).slice(0, 200);
+      console.error("[collect] scoring batch failed:", lastError);
       return;
     }
     for (const r of res.results) {
@@ -101,5 +105,5 @@ ${interestProfile.slice(0, 1500)}`;
   for (let i = 0; i < batches.length; i += CONCURRENCY) {
     await Promise.all(batches.slice(i, i + CONCURRENCY).map(scoreBatch));
   }
-  return out;
+  return { results: out, failedBatches, lastError };
 }
