@@ -19,6 +19,8 @@ export interface VideoRunResult {
   failed: number;
   errors: { source: string; error: string }[];
   budgetNote: string;
+  // Timestamps moved to the line their anchor quote was found on, out of all.
+  timestamps: { anchored: number; total: number };
 }
 
 const TRANSCRIPT_RETENTION_DAYS = 14;
@@ -58,6 +60,7 @@ export async function runVideos(cfg: DigestConfig, interestProfile: string, log:
   if (!vc?.channels.length) return null;
   const result: VideoRunResult = {
     found: 0, summarized: 0, noTranscript: 0, skippedBudget: 0, failed: 0, errors: [], budgetNote: "",
+    timestamps: { anchored: 0, total: 0 },
   };
   const now = Date.now();
   const since = now - vc.lookbackDays * DAY;
@@ -139,12 +142,14 @@ export async function runVideos(cfg: DigestConfig, interestProfile: string, log:
       });
     }
     try {
-      const summary = await summarizeVideo({
+      const { summary, anchored, total } = await summarizeVideo({
         title: v.title, channelName: v.channelName, durationSec: v.durationSec, lines, interestProfile,
       });
       await prisma.video.update({ where: { id: v.id }, data: { status: "summarized", summary: JSON.stringify(summary), error: null } });
       result.summarized++;
-      log(`🎬 摘要完成：${v.channelName}｜${v.title.slice(0, 40)}`);
+      result.timestamps.anchored += anchored;
+      result.timestamps.total += total;
+      log(`🎬 摘要完成：${v.channelName}｜${v.title.slice(0, 40)}（時間校正 ${anchored}/${total}）`);
     } catch (e) {
       const error = (e instanceof Error ? e.message : String(e)).slice(0, 200);
       await prisma.video.update({ where: { id: v.id }, data: { error } });

@@ -200,7 +200,7 @@ async function collect(
       }
     }
     const videoNote = videos
-      ? `；影片：新 ${videos.found}、摘要 ${videos.summarized}${videos.noTranscript ? `、無字幕 ${videos.noTranscript}` : ""}${videos.skippedBudget ? `、額度不足略過 ${videos.skippedBudget}` : ""}（${videos.budgetNote}）`
+      ? `；影片：新 ${videos.found}、摘要 ${videos.summarized}${videos.timestamps.total ? `（時間校正 ${videos.timestamps.anchored}/${videos.timestamps.total}）` : ""}${videos.noTranscript ? `、無字幕 ${videos.noTranscript}` : ""}${videos.skippedBudget ? `、額度不足略過 ${videos.skippedBudget}` : ""}（${videos.budgetNote}）`
       : "";
 
     const scoreCost = Number((usage.costUSD - costBefore).toFixed(4));
