@@ -20,7 +20,15 @@ a { color: inherit; }
 header.masthead { border-bottom: 3px solid var(--ink); padding-bottom: 16px; margin-bottom: 8px; }
 .masthead h1 { font-size: 28px; margin: 0; letter-spacing: 1px; }
 .masthead .meta { color: var(--muted); font-size: 14px; margin-top: 6px; }
-.toc { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 14px 20px; margin: 20px 0; font-size: 14px; color: var(--muted); }
+/* Table of contents: one tap jumps to a tier. */
+.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; font-size: 14px; }
+.toc .chip { display: inline-flex; align-items: center; gap: 4px; background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.toc .chip b { color: var(--muted); font-weight: 600; }
+.toc .chip:hover { border-color: var(--link); color: var(--link); }
+#toc, section.tier { scroll-margin-top: 12px; }
+/* Always-there way back to the table of contents on a long page. */
+.to-toc { position: fixed; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 10; background: var(--ink); color: #fff; border-radius: 999px; padding: 8px 14px; font-size: 13px; text-decoration: none; box-shadow: 0 2px 8px rgba(0, 0, 0, .18); opacity: .88; }
+.to-toc:hover { opacity: 1; }
 
 section.tier { margin-top: 36px; }
 .tier-head { display: flex; align-items: baseline; gap: 12px; border-left: 6px solid; padding: 6px 14px; border-radius: 4px; margin-bottom: 18px; flex-wrap: wrap; }
@@ -43,7 +51,7 @@ article.card { background: #fff; border: 1px solid var(--line); border-radius: 1
 .fact .label { background: #eaf1f8; color: #1a5fb4; }
 .hook .label { background: #fdf0ee; color: #c0392b; }
 .links { font-size: 13px; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--line); }
-.links a { color: var(--link); text-decoration: none; margin-right: 14px; }
+.links a { display: inline-block; padding: 6px 0; color: var(--link); text-decoration: none; margin-right: 14px; }
 .links a:hover { text-decoration: underline; }
 footer { margin-top: 40px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 14px; }
 footer .notes { margin: 0 0 12px; padding-left: 20px; }
@@ -101,13 +109,26 @@ label.field { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 1
 .daypicker { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 14px; }
 .daypicker .step { flex: 0 0 auto; color: var(--link); text-decoration: none; padding: 6px 2px; white-space: nowrap; }
 .daypicker .step.off { color: var(--line); }
-.daypicker select { flex: 1 1 auto; min-width: 0; font: inherit; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+.daypicker select { flex: 1 1 auto; min-width: 0; max-width: 340px; font: inherit; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
 
 @media (max-width: 480px) {
-  .masthead h1 { font-size: 23px; }
-  .wrap { padding: 18px 14px 48px; }
-  article.card { padding: 14px 16px; }
-  nav.topnav .inner { gap: 12px; }
+  /* One-line nav: icon instead of the name, bigger tap targets. */
+  nav.topnav .inner { gap: 14px; padding: 4px 14px; flex-wrap: nowrap; }
+  nav.topnav .brand-text { display: none; }
+  nav.topnav a, nav.topnav button.linkbtn { font-size: 15px; padding: 10px 0; }
+  /* Masthead: date + count only; the boilerplate is in the footer anyway. */
+  .wrap { padding: 14px 14px 72px; }
+  header.masthead { padding-bottom: 12px; }
+  .masthead h1 { font-size: 21px; }
+  .masthead .meta { margin-top: 2px; }
+  .masthead .meta-extra { display: none; }
+  .toc { margin: 14px 0; gap: 6px; }
+  .toc .chip { padding: 6px 10px; }
+  section.tier { margin-top: 28px; }
+  .tier-head { padding: 6px 12px; margin-bottom: 12px; gap: 2px 10px; }
+  .tier-head h2 { font-size: 18px; }
+  article.card { padding: 14px 16px; margin-bottom: 12px; }
+  .card h3 { font-size: 16.5px; }
 }
 
 /* ── 🎬 影音重點 (not part of the 45) ─────────────────────────────── */
@@ -120,10 +141,13 @@ label.field { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 1
 .video .points { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 6px; font-size: 14.5px; }
 .video .points li { display: grid; grid-template-columns: 4.6em minmax(0, 1fr); gap: 8px; align-items: baseline; }
 .video .points.quotes li span { color: var(--muted); }
-.video .ts { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; color: var(--link); text-decoration: none; font-variant-numeric: tabular-nums; }
+.video .ts { display: inline-block; padding: 5px 0; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; color: var(--link); text-decoration: none; font-variant-numeric: tabular-nums; }
 .video .ts:hover { text-decoration: underline; }
 .video .segments a { display: inline-block; margin: 2px 12px 2px 0; }
 .video-rest ul { margin: 6px 0 0; padding-left: 18px; font-size: 14px; }
 .video-rest li { margin: 4px 0; overflow-wrap: anywhere; }
 .video-rest a { color: var(--ink); }
 .video-rest .why { display: block; font-size: 12.5px; color: var(--muted); }
+@media (max-width: 480px) {
+  .video .points li { grid-template-columns: 4em minmax(0, 1fr); }
+}

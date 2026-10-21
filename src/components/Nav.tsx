@@ -22,7 +22,9 @@ export default function Nav() {
   return (
     <nav className="topnav">
       <div className="inner">
-        <span className="brand">📰 內容摘要日報</span>
+        <span className="brand">
+          📰<span className="brand-text"> 內容摘要日報</span>
+        </span>
         {LINKS.map((l) => (
           <Link
             key={l.href}
