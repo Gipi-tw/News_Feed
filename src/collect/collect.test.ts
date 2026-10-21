@@ -119,5 +119,8 @@ test("blocked publishers: exact name (any case) or domain incl. subdomains", () 
   assert.equal(blocked("Fortune", "https://not36kr.com/x"), false);
   assert.equal(blocked("Fortune", "https://fortune.com/x"), false);
   assert.equal(blocked(null, "not a url"), false);
+  const aol = publisherBlocker(["AOL.com"]); // Google News uses the domain as the name
+  assert.equal(aol("AOL.com", "https://news.google.com/rss/articles/x"), true);
+  assert.equal(aol("Fortune", "https://www.aol.com/finance/x"), true);
   assert.equal(publisherBlocker()("MSN"), false);
 });
