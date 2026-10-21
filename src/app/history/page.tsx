@@ -1,11 +1,14 @@
 import Link from "next/link";
-import { listDigests } from "@/lib/digest-data";
-import { formatChineseDate } from "@/lib/date";
+import { listDays } from "@/lib/digest-data";
+import { dayHref, formatChineseDate } from "@/lib/date";
 
 export const dynamic = "force-dynamic";
 
 export default async function HistoryPage() {
-  const digests = await listDigests();
+  const days = await listDays();
+  const digests = days.flatMap((d) =>
+    [...d.editions].reverse().map((e) => ({ ...e, date: d.date, href: dayHref(d.date, e.edition, d.editions[d.editions.length - 1].edition) })),
+  );
   return (
     <div className="wrap">
       <header className="masthead">
@@ -18,7 +21,7 @@ export default async function HistoryPage() {
         ) : (
           digests.map((d) => (
             <div className="history-item" key={d.id}>
-              <Link href={`/digest/${d.id}`}>
+              <Link href={d.href}>
                 {formatChineseDate(d.date)} 第 {d.edition} 期
               </Link>
               <span className="muted">{d.count} 篇</span>

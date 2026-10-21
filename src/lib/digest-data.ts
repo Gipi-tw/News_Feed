@@ -124,6 +124,36 @@ export async function getDigestById(id: string): Promise<DigestView | null> {
   return d ? { ...toView(d), videos: await videosFor(d.id) } : null;
 }
 
+/** The latest edition of one day (or a given edition), e.g. for /2026-10-21. */
+export async function getDigestByDate(date: string, edition?: number): Promise<DigestView | null> {
+  const d = await prisma.digest.findFirst({
+    where: { date, ...(edition ? { edition } : {}) },
+    orderBy: { edition: "desc" },
+    include: { articles: true },
+  });
+  return d ? { ...toView(d), videos: await videosFor(d.id) } : null;
+}
+
+export interface DayEntry {
+  date: string;
+  editions: { id: string; edition: number; count: number }[]; // oldest first
+}
+
+/** Digests grouped by day, newest day first. */
+export function groupDays(rows: { id: string; date: string; edition: number; count: number }[]): DayEntry[] {
+  const days = new Map<string, DayEntry>();
+  for (const r of rows) {
+    const day = days.get(r.date) ?? days.set(r.date, { date: r.date, editions: [] }).get(r.date)!;
+    day.editions.push({ id: r.id, edition: r.edition, count: r.count });
+  }
+  for (const d of days.values()) d.editions.sort((a, b) => a.edition - b.edition);
+  return [...days.values()].sort((a, b) => b.date.localeCompare(a.date));
+}
+
+export async function listDays(): Promise<DayEntry[]> {
+  return groupDays(await listDigests());
+}
+
 export async function listDigests(): Promise<
   { id: string; date: string; edition: number; count: number; createdAt: Date }[]
 > {
