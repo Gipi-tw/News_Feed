@@ -49,6 +49,17 @@ test("Atom relative entry links resolve against the feed's site link (real HBR s
   assert.equal(e.summary, "How companies can use disclosures.");
 });
 
+test("zoneless dates (iThome) use the feed's timezone; future dates are dropped", () => {
+  const xml = (d: string) =>
+    `<rss><channel><item><title>T</title><link>https://www.ithome.com.tw/news/1</link><pubDate>${d}</pubDate></item></channel></rss>`;
+  // iThome writes Taipei local time with no zone (note the double space).
+  assert.equal(parseFeed(xml("2026-10-21  10:10:21"), undefined, "+08:00")[0].publishedAt?.toISOString(), "2026-10-21T02:10:21.000Z");
+  // A zoned date ignores the feed timezone.
+  assert.equal(parseFeed(xml("Tue, 21 Oct 2026 02:10:21 GMT"), undefined, "+08:00")[0].publishedAt?.toISOString(), "2026-10-21T02:10:21.000Z");
+  // Far-future dates are treated as unknown (falls back to fetch time).
+  assert.equal(parseFeed(xml("Tue, 21 Oct 2099 02:10:21 GMT"))[0].publishedAt, null);
+});
+
 test("RSS 1.0 / RDF (Slashdot) with dc:date", () => {
   const xml = `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://purl.org/rss/1.0/" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel><title>Slashdot</title></channel>

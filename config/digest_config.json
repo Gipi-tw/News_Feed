@@ -1,5 +1,5 @@
 {
-  "configVersion": 3,
+  "configVersion": 4,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -236,7 +236,8 @@
         "url": "https://www.ithome.com.tw/rss",
         "tiers": [
           "tier2"
-        ]
+        ],
+        "timezone": "+08:00"
       },
       {
         "key": "slashdot",

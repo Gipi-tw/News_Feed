@@ -69,6 +69,8 @@ export interface FeedSource {
   // Tiers this source is dedicated to. Items from a source with tiers are
   // always scored; items from a general source only when a keyword matches.
   tiers?: TierKey[];
+  // UTC offset (e.g. "+08:00") for dates the feed writes without a zone.
+  timezone?: string;
 }
 
 export interface GoogleNewsQuery {

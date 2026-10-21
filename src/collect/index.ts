@@ -24,6 +24,7 @@ export interface CollectResult {
   inserted: number;
   scored: number;
   errors: { source: string; error: string }[];
+  scoreFailure: string;
 }
 
 interface NewItem {
@@ -37,13 +38,13 @@ interface NewItem {
   hints: TierKey[];
 }
 
-async function fetchFeed(url: string): Promise<FeedEntry[]> {
+async function fetchFeed(url: string, timezone?: string): Promise<FeedEntry[]> {
   const res = await fetch(url, {
     headers: { "user-agent": UA, accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, */*" },
     signal: AbortSignal.timeout(20_000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return parseFeed(await res.text(), url);
+  return parseFeed(await res.text(), url, timezone);
 }
 
 const errText = (e: unknown) => (e instanceof Error ? e.message : String(e)).slice(0, 120);
@@ -106,7 +107,7 @@ async function collect(
       await Promise.all(
         feeds.slice(i, i + FEED_CONCURRENCY).map(async (f) => {
           try {
-            add(f.key, f.name, f.tiers, await fetchFeed(f.url));
+            add(f.key, f.name, f.tiers, await fetchFeed(f.url, f.timezone));
           } catch (e) {
             errors.push({ source: f.key, error: errText(e) });
           }
@@ -159,9 +160,10 @@ async function collect(
       take: 1500,
     });
     let scored = 0;
+    let scoreFailure = "";
     if (toScore.length) {
       const profile = await getInterestProfile();
-      const results = await scoreItems(
+      const { results, failedBatches, lastError } = await scoreItems(
         toScore.map((t) => ({ ...t, hints: JSON.parse(t.hints) as string[] })),
         cfg,
         profile,
@@ -172,19 +174,21 @@ async function collect(
         );
       }
       scored = results.length;
+      // Surface it: "評分 0 則" alone hid a dead API key / empty credit balance.
+      if (failedBatches) scoreFailure = `評分失敗 ${failedBatches} 批（${lastError}）`;
     }
 
     // 5. Retention.
     await prisma.item.deleteMany({ where: { createdAt: { lt: new Date(oldest) } } });
 
-    const result = { runId: run.id, fetched: found.length, inserted: fresh.length, scored, errors };
+    const result = { runId: run.id, fetched: found.length, inserted: fresh.length, scored, errors, scoreFailure };
     await prisma.collectRun.update({
       where: { id: run.id },
       data: {
         status: "success",
         finishedAt: new Date(),
-        message: `${label}：新增 ${fresh.length} 則、評分 ${scored} 則${errors.length ? `、${errors.length} 個來源失敗` : ""}`,
-        detail: JSON.stringify({ perSource, errors }),
+        message: `${label}：新增 ${fresh.length} 則、評分 ${scored}/${toScore.length} 則${errors.length ? `、${errors.length} 個來源失敗` : ""}${scoreFailure ? `；${scoreFailure}` : ""}`.slice(0, 300),
+        detail: JSON.stringify({ perSource, errors, scoreFailure }),
       },
     });
     log(`新增 ${fresh.length} 則，評分 ${scored} 則`);

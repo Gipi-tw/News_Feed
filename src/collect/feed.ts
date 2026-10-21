@@ -43,12 +43,23 @@ function atomLink(n: unknown): string {
   return String(alt["@href"] ?? text(alt as Node));
 }
 
-function date(...candidates: Node[]): Date | null {
+const FUTURE_SLACK_MS = 2 * 3_600_000;
+
+/**
+ * First parseable date. A bare "YYYY-MM-DD HH:MM[:SS]" (iThome) has no zone;
+ * it's read in the feed's `timezone` instead of the server's (UTC on Fly,
+ * which put iThome 8h in the future). Dates still in the future are dropped,
+ * so the item falls back to its fetch time.
+ */
+function date(timezone: string | undefined, ...candidates: Node[]): Date | null {
   for (const c of candidates) {
-    const s = text(c).trim();
+    let s = text(c).trim();
     if (!s) continue;
+    const bare = s.match(/^(\d{4}-\d{2}-\d{2})[ T]+(\d{2}:\d{2})(:\d{2})?$/);
+    if (bare && timezone) s = `${bare[1]}T${bare[2]}${bare[3] ?? ":00"}${timezone}`;
     const d = new Date(s);
-    if (!Number.isNaN(d.getTime())) return d;
+    if (Number.isNaN(d.getTime())) continue;
+    return d.getTime() > Date.now() + FUTURE_SLACK_MS ? null : d;
   }
   return null;
 }
@@ -63,7 +74,7 @@ function absolute(link: string, base: string | undefined): string {
   }
 }
 
-export function parseFeed(xml: string, feedUrl?: string): FeedEntry[] {
+export function parseFeed(xml: string, feedUrl?: string, timezone?: string): FeedEntry[] {
   const doc = parser.parse(xml) as Record<string, Record<string, unknown>>;
   const rss = doc.rss?.channel as Record<string, unknown> | undefined;
   const items: Record<string, unknown>[] = [
@@ -88,7 +99,7 @@ export function parseFeed(xml: string, feedUrl?: string): FeedEntry[] {
       title,
       link: canonicalUrl(decodeEntities(link)),
       summary,
-      publishedAt: date(it.pubDate as Node, it.published as Node, it.updated as Node, it.date as Node),
+      publishedAt: date(timezone, it.pubDate as Node, it.published as Node, it.updated as Node, it.date as Node),
       publisher,
     });
   }

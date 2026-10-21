@@ -22,14 +22,14 @@ async function main() {
   let bad = 0;
 
   const all = [
-    ...src.feeds.map((f) => ({ key: f.key, url: f.url, tiers: f.tiers })),
-    ...src.googleNews.map((q) => ({ key: q.key, url: googleNewsSearchUrl(q), tiers: q.tiers })),
+    ...src.feeds.map((f) => ({ key: f.key, url: f.url, tiers: f.tiers, timezone: f.timezone })),
+    ...src.googleNews.map((q) => ({ key: q.key, url: googleNewsSearchUrl(q), tiers: q.tiers, timezone: undefined as string | undefined })),
   ];
   for (const s of all) {
     try {
       const res = await fetch(s.url, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(20_000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const entries = parseFeed(await res.text(), s.url);
+      const entries = parseFeed(await res.text(), s.url, s.timezone);
       const recent = entries.filter((e) => (e.publishedAt?.getTime() ?? Date.now()) >= since);
       const hinted = recent.filter((e) => tierHints(s.tiers, `${e.title} ${e.summary}`, match).length);
       const newest = entries.reduce((m, e) => Math.max(m, e.publishedAt?.getTime() ?? 0), 0);
