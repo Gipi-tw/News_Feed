@@ -5,6 +5,7 @@ import { canonicalUrl, htmlToText, stripPublisherSuffix, titleKey } from "./text
 import { keywordMatcher, tierHints } from "./prefilter";
 import { googleNewsArticleId, googleNewsSearchUrl, isGoogleNewsLink } from "./gnews";
 import { fallbackQueries } from "../pipeline/candidates";
+import { publisherBlocker } from "./blocklist";
 
 test("RSS 2.0: CDATA title, entity-encoded HTML description, tracking params dropped", () => {
   const xml = `<?xml version="1.0"?><rss version="2.0"><channel><title>X</title>
@@ -107,4 +108,16 @@ test("Google News search URL picks the edition by language and adds a window", (
     queries: ["心理學 焦慮", "parenting study"],
   });
   assert.deepEqual(fb.map((q) => q.lang), ["zh-TW", "en-US"]);
+});
+
+test("blocked publishers: exact name (any case) or domain incl. subdomains", () => {
+  const blocked = publisherBlocker(["MSN", "36Kr", "36kr.com", "蕃新聞"]);
+  assert.equal(blocked("msn"), true);
+  assert.equal(blocked("MSNBC"), false); // name match is exact, not substring
+  assert.equal(blocked("蕃新聞"), true);
+  assert.equal(blocked("Fortune", "https://eu.36kr.com/en/p/1"), true);
+  assert.equal(blocked("Fortune", "https://not36kr.com/x"), false);
+  assert.equal(blocked("Fortune", "https://fortune.com/x"), false);
+  assert.equal(blocked(null, "not a url"), false);
+  assert.equal(publisherBlocker()("MSN"), false);
 });

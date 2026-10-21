@@ -9,6 +9,7 @@ export interface TierOutcome {
   unmetMins: { rule: TagRule; got: number }[];
   trimmed: { tag: string; max: number }[];
   error?: string;
+  deduped?: number;
 }
 
 const short = (t: TierConfig) => `${t.emoji} ${t.label.split("：")[0]}`;
@@ -40,6 +41,7 @@ export function buildNotes(
       const reasons = [
         o.error ? `本區產生失敗（${o.error}）` : "",
         cleanNote(o.shortfallNote),
+        o.deduped ? `${o.deduped} 則和其他文章是同一事件，已刪除` : "",
         ...quotaReasons,
       ].filter(Boolean);
       notes.push(`${short(o.tier)} ${n}/${o.tier.count} 篇：${reasons.join("；") || "夠格內容不足，寧缺勿濫"}`);

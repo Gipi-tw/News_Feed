@@ -4,6 +4,7 @@ import type { DigestConfig, FeedSource, GoogleNewsQuery, TierKey } from "../lib/
 import { parseFeed, type FeedEntry } from "./feed";
 import { googleNewsSearchUrl, isGoogleNewsLink } from "./gnews";
 import { keywordMatcher, tierHints } from "./prefilter";
+import { publisherBlocker } from "./blocklist";
 import { scoreItems } from "./score";
 import { usage } from "../lib/anthropic";
 import { runVideos, type VideoRunResult } from "../videos";
@@ -89,6 +90,7 @@ async function collect(
   const errors: CollectResult["errors"] = [];
   const perSource: Record<string, number> = {};
   const match = keywordMatcher(src.keywords);
+  const blocked = publisherBlocker(src.blockedPublishers);
   const oldest = Date.now() - src.retentionDays * 86_400_000;
   const found: NewItem[] = [];
 
@@ -96,6 +98,7 @@ async function collect(
     perSource[sourceKey] = entries.length;
     for (const e of entries) {
       if (e.publishedAt && e.publishedAt.getTime() < oldest) continue;
+      if (blocked(e.publisher, e.link)) continue; // never stored, so never scored
       found.push({
         link: e.link,
         url: isGoogleNewsLink(e.link) ? null : e.link,

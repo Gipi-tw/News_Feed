@@ -3,6 +3,7 @@ import type { DigestConfig, GoogleNewsQuery, SearchHit, TierConfig } from "../li
 import { collectQueries } from "../collect";
 import { decodeGoogleNewsUrl, isGoogleNewsLink } from "../collect/gnews";
 import { canonicalUrl, titleKey } from "../collect/text";
+import { publisherBlocker } from "../collect/blocklist";
 
 // "collected" mode: candidates come from the collector's scored items. A tier
 // short on candidates is topped up with a Google News keyword search over the
@@ -22,11 +23,13 @@ async function fromItems(tier: TierConfig, cfg: DigestConfig, knownUrls: Set<str
     orderBy: [{ score: "desc" }, { publishedAt: "desc" }],
     take: tier.count * POOL_FACTOR * 2,
   });
+  const blocked = publisherBlocker(cfg.sources?.blockedPublishers);
   const seenTitles = new Set<string>();
   const out: SearchHit[] = [];
   for (const r of rows) {
     const url = r.url ?? r.link;
     if (knownUrls.has(url) || knownUrls.has(r.link)) continue;
+    if (blocked(r.sourceName, url)) continue; // collected before it was blocked
     const key = titleKey(r.title);
     if (seenTitles.has(key)) continue; // same headline from two sources
     seenTitles.add(key);
@@ -80,11 +83,13 @@ export async function collectedCandidates(
 /**
  * Replace Google News redirect links with original URLs (needed for full-text
  * fetch, real links in the digest, and URL dedup). Drops hits that resolve to
- * an already-published URL or duplicate another hit. Persists resolved URLs.
+ * an already-published URL, duplicate another hit, or land on a blocked
+ * domain (the name check can't see that). Persists resolved URLs.
  */
 export async function resolveLinks(
   pools: { ranked: SearchHit[] }[],
   knownUrls: Set<string>,
+  blockedPublishers?: string[],
 ): Promise<void> {
   const all = pools.flatMap((p) => p.ranked).filter((h) => isGoogleNewsLink(h.url));
   const CONCURRENCY = 4;
@@ -98,10 +103,11 @@ export async function resolveLinks(
       }),
     );
   }
+  const blocked = publisherBlocker(blockedPublishers);
   const seen = new Set<string>();
   for (const p of pools) {
     p.ranked = p.ranked.filter((h) => {
-      if (knownUrls.has(h.url) || seen.has(h.url)) return false;
+      if (knownUrls.has(h.url) || seen.has(h.url) || blocked(h.sourceName, h.url)) return false;
       seen.add(h.url);
       return true;
     });
