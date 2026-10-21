@@ -10,6 +10,7 @@ on:
     paths:
       - "config/digest_config.json"
       - "src/collect/**"
+      - "src/videos/youtube.ts"
       - "scripts/check-sources.ts"
 
 jobs:

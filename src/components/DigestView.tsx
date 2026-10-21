@@ -2,6 +2,7 @@ import type { DigestView as DigestData } from "@/lib/digest-data";
 import { getTierMeta } from "@/lib/digest-data";
 import { formatChineseDate } from "@/lib/date";
 import { getDigestConfig } from "@/lib/config";
+import VideoSection from "./VideoSection";
 
 // Renders one digest with the verified template layout (SPEC §5.2):
 // masthead, TOC, colored tier sections, cards with fact/hook/links, footer
@@ -28,6 +29,7 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
       const n = byTier.get(t.key)?.length ?? 0;
       return n ? `${t.emoji} ${t.label.split("：")[0]} ${n} 篇` : null;
     })
+    .concat(digest.videos.some((v) => v.summary) ? [`🎬 影音 ${digest.videos.filter((v) => v.summary).length} 支`] : [])
     .filter(Boolean)
     .join("｜");
   const total = digest.articles.length;
@@ -97,6 +99,8 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
           </section>
         );
       })}
+
+      <VideoSection videos={digest.videos} />
 
       <footer>
         {digest.notes.length ? (

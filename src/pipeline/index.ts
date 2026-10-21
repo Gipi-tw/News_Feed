@@ -13,6 +13,7 @@ import { enforceQuotas } from "./quota";
 import { buildNotes, type TierOutcome } from "./notes";
 import { collectedCandidates, markUsed, resolveLinks } from "./candidates";
 import { runCollect } from "../collect";
+import { attachVideos, unshownVideoCounts } from "../videos";
 import { nextEdition, saveDigest } from "./assemble";
 import { notifyDigestReady } from "./notify";
 import { estimateCostUSD, resetUsage, usage } from "../lib/anthropic";
@@ -220,6 +221,12 @@ export async function runDigest(opts?: {
     for (const a of finalArticles) byTier[a.tier] = (byTier[a.tier] ?? 0) + 1;
     detail.byTier = byTier;
     const notes = buildNotes(cfg, outcomes, finalArticles);
+    // 🎬 doesn't count toward the 45; say how many came along and how many
+    // couldn't be summarized (no captions / Supadata points).
+    const vids = await unshownVideoCounts();
+    if (vids.summarized || vids.other) {
+      notes.push(`🎬 影音重點 ${vids.summarized} 支${vids.other ? `（另 ${vids.other} 支沒有摘要：無字幕或 Supadata 額度不足）` : ""}，不佔 45 篇名額`);
+    }
     detail.notes = notes;
 
     // 8. Persist + dedup index.
@@ -230,6 +237,7 @@ export async function runDigest(opts?: {
       articles: finalArticles,
       notes,
     });
+    await attachVideos(digestId);
     await markUsed(
       digestId,
       finalArticles.map((a) => itemByUrl.get(a.urls[0])).filter((x): x is string => Boolean(x)),

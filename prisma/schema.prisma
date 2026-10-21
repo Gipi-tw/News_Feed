@@ -81,6 +81,26 @@ model Item {
   @@index([url])
 }
 
+// 🎬 影音重點：訂閱頻道的新長片（逐字稿來自 Supadata，摘要用 Haiku）
+model Video {
+  id            String    @id // YouTube video id
+  channelKey    String
+  channelName   String
+  title         String
+  durationSec   Int
+  publishedAt   DateTime? // approximate: the /videos tab only says "2d ago"
+  createdAt     DateTime  @default(now())
+  status        String    @default("new") // new | summarized | no_transcript | skipped_budget | failed
+  transcript    String? // JSON [[startSec, text], …], cleared after retention
+  transcribedAt DateTime?
+  summary       String? // JSON — see src/videos/summarize.ts
+  error         String?
+  digestId      String? // set once shown in a digest
+
+  @@index([status])
+  @@index([digestId])
+}
+
 // 每次收集的紀錄（與日報的 RunLog 分開，免得干擾「產生中」判斷）
 model CollectRun {
   id         String    @id @default(cuid())
