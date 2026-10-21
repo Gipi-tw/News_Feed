@@ -47,7 +47,8 @@ fly launch --no-deploy            # 建 app（沿用本 fly.toml；改 app 名�
 fly volumes create digest_data --size 1 --region nrt
 fly secrets set \
   ANTHROPIC_API_KEY=... \
-  BRAVE_API_KEY=... \
+  SUPADATA_API_KEY=...   # 🎬 影片逐字稿；沒設的話影片只列標題 \
+  BRAVE_API_KEY=...      # 選用：只有 provider=brave 才用 \
   AUTH_USERNAME=gipi AUTH_PASSWORD_HASH='$2b$...' \
   AUTH_SECRET=$(openssl rand -hex 32) \
   CRON_SECRET=$(openssl rand -hex 32) \

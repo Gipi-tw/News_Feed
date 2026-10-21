@@ -1,5 +1,5 @@
 {
-  "configVersion": 5,
+  "configVersion": 6,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -742,5 +742,109 @@
         "投資"
       ]
     }
+  },
+  "videos": {
+    "minMinutes": 15,
+    "lookbackDays": 3,
+    "transcriptLang": "en",
+    "reserveCredits": 3,
+    "channels": [
+      {
+        "key": "tim-ferriss",
+        "name": "Tim Ferriss",
+        "handle": "timferriss",
+        "id": "UCznv7Vf9nBdJYvBagFdAHWw"
+      },
+      {
+        "key": "twis",
+        "name": "This Week in Startups",
+        "handle": "startups",
+        "id": "UCkkhmBWfS7pILYIk0izkc3A"
+      },
+      {
+        "key": "startup-istanbul",
+        "name": "Startup Istanbul",
+        "handle": "StartupIstanbul",
+        "id": "UCLNyswnPaNvY7RmpZsE1nKQ"
+      },
+      {
+        "key": "masters-of-scale",
+        "name": "Masters of Scale",
+        "handle": "MastersofScale",
+        "id": "UCQDXdr8B2Ou72uNZynnAt3A"
+      },
+      {
+        "key": "hbr",
+        "name": "Harvard Business Review",
+        "handle": "harvardbusinessreview",
+        "id": "UCWo4IA01TXzBeGJJKWHOG9g"
+      },
+      {
+        "key": "high-performance",
+        "name": "High Performance",
+        "handle": "HighPerformancePodcast",
+        "id": "UCT4hFq01krOatjiSG7z3iag"
+      },
+      {
+        "key": "doac",
+        "name": "The Diary Of A CEO",
+        "handle": "TheDiaryOfACEO",
+        "id": "UCGq-a57w-aPwyi3pW7XLiHw"
+      },
+      {
+        "key": "fast-company",
+        "name": "Fast Company",
+        "handle": "FastCompany",
+        "id": "UCqeXB2WsPdzcdCdP-bUc52g"
+      },
+      {
+        "key": "jre",
+        "name": "The Joe Rogan Experience",
+        "handle": "joerogan",
+        "id": "UCzQUP1qoWDoEbmsQxvdjxgQ"
+      },
+      {
+        "key": "nathan-barry",
+        "name": "Nathan Barry",
+        "handle": "NathanBarry",
+        "id": "UCS8iR4o5fcYAo3TKiRa5e3A"
+      },
+      {
+        "key": "yc",
+        "name": "Y Combinator",
+        "handle": "ycombinator",
+        "id": "UCcefcZRL2oaA_uBNeo5UOWg"
+      },
+      {
+        "key": "next-big-idea",
+        "name": "The Next Big Idea",
+        "handle": "NextBigIdeaClub",
+        "id": "UCknapqRNHs7HbhJoyDY_anQ"
+      },
+      {
+        "key": "the-futur",
+        "name": "The Futur",
+        "handle": "thefutur",
+        "id": "UC-b3c7kxa5vU-bnmaROgvog"
+      },
+      {
+        "key": "laurie-santos",
+        "name": "Dr. Laurie Santos",
+        "handle": "DrLaurieSantos",
+        "id": "UCFfUSTVKFCfXl6PVyG08zxg"
+      },
+      {
+        "key": "product-school",
+        "name": "Product School",
+        "handle": "ProductSchoolSanFrancisco",
+        "id": "UC6hlQ0x6kPbAGjYkoz53cvA"
+      },
+      {
+        "key": "reinvention-summit",
+        "name": "The Reinvention Summit",
+        "handle": "TheReinventionSummit",
+        "id": "UC4mUbOiabwSJMMgRaxF-Fgg"
+      }
+    ]
   }
 }

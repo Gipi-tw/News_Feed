@@ -103,3 +103,21 @@ label.field { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 1
   article.card { padding: 14px 16px; }
   nav.topnav .inner { gap: 12px; }
 }
+
+/* ── 🎬 影音重點 (not part of the 45) ─────────────────────────────── */
+:root { --t5: #5b4a8b; --t5-bg: #f1eef8; }
+.tier5 .tier-head { border-color: var(--t5); background: var(--t5-bg); }
+.video .verdict { margin: 6px 0 4px; font-size: 14px; color: var(--muted); }
+.video .pill { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 999px; padding: 1px 10px; margin-right: 8px; background: var(--t5-bg); color: var(--t5); }
+.video .pill.full { background: #e7f6ec; color: #1e7a40; }
+.video .pill.skip { background: #eef1f4; color: var(--muted); }
+.video .points { list-style: none; margin: 8px 0; padding: 0; display: grid; gap: 6px; font-size: 14.5px; }
+.video .points li { display: grid; grid-template-columns: 4.6em minmax(0, 1fr); gap: 8px; align-items: baseline; }
+.video .points.quotes li span { color: var(--muted); }
+.video .ts { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; color: var(--link); text-decoration: none; font-variant-numeric: tabular-nums; }
+.video .ts:hover { text-decoration: underline; }
+.video .segments a { display: inline-block; margin: 2px 12px 2px 0; }
+.video-rest ul { margin: 6px 0 0; padding-left: 18px; font-size: 14px; }
+.video-rest li { margin: 4px 0; overflow-wrap: anywhere; }
+.video-rest a { color: var(--ink); }
+.video-rest .why { display: block; font-size: 12.5px; color: var(--muted); }

@@ -6,6 +6,7 @@ import { googleNewsSearchUrl, isGoogleNewsLink } from "./gnews";
 import { keywordMatcher, tierHints } from "./prefilter";
 import { scoreItems } from "./score";
 import { usage } from "../lib/anthropic";
+import { runVideos, type VideoRunResult } from "../videos";
 
 // The collector: every few hours, pull every configured RSS feed and Google
 // News query, store new items (deduped by link), keyword-prefilter them, and
@@ -56,11 +57,16 @@ export async function runCollect(opts: { log?: Log; skipIfFreshMinutes?: number 
   if (!cfg.sources) return null;
   if (opts.skipIfFreshMinutes) {
     const recent = await prisma.collectRun.findFirst({
-      where: { status: "success", finishedAt: { gte: new Date(Date.now() - opts.skipIfFreshMinutes * 60_000) } },
+      // Only full collections count (a digest-time top-up search is not one).
+      where: {
+        status: "success",
+        message: { startsWith: "排程收集" },
+        finishedAt: { gte: new Date(Date.now() - opts.skipIfFreshMinutes * 60_000) },
+      },
     });
     if (recent) return null;
   }
-  return collect(cfg, cfg.sources.feeds, cfg.sources.googleNews, opts.log, "排程收集");
+  return collect(cfg, cfg.sources.feeds, cfg.sources.googleNews, opts.log, "排程收集", true);
 }
 
 /** Run ad-hoc Google News queries (digest-time top-up for a short tier). */
@@ -76,6 +82,7 @@ async function collect(
   queries: GoogleNewsQuery[],
   log: Log = (m) => console.log(`[collect] ${m}`),
   label: string,
+  withVideos = false,
 ): Promise<CollectResult> {
   const src = cfg.sources!;
   const run = await prisma.collectRun.create({ data: { status: "running", message: label } });
@@ -161,13 +168,13 @@ async function collect(
       take: 1500,
     });
     let scored = 0;
-    // Scoring is the only LLM spend here; record it on this run so scheduled
-    // collections (outside any digest run) show up in the cost log too.
+    // Scoring (and video summaries) are the LLM spend here; record it on this
+    // run so scheduled collections show up in the cost log, not just digests.
     const costBefore = usage.costUSD;
     const tokensBefore = { input: usage.inputTokens, output: usage.outputTokens, cacheRead: usage.cacheReadInputTokens };
     let scoreFailure = "";
+    const profile = toScore.length || withVideos ? await getInterestProfile() : "";
     if (toScore.length) {
-      const profile = await getInterestProfile();
       const { results, failedBatches, lastError } = await scoreItems(
         toScore.map((t) => ({ ...t, hints: JSON.parse(t.hints) as string[] })),
         cfg,
@@ -183,6 +190,19 @@ async function collect(
       if (failedBatches) scoreFailure = `評分失敗 ${failedBatches} 批（${lastError}）`;
     }
 
+    // 🎬 New long uploads on the subscribed channels (daily collection only).
+    let videos: VideoRunResult | null = null;
+    if (withVideos) {
+      try {
+        videos = await runVideos(cfg, profile, log);
+      } catch (e) {
+        errors.push({ source: "videos", error: errText(e) });
+      }
+    }
+    const videoNote = videos
+      ? `；影片：新 ${videos.found}、摘要 ${videos.summarized}${videos.noTranscript ? `、無字幕 ${videos.noTranscript}` : ""}${videos.skippedBudget ? `、額度不足略過 ${videos.skippedBudget}` : ""}（${videos.budgetNote}）`
+      : "";
+
     const scoreCost = Number((usage.costUSD - costBefore).toFixed(4));
     const scoreUsage = {
       inputTokens: usage.inputTokens - tokensBefore.input,
@@ -193,14 +213,15 @@ async function collect(
     // 5. Retention.
     await prisma.item.deleteMany({ where: { createdAt: { lt: new Date(oldest) } } });
 
+    if (videos?.errors.length) errors.push(...videos.errors);
     const result = { runId: run.id, fetched: found.length, inserted: fresh.length, scored, errors, scoreFailure };
     await prisma.collectRun.update({
       where: { id: run.id },
       data: {
         status: "success",
         finishedAt: new Date(),
-        message: `${label}：新增 ${fresh.length} 則、評分 ${scored}/${toScore.length} 則${errors.length ? `、${errors.length} 個來源失敗` : ""}｜估算 US$${scoreCost.toFixed(4)}${scoreFailure ? `；${scoreFailure}` : ""}`.slice(0, 300),
-        detail: JSON.stringify({ perSource, errors, scoreFailure, scoreUsage, estimatedCostUSD: scoreCost }),
+        message: `${label}：新增 ${fresh.length} 則、評分 ${scored}/${toScore.length} 則${errors.length ? `、${errors.length} 個來源失敗` : ""}｜估算 US$${scoreCost.toFixed(4)}${scoreFailure ? `；${scoreFailure}` : ""}${videoNote}`.slice(0, 400),
+        detail: JSON.stringify({ perSource, errors, scoreFailure, videos, scoreUsage, estimatedCostUSD: scoreCost }),
       },
     });
     log(`新增 ${fresh.length} 則，評分 ${scored} 則`);

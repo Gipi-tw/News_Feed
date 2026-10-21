@@ -8,6 +8,7 @@ export const env = {
   serperKey: process.env.SERPER_API_KEY ?? "",
   googleCseKey: process.env.GOOGLE_CSE_KEY ?? "",
   googleCseId: process.env.GOOGLE_CSE_ID ?? "",
+  supadataKey: process.env.SUPADATA_API_KEY ?? "",
   searchProviderOverride: process.env.SEARCH_PROVIDER ?? "",
   authUsername: process.env.AUTH_USERNAME ?? "",
   authPasswordHash: process.env.AUTH_PASSWORD_HASH ?? "",

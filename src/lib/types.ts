@@ -58,6 +58,7 @@ export interface DigestConfig {
   // Quotas across the whole digest (e.g. AI-centric ≤ 15).
   globalRules?: TagRule[];
   sources?: SourcesConfig;
+  videos?: VideosConfig;
   tiers: TierConfig[];
   globalExclusions: string[];
 }
@@ -89,6 +90,21 @@ export interface SourcesConfig {
   feeds: FeedSource[];
   googleNews: GoogleNewsQuery[];
   keywords: Partial<Record<TierKey, string[]>>;
+}
+
+export interface VideoChannel {
+  key: string;
+  name: string;
+  handle: string; // youtube.com/@handle — new uploads are read from its /videos tab
+  id: string; // channel id (UC…), for reference
+}
+
+export interface VideosConfig {
+  minMinutes: number; // shorter uploads (clips, trailers) are skipped; Shorts never appear in /videos
+  lookbackDays: number; // only uploads newer than this are picked up
+  transcriptLang: string;
+  reserveCredits: number; // Supadata points left untouched each month
+  channels: VideoChannel[];
 }
 
 // A raw search hit before selection.

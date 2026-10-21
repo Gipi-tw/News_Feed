@@ -1,6 +1,7 @@
 import { prisma } from "./db";
 import { getDigestConfig } from "./config";
 import type { LintReport, TierConfig, TierKey } from "./types";
+import type { VideoSummary } from "../videos/summarize";
 
 export interface ArticleView {
   id: string;
@@ -27,6 +28,30 @@ export interface DigestView {
   createdAt: Date;
   notes: string[];
   articles: ArticleView[];
+  videos: VideoView[];
+}
+
+export interface VideoView {
+  id: string;
+  channelName: string;
+  title: string;
+  durationSec: number;
+  publishedAt: Date | null;
+  status: string; // summarized | no_transcript | skipped_budget | failed
+  summary: VideoSummary | null;
+}
+
+async function videosFor(digestId: string): Promise<VideoView[]> {
+  const rows = await prisma.video.findMany({
+    where: { digestId },
+    orderBy: [{ status: "desc" }, { publishedAt: "desc" }], // "summarized" sorts before the others
+    select: { id: true, channelName: true, title: true, durationSec: true, publishedAt: true, status: true, summary: true },
+  });
+  return rows.map((r) => {
+    let summary: VideoSummary | null = null;
+    try { summary = r.summary ? (JSON.parse(r.summary) as VideoSummary) : null; } catch { summary = null; }
+    return { ...r, summary };
+  });
 }
 
 function parseArticle(a: {
@@ -82,6 +107,7 @@ function toView(d: {
     id: d.id, date: d.date, edition: d.edition, title: d.title,
     status: d.status, createdAt: d.createdAt, notes: parseList(d.notes),
     articles: d.articles.map(parseArticle).sort((a, b) => a.position - b.position),
+    videos: [], // filled by the loaders below
   };
 }
 
@@ -90,12 +116,12 @@ export async function getLatestDigest(): Promise<DigestView | null> {
     orderBy: [{ date: "desc" }, { edition: "desc" }],
     include: { articles: true },
   });
-  return d ? toView(d) : null;
+  return d ? { ...toView(d), videos: await videosFor(d.id) } : null;
 }
 
 export async function getDigestById(id: string): Promise<DigestView | null> {
   const d = await prisma.digest.findUnique({ where: { id }, include: { articles: true } });
-  return d ? toView(d) : null;
+  return d ? { ...toView(d), videos: await videosFor(d.id) } : null;
 }
 
 export async function listDigests(): Promise<

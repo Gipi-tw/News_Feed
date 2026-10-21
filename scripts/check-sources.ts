@@ -8,6 +8,7 @@ import type { DigestConfig } from "../src/lib/types";
 import { parseFeed } from "../src/collect/feed";
 import { decodeGoogleNewsUrl, googleNewsSearchUrl } from "../src/collect/gnews";
 import { keywordMatcher, tierHints } from "../src/collect/prefilter";
+import { listChannelVideos } from "../src/videos/youtube";
 
 const UA =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Safari/537.36";
@@ -45,6 +46,26 @@ async function main() {
     if (s.key.startsWith("gn-")) await new Promise((r) => setTimeout(r, 700));
   }
 
+  // YouTube channels (listing only — no transcripts, no Supadata points).
+  const vrows: string[] = [];
+  const vc = cfg.videos;
+  for (const ch of vc?.channels ?? []) {
+    try {
+      const vids = await listChannelVideos(ch.handle);
+      const recentSince = Date.now() - vc!.lookbackDays * 86_400_000;
+      const long = vids.filter((v) => v.durationSec >= vc!.minMinutes * 60);
+      const recent = long.filter((v) => v.publishedAt && v.publishedAt.getTime() >= recentSince);
+      if (!vids.length) bad++;
+      vrows.push(
+        `| ${ch.name} | ${vids.length ? "✅" : "⚠️"} | ${vids.length} | ${long.length} | ${recent.length} | ${(long[0]?.title ?? "").slice(0, 50).replace(/\|/g, "／")} |`,
+      );
+    } catch (e) {
+      bad++;
+      vrows.push(`| ${ch.name} | ❌ ${(e as Error).message.slice(0, 40)} | | | | |`);
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+
   const decoded: string[] = [];
   for (const l of gnLinks.slice(0, 3)) decoded.push(`- ${(await decodeGoogleNewsUrl(l)) ?? "❌ 解不出來"}`);
 
@@ -59,6 +80,12 @@ async function main() {
     "",
     "Google News 連結解碼：",
     ...decoded,
+    "",
+    `## YouTube 頻道（影片分頁；長片 = ${vc?.minMinutes ?? "?"} 分鐘以上，近期 = ${vc?.lookbackDays ?? "?"} 天內）`,
+    "",
+    "| 頻道 | 狀態 | 列出 | 長片 | 近期長片 | 最新長片 |",
+    "|---|---|---|---|---|---|",
+    ...vrows,
     "",
   ].join("\n");
   console.log(md);
