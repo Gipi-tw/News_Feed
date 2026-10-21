@@ -40,7 +40,7 @@ export default function VideoSection({ videos }: { videos: VideoView[] }) {
   if (!videos.length) return null;
 
   return (
-    <section className="tier tier5">
+    <section className="tier tier5" id="videos">
       <div className="tier-head">
         <h2>🎬 影音重點</h2>
         <span className="count">

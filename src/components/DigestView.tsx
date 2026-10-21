@@ -4,6 +4,7 @@ import { formatChineseDate } from "@/lib/date";
 import { getDigestConfig } from "@/lib/config";
 import VideoSection from "./VideoSection";
 import DayPicker from "./DayPicker";
+import ToTocButton from "./ToTocButton";
 
 // Renders one digest with the verified template layout (SPEC §5.2):
 // masthead, TOC, colored tier sections, cards with fact/hook/links, footer
@@ -25,14 +26,12 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
     .join(" ＋ ");
   const quotaTotal = cfg.tiers.reduce((n, t) => n + t.count, 0);
 
-  const tocParts = tiers
-    .map((t) => {
-      const n = byTier.get(t.key)?.length ?? 0;
-      return n ? `${t.emoji} ${t.label.split("：")[0]} ${n} 篇` : null;
-    })
-    .concat(digest.videos.some((v) => v.summary) ? [`🎬 影音 ${digest.videos.filter((v) => v.summary).length} 支`] : [])
-    .filter(Boolean)
-    .join("｜");
+  // Table of contents as tap targets: on a phone the page is ~50 screens long.
+  const toc = tiers
+    // Short names ("餐飲", "領導") keep the chips to two rows at 360px; the full name heads each tier.
+    .map((t) => ({ href: `#${t.key}`, label: `${t.emoji} ${t.label.split("：")[0].split("・")[0]}`, n: byTier.get(t.key)?.length ?? 0 }))
+    .filter((x) => x.n)
+    .concat(digest.videos.some((v) => v.summary) ? [{ href: "#videos", label: "🎬 影音", n: digest.videos.filter((v) => v.summary).length }] : []);
   const total = digest.articles.length;
 
   return (
@@ -40,21 +39,25 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
       <header className="masthead">
         <h1>內容摘要日報</h1>
         <div className="meta">
-          {formatChineseDate(digest.date)} 第 {digest.edition} 期｜依《游舒帆興趣輪廓分析》產出｜
-          純策展清單：事實摘要 ＋ 觀點 hook ＋ 原始連結
+          {formatChineseDate(digest.date)} 第 {digest.edition} 期｜{total} 篇
+          <span className="meta-extra">｜依《游舒帆興趣輪廓分析》產出｜純策展清單：事實摘要 ＋ 觀點 hook ＋ 原始連結</span>
         </div>
         <DayPicker date={digest.date} edition={digest.edition} days={days} />
       </header>
 
-      <div className="toc">
-        本期 {total} 篇：{tocParts}
-      </div>
+      <nav className="toc" id="toc" aria-label="本期目錄">
+        {toc.map((x) => (
+          <a key={x.href} href={x.href} className="chip">
+            {x.label} <b>{x.n}</b>
+          </a>
+        ))}
+      </nav>
 
       {tiers.map((t) => {
         const items = byTier.get(t.key) ?? [];
         if (!items.length) return null;
         return (
-          <section key={t.key} className={`tier ${t.tierClass}`}>
+          <section key={t.key} id={t.key} className={`tier ${t.tierClass}`}>
             <div className="tier-head">
               <h2>
                 {t.emoji} {t.label}
@@ -122,6 +125,8 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
           去重以 URL 為硬條件、事件相似為軟條件，窗口 {cfg.dedup.windowDays} 天。純策展清單，不含貼文草稿。
         </p>
       </footer>
+
+      <ToTocButton />
     </div>
   );
 }
