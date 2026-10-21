@@ -1,5 +1,5 @@
 {
-  "configVersion": 7,
+  "configVersion": 8,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -174,7 +174,7 @@
     "minScore": 5,
     "retentionDays": 14,
     "maxItemsPerGoogleNewsQuery": 20,
-    "blockedPublishers": ["36Kr", "36氪", "36kr.com", "MSN", "msn.com", "蕃新聞", "n.yam.com", "CoinMarketCap", "coinmarketcap.com"],
+    "blockedPublishers": ["36Kr", "36氪", "36kr.com", "MSN", "msn.com", "蕃新聞", "n.yam.com", "CoinMarketCap", "coinmarketcap.com", "AOL.com", "AOL.co.uk", "TradingView", "tradingview.com", "KuCoin", "kucoin.com", "Stocktwits", "stocktwits.com"],
     "feeds": [
       {
         "key": "woshipm",

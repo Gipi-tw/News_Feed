@@ -21,7 +21,7 @@
 - 排除純財報、股價新聞。同一個持續事件只收新進展。
 - 去重：URL 為硬條件（30 天窗口），事件相似為軟條件。
 - 同一事件只留一則：各區選完後，模型再把全份候選（含備選）一起看一次，同一事件的不同報導只留排名最前的那則，其他刪掉、由備選遞補；因此少收時頁尾會註明。
-- 不收的媒體：`sources.blockedPublishers`（目前 36Kr、MSN、蕃新聞、CoinMarketCap），可在設定頁增減。寫媒體名要完全相同（不分大小寫，所以 MSN 不會擋到 MSNBC）；寫網域（含「.」）則連子網域一起擋。收集時就跳過，Google News 連結解回原文後再用網域檢查一次。
+- 不收的媒體：`sources.blockedPublishers`（目前 36Kr、MSN、蕃新聞、CoinMarketCap、AOL、TradingView、KuCoin、Stocktwits），可在設定頁增減。每一項都和媒體名比對，要完全相同（不分大小寫，所以 MSN 不會擋到 MSNBC）；含「.」的項目另外當網域比對，連子網域一起擋（Google News 有些媒體名就是網域，例如 AOL.com）。收集時就跳過，Google News 連結解回原文後再用網域檢查一次。
 
 ## 追蹤名單
 
