@@ -1,5 +1,5 @@
 {
-  "configVersion": 4,
+  "configVersion": 5,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -165,7 +165,7 @@
     "中國企業動態（阿里、騰訊、字節跳動等，除非與國際巨頭直接相關）"
   ],
   "sources": {
-    "collectEveryHours": 4,
+    "collectCron": "0 5 * * *",
     "minScore": 5,
     "retentionDays": 14,
     "maxItemsPerGoogleNewsQuery": 20,

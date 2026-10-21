@@ -5,6 +5,7 @@ import { parseFeed, type FeedEntry } from "./feed";
 import { googleNewsSearchUrl, isGoogleNewsLink } from "./gnews";
 import { keywordMatcher, tierHints } from "./prefilter";
 import { scoreItems } from "./score";
+import { usage } from "../lib/anthropic";
 
 // The collector: every few hours, pull every configured RSS feed and Google
 // News query, store new items (deduped by link), keyword-prefilter them, and
@@ -160,6 +161,10 @@ async function collect(
       take: 1500,
     });
     let scored = 0;
+    // Scoring is the only LLM spend here; record it on this run so scheduled
+    // collections (outside any digest run) show up in the cost log too.
+    const costBefore = usage.costUSD;
+    const tokensBefore = { input: usage.inputTokens, output: usage.outputTokens, cacheRead: usage.cacheReadInputTokens };
     let scoreFailure = "";
     if (toScore.length) {
       const profile = await getInterestProfile();
@@ -178,6 +183,13 @@ async function collect(
       if (failedBatches) scoreFailure = `評分失敗 ${failedBatches} 批（${lastError}）`;
     }
 
+    const scoreCost = Number((usage.costUSD - costBefore).toFixed(4));
+    const scoreUsage = {
+      inputTokens: usage.inputTokens - tokensBefore.input,
+      outputTokens: usage.outputTokens - tokensBefore.output,
+      cacheReadInputTokens: usage.cacheReadInputTokens - tokensBefore.cacheRead,
+    };
+
     // 5. Retention.
     await prisma.item.deleteMany({ where: { createdAt: { lt: new Date(oldest) } } });
 
@@ -187,8 +199,8 @@ async function collect(
       data: {
         status: "success",
         finishedAt: new Date(),
-        message: `${label}：新增 ${fresh.length} 則、評分 ${scored}/${toScore.length} 則${errors.length ? `、${errors.length} 個來源失敗` : ""}${scoreFailure ? `；${scoreFailure}` : ""}`.slice(0, 300),
-        detail: JSON.stringify({ perSource, errors, scoreFailure }),
+        message: `${label}：新增 ${fresh.length} 則、評分 ${scored}/${toScore.length} 則${errors.length ? `、${errors.length} 個來源失敗` : ""}｜估算 US$${scoreCost.toFixed(4)}${scoreFailure ? `；${scoreFailure}` : ""}`.slice(0, 300),
+        detail: JSON.stringify({ perSource, errors, scoreFailure, scoreUsage, estimatedCostUSD: scoreCost }),
       },
     });
     log(`新增 ${fresh.length} 則，評分 ${scored} 則`);

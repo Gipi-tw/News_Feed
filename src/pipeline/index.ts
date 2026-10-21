@@ -125,7 +125,7 @@ export async function runDigest(opts?: {
       if (mode === "collected") {
         // ── Collected path (default): RSS/Google News items, scored by the collector.
         await progress("收集最新文章…");
-        await runCollect({ log, skipIfFreshMinutes: 30 });
+        await runCollect({ log, skipIfFreshMinutes: 12 * 60 });
         await progress("從收集到的文章挑候選…");
         for (const [k, v] of await collectedCandidates(cfg, knownUrls, log)) byTierHits.set(k, v);
         detail.candidates = Object.fromEntries([...byTierHits].map(([k, v]) => [k, v.length]));
@@ -143,24 +143,25 @@ export async function runDigest(opts?: {
         }
       }
       await progress("選文中…");
-      const pools: TierPool<SearchHit & { tags: string[] }>[] = await Promise.all(
-        cfg.tiers.map(async (tier) => {
-          try {
-            const s = await selectForTier({
-              tier,
-              candidates: byTierHits.get(tier.key) ?? [],
-              recentTitles,
-              interestProfile,
-              today,
-              cfg,
-            });
-            return { tier, ranked: s.ranked.map((h) => ({ ...h, tags: h.tags ?? [] })), shortfallNote: s.shortfallNote };
-          } catch (err) {
-            log(`選文失敗（${tier.key}）：${errMsg(err)}`);
-            return { tier, ranked: [], shortfallNote: "", error: errMsg(err) };
-          }
-        }),
-      );
+      // One tier at a time: the first call writes the cached system prompt
+      // (full interest profile), the other four read it at 0.1× the price.
+      const pools: TierPool<SearchHit & { tags: string[] }>[] = [];
+      for (const tier of cfg.tiers) {
+        try {
+          const s = await selectForTier({
+            tier,
+            candidates: byTierHits.get(tier.key) ?? [],
+            recentTitles,
+            interestProfile,
+            today,
+            cfg,
+          });
+          pools.push({ tier, ranked: s.ranked.map((h) => ({ ...h, tags: h.tags ?? [] })), shortfallNote: s.shortfallNote });
+        } catch (err) {
+          log(`選文失敗（${tier.key}）：${errMsg(err)}`);
+          pools.push({ tier, ranked: [], shortfallNote: "", error: errMsg(err) });
+        }
+      }
       assertSomeTierWorked(pools);
       if (mode === "collected") {
         await progress("解析 Google News 原文連結…");

@@ -82,7 +82,7 @@ export interface GoogleNewsQuery {
 }
 
 export interface SourcesConfig {
-  collectEveryHours: number;
+  collectCron: string; // daily "M H * * *" in `timezone` (default 05:00, before the 08:00 digest)
   minScore: number; // 0–10; items below never become candidates
   retentionDays: number;
   maxItemsPerGoogleNewsQuery: number;
