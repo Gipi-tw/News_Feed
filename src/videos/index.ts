@@ -31,6 +31,23 @@ export function daysLeftInMonth(timeZone: string, now = new Date()): number {
   return daysInMonth - d + 1;
 }
 
+/**
+ * Order for spending points: videos that already have a transcript (free to
+ * re-summarize) first, then channels take turns, newest first within each — so
+ * one prolific channel (Product School posts ~9 talks in 3 days) can't use up
+ * the day's allowance before JRE or Diary of a CEO get one.
+ */
+export function interleaveByChannel<T extends { channelKey: string; transcript: string | null }>(newestFirst: T[]): T[] {
+  const ready = newestFirst.filter((v) => v.transcript);
+  const queues = new Map<string, T[]>();
+  for (const v of newestFirst) if (!v.transcript) (queues.get(v.channelKey) ?? queues.set(v.channelKey, []).get(v.channelKey)!).push(v);
+  const turns: T[] = [];
+  for (let round = 0; turns.length < newestFirst.length - ready.length; round++) {
+    for (const q of queues.values()) if (q[round]) turns.push(q[round]);
+  }
+  return [...ready, ...turns];
+}
+
 /** Spread the remaining points over the rest of the month; never go below 1/day while any remain. */
 export function dailyAllowance(remaining: number, daysLeft: number): number {
   return remaining > 0 ? Math.ceil(remaining / Math.max(1, daysLeft)) : 0;
@@ -88,9 +105,12 @@ export async function runVideos(cfg: DigestConfig, interestProfile: string, log:
     }
   }
 
-  // 3. Newest first. Videos that already have a transcript (an earlier summary
-  //    attempt failed) are re-summarized without spending a point.
-  const pending = await prisma.video.findMany({ where: { status: "new" }, orderBy: { publishedAt: "desc" } });
+  // 3. Videos that already have a transcript (an earlier summary attempt
+  //    failed) are re-summarized without spending a point; the rest take turns
+  //    by channel, newest first.
+  const pending = interleaveByChannel(
+    await prisma.video.findMany({ where: { status: "new" }, orderBy: { publishedAt: "desc" } }),
+  );
   for (const v of pending) {
     let lines: [number, string][] | null = v.transcript ? (JSON.parse(v.transcript) as [number, string][]) : null;
     if (!lines) {

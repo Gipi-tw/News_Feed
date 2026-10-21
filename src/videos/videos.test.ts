@@ -2,7 +2,16 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseDuration, parseRelativeTime, parseVideosTab, watchUrl } from "./youtube";
 import { compactTranscript } from "./supadata";
-import { dailyAllowance, daysLeftInMonth } from "./index";
+import { dailyAllowance, daysLeftInMonth, interleaveByChannel } from "./index";
+
+test("channels take turns; videos with a transcript go first", () => {
+  const v = (id: string, channelKey: string, transcript: string | null = null) => ({ id, channelKey, transcript });
+  const order = interleaveByChannel([
+    v("ps1", "product-school"), v("ps2", "product-school"), v("jre1", "jre"),
+    v("ps3", "product-school"), v("doac1", "doac"), v("yc1", "yc", "[[0,\"hi\"]]"),
+  ]);
+  assert.deepEqual(order.map((x) => x.id), ["yc1", "ps1", "jre1", "doac1", "ps2", "ps3"]);
+});
 
 const NOW = Date.parse("2026-10-21T04:00:00Z");
 
