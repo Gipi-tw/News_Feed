@@ -60,6 +60,37 @@ model DedupEntry {
   @@index([date])
 }
 
+// 收集到的文章（RSS / Google News）。出日報時先從這裡選，不夠才搜尋補。
+model Item {
+  id          String    @id @default(cuid())
+  link        String    @unique // as fetched (Google News items: the news.google.com redirect)
+  url         String? // resolved original URL (feeds: = link; Google News: after decoding)
+  title       String
+  summary     String    @default("")
+  sourceKey   String
+  sourceName  String
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  hints       String    @default("[]") // JSON tier keys from the source / keyword prefilter
+  tier        String? // scorer's tier; "none" = not relevant / not scored
+  score       Int? // 0–10 relevance for Gipi; null = not scored yet
+  digestId    String? // set once published
+
+  @@index([publishedAt])
+  @@index([tier, score])
+  @@index([url])
+}
+
+// 每次收集的紀錄（與日報的 RunLog 分開，免得干擾「產生中」判斷）
+model CollectRun {
+  id         String    @id @default(cuid())
+  status     String    @default("running") // running | success | failed
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  message    String?
+  detail     String? // JSON: per-source counts / errors
+}
+
 // 可在後台編輯的設定（興趣輪廓 md / 口吻指南 md / 配比與排除規則 JSON / 排程）
 model Setting {
   key       String   @id // interest_profile | style_guide | digest_config

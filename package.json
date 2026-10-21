@@ -21,6 +21,7 @@
     "@mozilla/readability": "^0.6.0",
     "@prisma/client": "^6.3.0",
     "bcryptjs": "^3.0.2",
+    "fast-xml-parser": "^4.5.3",
     "jose": "^6.0.10",
     "jsdom": "^26.0.0",
     "next": "^15.5.19",

@@ -1,16 +1,17 @@
 {
-  "configVersion": 2,
+  "configVersion": 3,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
-    "provider": "claude",
+    "provider": "collected",
     "freshnessHours": 48,
     "resultsPerQuery": 10,
     "languages": [
       "zh-hant",
       "en"
     ],
-    "maxSearchesPerTier": 1
+    "maxSearchesPerTier": 1,
+    "fallback": "gnews"
   },
   "dedup": {
     "windowDays": 30
@@ -162,5 +163,583 @@
     "選舉政治（科技政策與勞動議題除外）",
     "純股價財報新聞",
     "中國企業動態（阿里、騰訊、字節跳動等，除非與國際巨頭直接相關）"
-  ]
+  ],
+  "sources": {
+    "collectEveryHours": 4,
+    "minScore": 5,
+    "retentionDays": 14,
+    "maxItemsPerGoogleNewsQuery": 20,
+    "feeds": [
+      {
+        "key": "woshipm",
+        "name": "人人都是產品經理",
+        "url": "https://www.woshipm.com/feed",
+        "tiers": [
+          "tier2"
+        ]
+      },
+      {
+        "key": "inside",
+        "name": "INSIDE",
+        "url": "https://www.inside.com.tw/feed/rss",
+        "tiers": [
+          "tier2"
+        ]
+      },
+      {
+        "key": "techcrunch",
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/feed/",
+        "tiers": []
+      },
+      {
+        "key": "geekpark",
+        "name": "極客公園",
+        "url": "https://www.geekpark.net/rss",
+        "tiers": []
+      },
+      {
+        "key": "bloomberg-tech",
+        "name": "Bloomberg Technology",
+        "url": "https://feeds.bloomberg.com/technology/news.rss",
+        "tiers": []
+      },
+      {
+        "key": "wired",
+        "name": "WIRED",
+        "url": "https://www.wired.com/feed/rss",
+        "tiers": []
+      },
+      {
+        "key": "wired-gear",
+        "name": "WIRED Gear",
+        "url": "https://www.wired.com/feed/category/gear/latest/rss",
+        "tiers": []
+      },
+      {
+        "key": "gizmodo",
+        "name": "Gizmodo",
+        "url": "https://gizmodo.com/rss",
+        "tiers": []
+      },
+      {
+        "key": "infoq",
+        "name": "InfoQ",
+        "url": "https://feed.infoq.com",
+        "tiers": [
+          "tier2"
+        ]
+      },
+      {
+        "key": "ithome",
+        "name": "iThome",
+        "url": "https://www.ithome.com.tw/rss",
+        "tiers": [
+          "tier2"
+        ]
+      },
+      {
+        "key": "slashdot",
+        "name": "Slashdot",
+        "url": "https://rss.slashdot.org/Slashdot/slashdotMain",
+        "tiers": []
+      },
+      {
+        "key": "verge",
+        "name": "The Verge",
+        "url": "https://www.theverge.com/rss/index.xml",
+        "tiers": []
+      },
+      {
+        "key": "fastcompany",
+        "name": "Fast Company",
+        "url": "https://www.fastcompany.com/latest/rss",
+        "tiers": [
+          "leadership"
+        ]
+      },
+      {
+        "key": "hbr",
+        "name": "Harvard Business Review",
+        "url": "http://feeds.hbr.org/harvardbusiness",
+        "tiers": [
+          "leadership"
+        ]
+      },
+      {
+        "key": "lifehacker",
+        "name": "Lifehacker",
+        "url": "https://lifehacker.com/feed/rss",
+        "tiers": [
+          "life"
+        ]
+      },
+      {
+        "key": "mitsmr",
+        "name": "MIT Sloan Management Review",
+        "url": "https://sloanreview.mit.edu/feed/",
+        "tiers": [
+          "leadership"
+        ]
+      },
+      {
+        "key": "technews",
+        "name": "TechNews 科技新報",
+        "url": "https://technews.tw/feed/",
+        "tiers": [
+          "tier2"
+        ]
+      },
+      {
+        "key": "psypost",
+        "name": "PsyPost",
+        "url": "https://www.psypost.org/feed/",
+        "tiers": [
+          "life"
+        ]
+      },
+      {
+        "key": "nrn",
+        "name": "Nation's Restaurant News",
+        "url": "https://www.nrn.com/rss.xml",
+        "tiers": [
+          "food"
+        ]
+      },
+      {
+        "key": "fortune",
+        "name": "Fortune",
+        "url": "https://fortune.com/feed/",
+        "tiers": [
+          "corp",
+          "leadership"
+        ]
+      },
+      {
+        "key": "restaurantdive",
+        "name": "Restaurant Dive",
+        "url": "https://www.restaurantdive.com/feeds/news/",
+        "tiers": [
+          "food"
+        ]
+      },
+      {
+        "key": "fooddive",
+        "name": "Food Dive",
+        "url": "https://www.fooddive.com/feeds/news/",
+        "tiers": [
+          "food"
+        ]
+      },
+      {
+        "key": "hrdive",
+        "name": "HR Dive",
+        "url": "https://www.hrdive.com/feeds/news/",
+        "tiers": [
+          "leadership"
+        ]
+      }
+    ],
+    "googleNews": [
+      {
+        "key": "gn-bnext",
+        "name": "數位時代",
+        "query": "site:bnext.com.tw",
+        "tiers": [
+          "tier2"
+        ],
+        "lang": "zh-TW"
+      },
+      {
+        "key": "gn-managertoday",
+        "name": "經理人",
+        "query": "site:managertoday.com.tw",
+        "tiers": [
+          "leadership",
+          "tier2"
+        ],
+        "lang": "zh-TW"
+      },
+      {
+        "key": "gn-parenting",
+        "name": "親子天下",
+        "query": "site:parenting.com.tw",
+        "tiers": [
+          "life"
+        ],
+        "lang": "zh-TW"
+      },
+      {
+        "key": "gn-restaurantbusiness",
+        "name": "Restaurant Business",
+        "query": "site:restaurantbusinessonline.com",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-google",
+        "name": "Google",
+        "query": "(Google OR Alphabet OR Pichai) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-musk",
+        "name": "Musk 系",
+        "query": "(Musk OR Tesla OR SpaceX OR xAI) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-apple",
+        "name": "Apple",
+        "query": "(Apple OR \"Tim Cook\") (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-microsoft",
+        "name": "Microsoft",
+        "query": "(Microsoft OR Nadella) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-openai",
+        "name": "OpenAI",
+        "query": "(OpenAI OR \"Sam Altman\") (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-anthropic",
+        "name": "Anthropic",
+        "query": "(Anthropic OR \"Dario Amodei\") (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-nvidia",
+        "name": "NVIDIA／黃仁勳",
+        "query": "(Nvidia OR \"Jensen Huang\")",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-meta",
+        "name": "Meta",
+        "query": "(Meta OR Zuckerberg) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-amazon",
+        "name": "Amazon",
+        "query": "(Amazon OR \"Andy Jassy\") (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-media-mobility",
+        "name": "Netflix／Disney／Uber",
+        "query": "(Netflix OR Disney OR Uber) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-intel-crm-coinbase",
+        "name": "Intel／Salesforce／Coinbase",
+        "query": "(Intel OR Salesforce OR Coinbase) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-rbi",
+        "name": "RBI 系",
+        "query": "(\"Restaurant Brands International\" OR \"Burger King\" OR \"Tim Hortons\" OR Popeyes)",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-mcdonalds",
+        "name": "McDonald's",
+        "query": "\"McDonald's\"",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-yum",
+        "name": "Yum! Brands",
+        "query": "(\"Yum Brands\" OR KFC OR \"Taco Bell\" OR \"Pizza Hut\")",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-chains",
+        "name": "Chipotle／Domino's／Darden",
+        "query": "(Chipotle OR \"Domino's\" OR Darden)",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-starbucks",
+        "name": "Starbucks",
+        "query": "Starbucks",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-beverage",
+        "name": "跨國飲料",
+        "query": "(\"AB InBev\" OR \"Coca-Cola\" OR PepsiCo OR Nestle OR \"Keurig Dr Pepper\" OR \"Monster Beverage\")",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-spirits",
+        "name": "烈酒與精品酒",
+        "query": "(Diageo OR \"Pernod Ricard\" OR \"Moet Hennessy\" OR \"Remy Cointreau\" OR \"Brown-Forman\" OR \"Red Bull\")",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-coffee",
+        "name": "精品咖啡",
+        "query": "(\"Blue Bottle\" OR \"% Arabica\" OR \"Starbucks Reserve\" OR \"specialty coffee\")",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-foodservice",
+        "name": "團膳",
+        "query": "(\"Compass Group\" OR Aramark)",
+        "tiers": [
+          "food"
+        ],
+        "lang": "en-US"
+      }
+    ],
+    "keywords": {
+      "corp": [
+        "Google",
+        "Alphabet",
+        "Pichai",
+        "Musk",
+        "Tesla",
+        "SpaceX",
+        "xAI",
+        "Apple",
+        "Tim Cook",
+        "Microsoft",
+        "Nadella",
+        "OpenAI",
+        "Altman",
+        "Anthropic",
+        "Amodei",
+        "Nvidia",
+        "Jensen Huang",
+        "Meta",
+        "Zuckerberg",
+        "Amazon",
+        "Jassy",
+        "Bezos",
+        "Netflix",
+        "Uber",
+        "Disney",
+        "Intel",
+        "Salesforce",
+        "Benioff",
+        "Coinbase",
+        "谷歌",
+        "蘋果",
+        "微軟",
+        "輝達",
+        "英偉達",
+        "黃仁勳",
+        "亞馬遜",
+        "特斯拉",
+        "馬斯克",
+        "祖克柏",
+        "迪士尼",
+        "英特爾"
+      ],
+      "food": [
+        "McDonald's",
+        "Starbucks",
+        "Chipotle",
+        "Burger King",
+        "Tim Hortons",
+        "Popeyes",
+        "KFC",
+        "Taco Bell",
+        "Pizza Hut",
+        "Domino's",
+        "Darden",
+        "Coca-Cola",
+        "PepsiCo",
+        "Nestle",
+        "Nestlé",
+        "AB InBev",
+        "Diageo",
+        "Pernod",
+        "Hennessy",
+        "Red Bull",
+        "Blue Bottle",
+        "restaurant",
+        "restaurants",
+        "franchisee",
+        "franchisees",
+        "麥當勞",
+        "星巴克",
+        "肯德基",
+        "餐飲",
+        "連鎖",
+        "加盟",
+        "飲料",
+        "咖啡"
+      ],
+      "leadership": [
+        "leadership",
+        "leader",
+        "leaders",
+        "manager",
+        "managers",
+        "management",
+        "executive",
+        "executives",
+        "workplace",
+        "employee",
+        "employees",
+        "layoff",
+        "layoffs",
+        "company culture",
+        "remote work",
+        "return to office",
+        "RTO",
+        "hybrid work",
+        "four-day",
+        "burnout",
+        "hiring",
+        "talent",
+        "coaching",
+        "領導",
+        "主管",
+        "管理",
+        "組織",
+        "員工",
+        "職場",
+        "裁員",
+        "企業文化",
+        "人才",
+        "遠距",
+        "教練"
+      ],
+      "tier2": [
+        "Claude Code",
+        "vibe coding",
+        "Cursor",
+        "Copilot",
+        "AI agent",
+        "AI agents",
+        "product manager",
+        "product management",
+        "startup",
+        "startups",
+        "SaaS",
+        "career",
+        "developer",
+        "developers",
+        "產品經理",
+        "職涯",
+        "創業",
+        "新創",
+        "開發者",
+        "工程師",
+        "台灣",
+        "知識變現",
+        "課程",
+        "培訓"
+      ],
+      "life": [
+        "anxiety",
+        "depression",
+        "stress",
+        "emotion",
+        "emotions",
+        "mental health",
+        "psychology",
+        "psychologist",
+        "parenting",
+        "parents",
+        "children",
+        "kids",
+        "teen",
+        "teens",
+        "adolescent",
+        "adolescents",
+        "sleep",
+        "exercise",
+        "fitness",
+        "workout",
+        "Elden Ring",
+        "FromSoftware",
+        "Nightreign",
+        "Soulslike",
+        "investing",
+        "investors",
+        "焦慮",
+        "心理",
+        "情緒",
+        "親子",
+        "孩子",
+        "青少年",
+        "教養",
+        "健身",
+        "運動",
+        "魂系",
+        "艾爾登",
+        "投資"
+      ]
+    }
+  }
 }

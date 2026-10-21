@@ -11,6 +11,8 @@ import { summarizeTier } from "./summarize";
 import { researchTier } from "./research";
 import { enforceQuotas } from "./quota";
 import { buildNotes, type TierOutcome } from "./notes";
+import { collectedCandidates, markUsed, resolveLinks } from "./candidates";
+import { runCollect } from "../collect";
 import { nextEdition, saveDigest } from "./assemble";
 import { notifyDigestReady } from "./notify";
 import { estimateCostUSD, resetUsage, usage } from "../lib/anthropic";
@@ -82,6 +84,7 @@ export async function runDigest(opts?: {
     const mode = env.searchProviderOverride || cfg.search.provider;
     let articlesFlat: SelectedArticle[];
     let outcomes: TierOutcome[];
+    const itemByUrl = new Map<string, string>(); // collected mode: url → Item id
 
     if (mode === "claude") {
       // ── Claude-native path: web_search does search+select+summarize per tier.
@@ -93,8 +96,11 @@ export async function runDigest(opts?: {
         const tier = cfg.tiers[i];
         try {
           const r = await researchTier({ tier, recentTitles, interestProfile, today, cfg });
-          // Backstop URL hard-dedup against the last `windowDays` (SPEC §4.3).
-          const ranked = r.ranked.filter((a) => a.urls[0] && !knownUrls.has(a.urls[0]));
+          // Backstop URL hard-dedup against the last `windowDays` (SPEC §4.3),
+          // and drop stale finds (web_search happily returns months-old pages).
+          const ranked = r.ranked.filter(
+            (a) => a.urls[0] && !knownUrls.has(a.urls[0]) && isFresh(a.sourceDate, cfg.search.freshnessHours * 2),
+          );
           pools.push({ tier, ranked, shortfallNote: r.shortfallNote });
         } catch (err) {
           log(`分區失敗（${tier.key}）：${errMsg(err)}`);
@@ -115,19 +121,28 @@ export async function runDigest(opts?: {
       detail.mode = "claude";
       await progress(`研究完成：${articlesFlat.length} 篇，存檔中…`);
     } else {
-      // ── Third-party provider path (Brave/Serper/mock).
-      const hits = await runSearches(cfg);
-      log(`搜尋取得 ${hits.length} 則候選`);
-      detail.rawHits = hits.length;
+      const byTierHits = new Map<string, SearchHit[]>();
+      if (mode === "collected") {
+        // ── Collected path (default): RSS/Google News items, scored by the collector.
+        await progress("收集最新文章…");
+        await runCollect({ log, skipIfFreshMinutes: 30 });
+        await progress("從收集到的文章挑候選…");
+        for (const [k, v] of await collectedCandidates(cfg, knownUrls, log)) byTierHits.set(k, v);
+        detail.candidates = Object.fromEntries([...byTierHits].map(([k, v]) => [k, v.length]));
+      } else {
+        // ── Third-party provider path (Brave/Serper/mock).
+        const hits = await runSearches(cfg);
+        log(`搜尋取得 ${hits.length} 則候選`);
+        detail.rawHits = hits.length;
 
-      const fresh = hardFilter(hits, knownUrls);
-      log(`URL 去重後剩 ${fresh.length} 則（已排除 ${hits.length - fresh.length}）`);
-
-      const byTierHits = new Map<TierKey, SearchHit[]>();
-      for (const h of fresh) {
-        const t = (h.tier ?? "tier2") as TierKey;
-        (byTierHits.get(t) ?? byTierHits.set(t, []).get(t)!).push(h);
+        const fresh = hardFilter(hits, knownUrls);
+        log(`URL 去重後剩 ${fresh.length} 則（已排除 ${hits.length - fresh.length}）`);
+        for (const h of fresh) {
+          const t = (h.tier ?? "tier2") as TierKey;
+          (byTierHits.get(t) ?? byTierHits.set(t, []).get(t)!).push(h);
+        }
       }
+      await progress("選文中…");
       const pools: TierPool<SearchHit & { tags: string[] }>[] = await Promise.all(
         cfg.tiers.map(async (tier) => {
           try {
@@ -147,11 +162,16 @@ export async function runDigest(opts?: {
         }),
       );
       assertSomeTierWorked(pools);
+      if (mode === "collected") {
+        await progress("解析 Google News 原文連結…");
+        await resolveLinks(pools, knownUrls);
+      }
 
       const enforced = enforceQuotas(
         pools.map((p) => ({ key: p.tier.key, ranked: p.ranked, count: p.tier.count, rules: p.tier.rules })),
         cfg.globalRules,
       );
+      for (const r of enforced) for (const h of r.picked) if (h.itemId) itemByUrl.set(h.url, h.itemId);
       log(`選文完成：共選 ${enforced.reduce((n, r) => n + r.picked.length, 0)} 則`);
 
       const allPicked = enforced.flatMap((r) => r.picked);
@@ -209,6 +229,10 @@ export async function runDigest(opts?: {
       articles: finalArticles,
       notes,
     });
+    await markUsed(
+      digestId,
+      finalArticles.map((a) => itemByUrl.get(a.urls[0])).filter((x): x is string => Boolean(x)),
+    );
 
     // Cost accounting ("先量再砍"): record token/search usage + USD estimate so
     // we can trim web_search caps from real data.
@@ -250,6 +274,12 @@ export async function runDigest(opts?: {
     log(`失敗 ✗ ${message}`);
     throw err;
   }
+}
+
+/** True when an article date (YYYY-MM-DD…) is within `hours`, or unparseable. */
+function isFresh(date: string, hours: number): boolean {
+  const t = Date.parse(date);
+  return Number.isNaN(t) || Date.now() - t <= hours * 3_600_000 + 86_400_000; // +1 day: dates have no time
 }
 
 /**

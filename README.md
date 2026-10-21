@@ -68,17 +68,25 @@ prod 主機常駐（`auto_stop_machines = "off"`），由 app 內建排程每分
 ## Pipeline 架構
 
 ```
-runDigest()  (src/pipeline/index.ts)
-  1. 讀設定（interest_profile / style_guide / digest_config）
-  2. runSearches      — 各區查詢 × provider（繁中優先 fallback）
-  3. hardFilter       — URL 硬去重（最近 30 天）
-  4. selectForTier    — 每區用 snippet 選 N 篇（含近 30 天標題避免重複事件）
-  5. enrichCandidates — 只對選中的抓全文（readability）
-  6. summarizeTier    — 事實摘要 + 觀點 Hook
-  7. generateComment  — 口吻評論 + 程式化 lint，最多重試 2 次
-  8. saveDigest       — 存 DB + 更新去重索引
+runCollect()  (src/collect/index.ts) — 每 4 小時一次，出日報前也會先跑
+  1. 抓 digest_config.sources 裡的 RSS（23 個）與 Google News 查詢（24 條）
+  2. 以連結去重後存進 Item 表（保留 14 天）
+  3. 初篩：專屬來源一律通過；綜合來源要命中關鍵字／人名
+  4. Haiku 只看標題＋摘要，給每則「最適合的區塊＋0–10 分」
+
+runDigest()  (src/pipeline/index.ts) — 每天 08:00
+  1. 讀設定（interest_profile / digest_config）
+  2. 候選：各區取 48 小時內、分數 ≥ minScore 的收集文章；不夠就用該區 queries 跑 Google News 補搜尋
+  3. selectForTier    — 每區排序＋標主題標籤（含近 30 天標題避免重複事件）
+  4. resolveLinks     — Google News 轉址解回原文網址，再做 URL 去重
+  5. enforceQuotas    — 程式強制配額（AI 上限等），超標用備選遞補
+  6. enrichCandidates — 只對選中的抓全文（readability）
+  7. summarizeTier    — 事實摘要 + 觀點 Hook
+  8. saveDigest       — 存 DB（含頁尾 notes）+ 更新去重索引 + 標記已用的 Item
   9. notifyDigestReady— （選）email
 ```
+
+`digest_config.search.provider` 也可改回 `claude`（Claude 內建 web_search）或第三方搜尋。來源健康檢查：`npx tsx scripts/check-sources.ts`（PR 改到來源時 GitHub Actions 會自動跑）。
 
 ## 驗收對照（SPEC §7）
 
