@@ -481,7 +481,7 @@
       {
         "key": "gn-rbi",
         "name": "RBI 系",
-        "query": "(\"Restaurant Brands International\" OR \"Burger King\" OR \"Tim Hortons\" OR Popeyes)",
+        "query": "(\"Restaurant Brands International\" OR \"Burger King\" OR \"Tim Hortons\" OR Popeyes) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -490,7 +490,7 @@
       {
         "key": "gn-mcdonalds",
         "name": "McDonald's",
-        "query": "\"McDonald's\"",
+        "query": "\"McDonald's\" (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -499,7 +499,7 @@
       {
         "key": "gn-yum",
         "name": "Yum! Brands",
-        "query": "(\"Yum Brands\" OR KFC OR \"Taco Bell\" OR \"Pizza Hut\")",
+        "query": "(\"Yum Brands\" OR KFC OR \"Taco Bell\" OR \"Pizza Hut\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -508,7 +508,7 @@
       {
         "key": "gn-chains",
         "name": "Chipotle／Domino's／Darden",
-        "query": "(Chipotle OR \"Domino's\" OR Darden)",
+        "query": "(Chipotle OR \"Domino's\" OR Darden) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -517,7 +517,7 @@
       {
         "key": "gn-starbucks",
         "name": "Starbucks",
-        "query": "Starbucks",
+        "query": "Starbucks (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -526,7 +526,7 @@
       {
         "key": "gn-beverage",
         "name": "跨國飲料",
-        "query": "(\"AB InBev\" OR \"Coca-Cola\" OR PepsiCo OR Nestle OR \"Keurig Dr Pepper\" OR \"Monster Beverage\")",
+        "query": "(\"AB InBev\" OR \"Coca-Cola\" OR PepsiCo OR Nestle OR \"Keurig Dr Pepper\" OR \"Monster Beverage\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -535,7 +535,7 @@
       {
         "key": "gn-spirits",
         "name": "烈酒與精品酒",
-        "query": "(Diageo OR \"Pernod Ricard\" OR \"Moet Hennessy\" OR \"Remy Cointreau\" OR \"Brown-Forman\" OR \"Red Bull\")",
+        "query": "(Diageo OR \"Pernod Ricard\" OR \"Moet Hennessy\" OR \"Remy Cointreau\" OR \"Brown-Forman\" OR \"Red Bull\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition) -F1 -\"Formula 1\" -racing -\"Red Bulls\" -cycling",
         "tiers": [
           "food"
         ],
@@ -553,7 +553,7 @@
       {
         "key": "gn-foodservice",
         "name": "團膳",
-        "query": "(\"Compass Group\" OR Aramark)",
+        "query": "(\"Compass Group\" OR Aramark) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
