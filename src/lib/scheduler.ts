@@ -12,11 +12,12 @@ import { runCollect } from "../collect";
 //
 // Jobs (one at a time):
 //   - digest: daily at digest_config.scheduleCron (08:00 Asia/Taipei)
-//   - collect: every sources.collectEveryHours (RSS / Google News)
+//   - collect: daily at sources.collectCron (05:00 Asia/Taipei; RSS / Google News)
 
 const TICK_MS = 60_000;
 const GRACE_MINUTES = 4 * 60; // a restart within 4h after the slot still runs today
 const DEFAULT_SLOT = 8 * 60;
+const COLLECT_GRACE_MINUTES = 3 * 60; // a restart before 08:00 still collects
 
 let started = false;
 let busy = false;
@@ -73,11 +74,13 @@ async function digestIfDue(): Promise<boolean> {
 
 async function collectIfDue(): Promise<void> {
   const cfg = await getDigestConfig();
-  const every = cfg.sources?.collectEveryHours;
-  if (!every) return;
-  // Measured from the last attempt (success or not), so a broken source can't
-  // make it retry every minute.
-  const last = await prisma.collectRun.findFirst({ orderBy: { startedAt: "desc" } });
-  if (last && Date.now() - last.startedAt.getTime() < every * 3_600_000) return;
+  const slot = cfg.sources?.collectCron ? parseDailyCron(cfg.sources.collectCron) : null;
+  if (slot == null) return;
+  const since = dueSlotStart(slot, COLLECT_GRACE_MINUTES, cfg.timezone);
+  if (!since) return;
+  // One attempt per day (success or not), so a broken source can't make it
+  // retry every minute; the digest re-collects if this one failed.
+  const already = await prisma.collectRun.findFirst({ where: { startedAt: { gte: since } } });
+  if (already) return;
   await runCollect().catch((err) => console.error("[scheduler] collect failed:", err));
 }

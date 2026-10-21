@@ -68,7 +68,7 @@ prod 主機常駐（`auto_stop_machines = "off"`），由 app 內建排程每分
 ## Pipeline 架構
 
 ```
-runCollect()  (src/collect/index.ts) — 每 4 小時一次，出日報前也會先跑
+runCollect()  (src/collect/index.ts) — 每天台北 05:00 一次；出日報時若當天沒收集成功才補跑
   1. 抓 digest_config.sources 裡的 RSS（23 個）與 Google News 查詢（24 條）
   2. 以連結去重後存進 Item 表（保留 14 天）
   3. 初篩：專屬來源一律通過；綜合來源要命中關鍵字／人名

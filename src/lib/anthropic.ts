@@ -115,6 +115,9 @@ export async function generateJSON<T>(opts: {
   // Haiku 5.5 thinks adaptively by default (effort "medium"); "low" for bulk
   // classification. Thinking counts toward maxTokens, so keep it roomy.
   effort?: "low" | "medium" | "high";
+  // Cache the system prompt (e.g. the full interest profile) across calls that
+  // share it. Haiku 5.5 caches prefixes from 512 tokens; reads bill at 0.1×.
+  cacheSystem?: boolean;
 }): Promise<T> {
   const res = await client().messages.create({
     model: opts.model,
@@ -123,7 +126,9 @@ export async function generateJSON<T>(opts: {
       format: { type: "json_schema", schema: opts.schema },
       ...(opts.effort ? { effort: opts.effort } : {}),
     },
-    system: opts.system,
+    system: opts.cacheSystem
+      ? [{ type: "text", text: opts.system, cache_control: { type: "ephemeral" } }]
+      : opts.system,
     messages: [{ role: "user", content: opts.user }],
   });
   recordUsage(res.usage, opts.model);

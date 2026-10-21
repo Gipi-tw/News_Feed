@@ -63,8 +63,8 @@ ${cfg.tiers.map((t) => `- ${t.key}｜${t.emoji} ${t.label}：${t.scope}`).join("
 # 全域排除
 ${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
 
-# 興趣輪廓（節錄）
-${interestProfile.slice(0, 1500)}`;
+# 興趣輪廓（全文）
+${interestProfile}`;
 
   const batches: ScoreInput[][] = [];
   for (let start = 0; start < items.length; start += BATCH) batches.push(items.slice(start, start + BATCH));
@@ -89,6 +89,7 @@ ${interestProfile.slice(0, 1500)}`;
         schema,
         maxTokens: 12000,
         effort: "low",
+        cacheSystem: true,
       });
     } catch (err) {
       failedBatches++;

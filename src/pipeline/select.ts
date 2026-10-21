@@ -63,27 +63,26 @@ export async function selectForTier(opts: {
     )
     .join("\n");
 
-  const system =
-    "你是游舒帆（Gipi）的個人內容策展編輯。今天是 " +
-    today +
-    "（台北時間）。你的任務是依他的興趣輪廓，從候選新聞中挑出最值得他關注、可發揮成貼文的文章。" +
-    "嚴格遵守區塊定位與全域排除規則。同一事件（不同來源）只選一則；若是某持續事件的「新進展」可收錄並聚焦增量。" +
-    "寧缺勿濫：找不到夠好的內容就少選，並說明原因。";
+  // Everything shared by the five tier calls of one run goes in the system
+  // prompt (cached); only the tier and its candidates vary per call.
+  const system = `你是游舒帆（Gipi）的個人內容策展編輯。今天是 ${today}（台北時間）。你的任務是依他的興趣輪廓，從候選新聞中挑出最值得他關注、可發揮成貼文的文章。
+嚴格遵守區塊定位與全域排除規則。同一事件（不同來源）只選一則；若是某持續事件的「新進展」可收錄並聚焦增量。
+寧缺勿濫：找不到夠好的內容就少選，並說明原因。
+
+# 全域排除規則（命中則不選）
+${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
+
+# 近 30 天已發過的標題（避免重複，同事件除非有新進展）
+${recentTitles.length ? recentTitles.slice(0, 50).map((t) => `- ${t}`).join("\n") : "（無）"}
+
+# 興趣輪廓（全文）
+${interestProfile}`;
 
   const user = `# 本區塊：${tier.emoji} ${tier.label}
 定位與切角：${tier.scope}
 本區名額：${tier.count} 則
 
-# 全域排除規則（命中則不選）
-${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
-
 ${rulesPrompt(tier, cfg)}
-
-# 興趣輪廓（節錄，用於判斷相關性）
-${interestProfile.slice(0, 1500)}
-
-# 近 30 天已發過的標題（避免重複，同事件除非有新進展）
-${recentTitles.length ? recentTitles.slice(0, 50).map((t) => `- ${t}`).join("\n") : "（無）"}
 
 # 候選新聞（共 ${candidates.length} 則）
 ${list}
@@ -98,6 +97,7 @@ shortfallNote：若夠格的候選少於 ${tier.count} 則，用 30 字內一句
     user,
     schema: selectSchema(tier, cfg),
     maxTokens: 16000, // Haiku 5.5 thinking counts toward this
+    cacheSystem: true,
   });
 
   // Map chosen urls back to the original hits; dedupe; cap the pool.

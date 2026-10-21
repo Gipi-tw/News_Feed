@@ -37,7 +37,8 @@
 
 ## 來源（第 2 步）
 
-- 收集每 4 小時一次（出日報前也會先跑），來源清單在 `digest_config.sources`，可在設定頁編輯。
+- 收集每天一次（台北 05:00，`sources.collectCron`）；出日報時只有當天凌晨那次沒成功才補跑。來源清單在 `digest_config.sources`，可在設定頁編輯。高流量 RSS（TechCrunch、The Verge 等只給最新 10–20 篇）一天抓一次會漏掉部分文章，候選常不夠時可改成一天兩次。
+- 評分與選文會帶入完整的興趣輪廓（不再只取開頭 1,500 字），並用提示快取降低重複成本。
 - RSS：woshipm、INSIDE、TechCrunch、極客公園、Bloomberg Tech、WIRED（含 Gear）、Gizmodo、InfoQ、iThome、Slashdot、The Verge、Fast Company、HBR（http）、Lifehacker、MIT SMR、TechNews、PsyPost、NRN，加上 Cowork 實際常用的 Fortune、Restaurant Dive、Food Dive、HR Dive。
 - Google News：沒有 RSS 的站用 `site:` 查（數位時代、經理人、親子天下、Restaurant Business）；追蹤企業／人物各一條（企業區 11 條、餐飲區 9 條）。企業區與餐飲區的查詢都加上組織／經營類關鍵字（精品咖啡除外），避開促銷、菜單、股價閒聊；烈酒查詢另外排除 Red Bull 的賽車和球隊新聞。連結是 Google 轉址，選中後才解回原文網址。
 - 篩選：專屬來源一律評分；綜合來源要命中關鍵字／人名才評分。Haiku 只看標題＋摘要給「區塊＋0–10 分」；只對選中的文章抓全文。

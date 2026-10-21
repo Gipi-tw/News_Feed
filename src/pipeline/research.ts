@@ -93,8 +93,8 @@ ${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
 
 ${rulesPrompt(tier, cfg)}
 
-# 興趣輪廓（節錄，判斷相關性用）
-${interestProfile.slice(0, 1500)}
+# 興趣輪廓（全文）
+${interestProfile}
 
 # 近 30 天已發過的標題（避免重複；同事件僅收新進展）
 ${recentTitles.length ? recentTitles.slice(0, 40).map((t) => `- ${t}`).join("\n") : "（無）"}
