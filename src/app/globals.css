@@ -97,6 +97,12 @@ label.field { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 1
 .history-item a { text-decoration: none; color: var(--ink); font-weight: 600; }
 .history-item a:hover { color: var(--link); }
 
+/* Day picker: ‹ older ｜ date menu ｜ newer › */
+.daypicker { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 14px; }
+.daypicker .step { flex: 0 0 auto; color: var(--link); text-decoration: none; padding: 6px 2px; white-space: nowrap; }
+.daypicker .step.off { color: var(--line); }
+.daypicker select { flex: 1 1 auto; min-width: 0; font: inherit; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+
 @media (max-width: 480px) {
   .masthead h1 { font-size: 23px; }
   .wrap { padding: 18px 14px 48px; }

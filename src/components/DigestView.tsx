@@ -1,15 +1,16 @@
 import type { DigestView as DigestData } from "@/lib/digest-data";
-import { getTierMeta } from "@/lib/digest-data";
+import { getTierMeta, listDays } from "@/lib/digest-data";
 import { formatChineseDate } from "@/lib/date";
 import { getDigestConfig } from "@/lib/config";
 import VideoSection from "./VideoSection";
+import DayPicker from "./DayPicker";
 
 // Renders one digest with the verified template layout (SPEC §5.2):
 // masthead, TOC, colored tier sections, cards with fact/hook/links, footer
 // with the quota line and why any tier shipped short.
 // Pure-curation mode: no 我的評論 block.
 export default async function DigestView({ digest }: { digest: DigestData }) {
-  const [tiers, cfg] = await Promise.all([getTierMeta(), getDigestConfig()]);
+  const [tiers, cfg, days] = await Promise.all([getTierMeta(), getDigestConfig(), listDays()]);
   const byTier = new Map<string, typeof digest.articles>();
   for (const a of digest.articles) {
     (byTier.get(a.tier) ?? byTier.set(a.tier, []).get(a.tier)!).push(a);
@@ -42,6 +43,7 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
           {formatChineseDate(digest.date)} 第 {digest.edition} 期｜依《游舒帆興趣輪廓分析》產出｜
           純策展清單：事實摘要 ＋ 觀點 hook ＋ 原始連結
         </div>
+        <DayPicker date={digest.date} edition={digest.edition} days={days} />
       </header>
 
       <div className="toc">
