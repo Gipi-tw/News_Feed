@@ -3,6 +3,56 @@ import assert from "node:assert/strict";
 import { parseDuration, parseRelativeTime, parseVideosTab, watchUrl } from "./youtube";
 import { compactTranscript } from "./supadata";
 import { dailyAllowance, daysLeftInMonth, interleaveByChannel } from "./index";
+import { anchorLocator, tidySummary } from "./summarize";
+
+const LINES: [number, string][] = [
+  [0, "Welcome back. Today we talk about the Hugging Face breach and AI safety."],
+  [30, "So like the hugging face breach is another fact versus fiction thing"],
+  [369, "If you look at the Slashdot headline, OpenAI says its AI models acted"],
+  [399, "on its own. OpenAI never said that. Not in one statement."],
+  [1930, "formal methods give us guarantees about the hugging face breach too"],
+];
+
+test("anchor moves a timestamp to the line that says it, nearest the guess when repeated", () => {
+  const locate = anchorLocator(LINES);
+  assert.equal(locate("the Slashdot headline, OpenAI says", 1930), 369);
+  assert.equal(locate("AI models acted on its own", 0), 369); // spans two lines → where it starts
+  assert.equal(locate("hugging face breach", 1900), 1930);
+  assert.equal(locate("hugging face breach", 10), 0);
+  assert.equal(locate("yeah so", 369), null); // too short to trust
+  assert.equal(locate("words that are not there at all", 369), null);
+});
+
+test("tidySummary: anchored times, video order, merged segments, no anchors stored", () => {
+  const { summary, anchored, total } = tidySummary(
+    {
+      oneLiner: "x",
+      hook: "對你來說",
+      verdict: "segments",
+      verdictReason: "r",
+      keyPoints: [
+        { anchor: "OpenAI never said that", t: 1930, point: "late" },
+        { anchor: "Welcome back. Today we talk", t: 5, point: "early" },
+      ],
+      quotes: [{ anchor: "no such words anywhere here", t: 9999, text: "q" }],
+      segments: [
+        { anchor: "formal methods give us guarantees", from: 1900, to: 2100, why: "b" },
+        { anchor: "the Slashdot headline", from: 300, to: 500, why: "a1" },
+        { anchor: "never said that. Not in one", from: 400, to: 600, why: "a2" },
+      ],
+    },
+    LINES,
+    2000,
+  );
+  assert.deepEqual(summary.keyPoints, [{ t: 0, point: "early" }, { t: 399, point: "late" }]);
+  assert.deepEqual(summary.quotes, [{ t: 2000, text: "q" }]); // not found → clamped into the video
+  assert.deepEqual(summary.segments, [
+    { from: 369, to: 599, why: "a1；a2" },
+    { from: 1930, to: 2000, why: "b" },
+  ]);
+  assert.deepEqual([anchored, total], [5, 6]);
+  assert.equal(JSON.stringify(summary).includes("anchor"), false);
+});
 
 test("channels take turns; videos with a transcript go first", () => {
   const v = (id: string, channelKey: string, transcript: string | null = null) => ({ id, channelKey, transcript });
