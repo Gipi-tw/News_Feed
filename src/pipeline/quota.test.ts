@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { enforceQuotas, pickWithRules, withMax } from "./quota";
+import { mapSelection } from "./select";
 
 const item = (id: string, ...tags: string[]) => ({ id, tags });
 const ids = (xs: { id: string }[]) => xs.map((x) => x.id).join(",");
@@ -62,4 +63,23 @@ test("global max shrinks a tier when its pool has nothing untagged left", () => 
   const a = [item("a1", "ai"), item("a2", "ai")];
   const [ra] = enforceQuotas([{ key: "A", ranked: a, count: 2 }], [{ tag: "ai", desc: "", max: 1 }]);
   assert.equal(ids(ra.picked), "a1");
+});
+
+test("selector picks map by candidate number; bad or repeated numbers are skipped; ai_dev counts as ai", () => {
+  const c = (n: number) => ({ title: `t${n}`, url: `https://news.google.com/rss/articles/${"x".repeat(200)}${n}`, snippet: "" });
+  const candidates = [c(0), c(1), c(2), c(3)];
+  const ranked = mapSelection(
+    candidates,
+    [
+      { id: 2, tags: ["ai_dev"] },
+      { id: 9, tags: [] }, // no such candidate
+      { id: 2, tags: [] }, // repeated
+      { id: 0, tags: ["ai"] },
+      { id: 1.5 as number, tags: [] },
+      { id: 3 },
+      { id: 1, tags: [] }, // past the limit
+    ],
+    3,
+  );
+  assert.deepEqual(ranked.map((h) => [h.title, (h.tags ?? []).sort().join(",")]), [["t2", "ai,ai_dev"], ["t0", "ai"], ["t3", ""]]);
 });

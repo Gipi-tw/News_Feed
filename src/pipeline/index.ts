@@ -158,22 +158,21 @@ export async function runDigest(opts?: {
       // One tier at a time: the first call writes the cached system prompt
       // (full interest profile), the other four read it at 0.1× the price.
       const pools: TierPool<SearchHit & { tags: string[] }>[] = [];
+      const selection: Record<string, string> = {};
       for (const tier of cfg.tiers) {
         try {
-          const s = await selectForTier({
-            tier,
-            candidates: byTierHits.get(tier.key) ?? [],
-            recentTitles,
-            interestProfile,
-            today,
-            cfg,
-          });
+          const candidates = byTierHits.get(tier.key) ?? [];
+          const s = await selectForTier({ tier, candidates, recentTitles, interestProfile, today, cfg });
+          // Candidates → model picks → picks matched to a candidate (+ retries).
+          selection[tier.key] = `${candidates.length}→${s.returned}→${s.ranked.length}${s.attempts > 1 ? `（重選 ${s.attempts - 1} 次）` : ""}`;
+          log(`選文（${tier.key}）：候選 ${candidates.length}、模型選 ${s.returned}、對上 ${s.ranked.length}${s.attempts > 1 ? `，重選 ${s.attempts - 1} 次` : ""}`);
           pools.push({ tier, ranked: s.ranked.map((h) => ({ ...h, tags: h.tags ?? [] })), shortfallNote: s.shortfallNote });
         } catch (err) {
           log(`選文失敗（${tier.key}）：${errMsg(err)}`);
           pools.push({ tier, ranked: [], shortfallNote: "", error: errMsg(err) });
         }
       }
+      detail.selection = selection;
       assertSomeTierWorked(pools);
       if (mode === "collected") {
         await progress("解析 Google News 原文連結…");
