@@ -7,6 +7,10 @@ import { rulesPrompt, tagsSchema } from "./rules-prompt";
 // count so quota enforcement (quota.ts) can backfill after trimming.
 // Snippet-based (full text is fetched only for the winners), so the prompt
 // stays small even with many candidates.
+//
+// Picks come back as candidate numbers, not URLs: copying long URLs (Google
+// News redirects, percent-encoded Chinese paths) is error-prone, and on 10/22
+// every life-tier pick failed to match its candidate, shipping that tier empty.
 
 const SPARE = 4; // extra ranked picks beyond `count`, for quota backfill
 
@@ -21,12 +25,12 @@ function selectSchema(tier: TierConfig, cfg: DigestConfig) {
           type: "object",
           additionalProperties: false,
           properties: {
-            url: { type: "string" },
+            id: { type: "integer" },
             title: { type: "string" },
             reason: { type: "string" },
             tags: tagsSchema(tier, cfg),
           },
-          required: ["url", "title", "reason", "tags"],
+          required: ["id", "title", "reason", "tags"],
         },
       },
       shortfallNote: { type: "string" },
@@ -36,13 +40,39 @@ function selectSchema(tier: TierConfig, cfg: DigestConfig) {
 }
 
 interface SelectResult {
-  selected: { url: string; title: string; reason: string; tags: string[] }[];
+  selected: { id: number; title: string; reason: string; tags: string[] }[];
   shortfallNote: string;
 }
 
 export interface TierSelection {
   ranked: SearchHit[]; // best first, each with tags
   shortfallNote: string;
+  returned: number; // picks the model returned, before mapping (for the run log)
+  attempts: number;
+}
+
+/**
+ * Model picks → candidates, best first: unknown or repeated numbers are
+ * skipped, and AI-dev pieces also count as AI (so a tier's "AI ≤ n" cap
+ * covers them — on 10/22 two ai_dev-only picks slipped past 第二級's AI cap).
+ */
+export function mapSelection(
+  candidates: SearchHit[],
+  selected: { id: number; tags?: string[] }[],
+  limit: number,
+): SearchHit[] {
+  const ranked: SearchHit[] = [];
+  const seen = new Set<number>();
+  for (const s of selected) {
+    const hit = Number.isInteger(s.id) ? candidates[s.id] : undefined;
+    if (!hit || seen.has(s.id)) continue;
+    seen.add(s.id);
+    const tags = new Set(s.tags ?? []);
+    if (tags.has("ai_dev")) tags.add("ai");
+    ranked.push({ ...hit, tags: [...tags] });
+    if (ranked.length >= limit) break;
+  }
+  return ranked;
 }
 
 export async function selectForTier(opts: {
@@ -54,7 +84,7 @@ export async function selectForTier(opts: {
   cfg: DigestConfig;
 }): Promise<TierSelection> {
   const { tier, candidates, recentTitles, interestProfile, today, cfg } = opts;
-  if (candidates.length === 0) return { ranked: [], shortfallNote: "今日沒有候選" };
+  if (candidates.length === 0) return { ranked: [], shortfallNote: "今日沒有候選", returned: 0, attempts: 0 };
 
   const list = candidates
     .map(
@@ -88,29 +118,24 @@ ${rulesPrompt(tier, cfg)}
 ${list}
 
 請依重要性排序，列出最多 ${tier.count + SPARE} 則值得收錄的候選（前 ${tier.count} 則是首選，其餘是配額超標時的備選）。
-每則回傳 url（必須是候選清單中的原始 url）、title、一句挑選理由、tags。
+每則回傳 id（候選清單開頭的編號，例如 [3] 就填 3）、title、一句挑選理由、tags。
 shortfallNote：若夠格的候選少於 ${tier.count} 則，用 30 字內一句話說明原因（例如「窗口內沒有跨國飲料大廠的新消息」）；足額則留空字串。`;
 
-  const result = await generateJSON<SelectResult>({
-    model: MODELS.select,
-    system,
-    user,
-    schema: selectSchema(tier, cfg),
-    maxTokens: 16000, // Haiku 5.5 thinking counts toward this
-    cacheSystem: true,
-  });
-
-  // Map chosen urls back to the original hits; dedupe; cap the pool.
-  const byUrl = new Map(candidates.map((c) => [c.url, c]));
-  const ranked: SearchHit[] = [];
-  const seen = new Set<string>();
-  for (const s of result.selected) {
-    const hit = byUrl.get(s.url);
-    if (hit && !seen.has(hit.url)) {
-      seen.add(hit.url);
-      ranked.push({ ...hit, tags: s.tags ?? [] });
-    }
-    if (ranked.length >= tier.count + SPARE) break;
+  // A tier that comes back with nothing usable gets one more try.
+  let result: SelectResult = { selected: [], shortfallNote: "" };
+  let ranked: SearchHit[] = [];
+  let attempts = 0;
+  while (attempts < 2 && !ranked.length) {
+    attempts++;
+    result = await generateJSON<SelectResult>({
+      model: MODELS.select,
+      system,
+      user,
+      schema: selectSchema(tier, cfg),
+      maxTokens: 16000, // Haiku 5.5 thinking counts toward this
+      cacheSystem: true,
+    });
+    ranked = mapSelection(candidates, result.selected, tier.count + SPARE);
   }
-  return { ranked, shortfallNote: result.shortfallNote ?? "" };
+  return { ranked, shortfallNote: result.shortfallNote ?? "", returned: result.selected.length, attempts };
 }
