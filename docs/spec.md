@@ -1,6 +1,6 @@
 # 日報規格（2026-10 版）
 
-取代原本只寫在 Cowork 排程 prompt 裡的規格。程式裡對應的設定在 `config/digest_config.json`（`configVersion: 9`），配額由 `src/pipeline/quota.ts` 強制執行。
+取代原本只寫在 Cowork 排程 prompt 裡的規格。程式裡對應的設定在 `config/digest_config.json`（`configVersion: 10`），配額由 `src/pipeline/quota.ts` 強制執行。
 
 ## 5 區 45 篇（顯示順序）
 
@@ -51,7 +51,7 @@
 
 ## 🎬 影音重點（第 3 步）
 
-- 頻道清單在 `digest_config.videos.channels`（16 個；BBC Learning English、Easy English Audio、Chill Story Cafe 是練英文用的，刻意不摘要）。
+- 頻道清單在 `digest_config.videos.channels`（26 個；BBC Learning English、Easy English Audio、Chill Story Cafe 是練英文用的，刻意不摘要）。2026-10-26 加了 10 個：領導與教練（Coaching for Leaders、Stanford GSB、Brené Brown）、心理與成長（Mel Robbins、Chris Williamson／Modern Wisdom、Hidden Brain、The Knowledge Project）、AI 開發與產業（Latent Space、No Priors、Dwarkesh Patel）。加上原本的頻道，每月約 210 支 15 分鐘以上的長片，所以 Supadata 改用 Basic（每月 300 點）。
 - 每天 05:00 收集時一起跑：讀各頻道的「影片」分頁找新片（頻道 RSS 從 10 月中起常回 404／500；影片分頁本來就不含 Shorts，還看得到片長）。只收 15 分鐘以上、3 天內上的片。
 - 逐字稿用 Supadata（`mode=native`、`lang=en`，每支 1 點，跟片長無關；雲端主機直接抓 YouTube 字幕會被擋）。每天能抓幾支，是把本月剩下的點數平均分到月底（保留 3 點），所以不會月初就用完。
 - 摘要用 Haiku（帶完整興趣輪廓）：一句話重點、3–5 個關鍵觀點（附時間戳連結）、數據或金句、Hook、值不值得看全片／建議看哪幾段。

@@ -1,5 +1,5 @@
 {
-  "configVersion": 9,
+  "configVersion": 10,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -895,6 +895,66 @@
         "name": "The Reinvention Summit",
         "handle": "TheReinventionSummit",
         "id": "UC4mUbOiabwSJMMgRaxF-Fgg"
+      },
+      {
+        "key": "coaching-for-leaders",
+        "name": "Coaching for Leaders",
+        "handle": "CoachingforLeaders",
+        "id": "UCnmM41YXkTnqsG0ft_jV6pA"
+      },
+      {
+        "key": "stanford-gsb",
+        "name": "Stanford Graduate School of Business",
+        "handle": "stanfordgsb",
+        "id": "UCGwuxdEeCf0TIA2RbPOj-8g"
+      },
+      {
+        "key": "brene-brown",
+        "name": "Brené Brown",
+        "handle": "BreneBrown",
+        "id": "UCziI88vqEy43h-I06xvpzSg"
+      },
+      {
+        "key": "mel-robbins",
+        "name": "Mel Robbins",
+        "handle": "melrobbins",
+        "id": "UCk2U-Oqn7RXf-ydPqfSxG5g"
+      },
+      {
+        "key": "modern-wisdom",
+        "name": "Chris Williamson（Modern Wisdom）",
+        "handle": "ChrisWillx",
+        "id": "UCIaH-gZIVC432YRjNVvnyCA"
+      },
+      {
+        "key": "hidden-brain",
+        "name": "Hidden Brain",
+        "handle": "HiddenBrain",
+        "id": "UCgjZeiV0Ks3Shx8xPgvm7pQ"
+      },
+      {
+        "key": "knowledge-project",
+        "name": "The Knowledge Project",
+        "handle": "tkppodcast",
+        "id": "UCLtTf_uKt0Itd0NG7txrwXA"
+      },
+      {
+        "key": "latent-space",
+        "name": "Latent Space",
+        "handle": "LatentSpacePod",
+        "id": "UCxBcwypKK-W3GHd_RZ9FZrQ"
+      },
+      {
+        "key": "no-priors",
+        "name": "No Priors",
+        "handle": "NoPriorsPodcast",
+        "id": "UCSI7h9hydQ40K5MJHnCrQvw"
+      },
+      {
+        "key": "dwarkesh",
+        "name": "Dwarkesh Patel",
+        "handle": "DwarkeshPatel",
+        "id": "UCXl4i9dYBrFOabk0xGmbkRA"
       }
     ]
   }
