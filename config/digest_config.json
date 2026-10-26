@@ -1,5 +1,5 @@
 {
-  "configVersion": 8,
+  "configVersion": 9,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -28,6 +28,10 @@
       "tag": "ai",
       "desc": "以 AI 為主軸：AI 技術、模型、AI 產品或 AI 對組織／工作的影響是文章核心（只是順帶提到 AI 不算）",
       "max": 15
+    },
+    {
+      "tag": "ai_strategy",
+      "desc": "企業因應 AI 的策略改變、落地進展或可衡量成效（營收、成本、生產力、採用率等數據）"
     }
   ],
   "tiers": [
@@ -38,20 +42,25 @@
       "subtitle": "組織・人才・領導・商業模式",
       "count": 10,
       "tierClass": "tier0",
-      "scope": "國際科技巨頭限定：Google、Musk 系（Tesla/SpaceX/X）、Apple、Microsoft、OpenAI、Anthropic、NVIDIA（含黃仁勳言論）、Meta、Amazon、Netflix、Uber、Disney、Intel、Salesforce、Coinbase。切角：組織設計與重組、人才與薪酬制度、領導者決策與言論、企業文化事件（裁員信、工會、紀律通報、dogfooding）、商業模式轉變。排除純財報股價新聞。",
+      "scope": "國際科技巨頭為主：Google、Musk 系（Tesla/SpaceX/X）、Apple、Microsoft、OpenAI、Anthropic、NVIDIA（含黃仁勳言論）、Meta、Amazon、Netflix、Uber、Disney、Intel、Salesforce、Coinbase；也收其他知名大企業（金融、零售、製造等）因應 AI 的策略與成效。切角：企業因應 AI 的策略改變（產品與商業模式轉向、流程與組織怎麼重新設計、投資與合作布局）、AI 落地的進展（導入到哪裡、遇到什麼問題）、可衡量的成效（營收、成本、生產力、採用率、客戶數據）；人才與薪酬制度、領導者決策與言論、企業文化事件（工會、紀律通報、dogfooding）、商業模式轉變。不收以裁員、精簡人事為主軸的新聞；排除純財報股價新聞。",
       "queries": [
-        "Google org restructuring OR layoffs OR leadership",
-        "OpenAI OR Anthropic culture OR talent OR Sam Altman",
-        "NVIDIA Jensen Huang management OR talent",
-        "Microsoft OR Meta OR Amazon layoffs OR reorg OR dogfooding",
-        "Tesla OR SpaceX OR Musk compensation OR governance",
-        "Apple OR Netflix OR Uber OR Disney OR Intel OR Salesforce OR Coinbase organizational change"
+        "Google OR Microsoft OR Amazon AI strategy results OR productivity",
+        "OpenAI OR Anthropic enterprise adoption OR customers OR revenue",
+        "NVIDIA Jensen Huang strategy OR enterprise AI",
+        "Meta OR Apple AI strategy OR product shift",
+        "Salesforce OR Uber OR Netflix OR Disney AI agents OR AI adoption",
+        "企業 AI 導入 成效 OR 效益"
       ],
       "rules": [
         {
           "tag": "ai",
           "desc": "以 AI 為主軸",
           "max": 5
+        },
+        {
+          "tag": "ai_strategy",
+          "desc": "企業因應 AI 的策略改變、落地進展或可衡量成效（營收、成本、生產力、採用率等數據）",
+          "min": 3
         }
       ]
     },
@@ -62,7 +71,7 @@
       "subtitle": "跨國餐飲集團・飲料・精品咖啡與烈酒",
       "count": 10,
       "tierClass": "tier4",
-      "scope": "跨國餐飲集團（Restaurant Brands International／漢堡王／Tim Hortons／Popeyes、McDonald's、Yum! Brands、Chipotle、Domino's、Darden、Compass／Aramark）、跨國飲料與酒（AB InBev、Coca-Cola、PepsiCo、Nestlé、Diageo、Keurig Dr Pepper、Monster）、精品咖啡與烈酒（LVMH Moët Hennessy、Red Bull、Pernod Ricard、Rémy Cointreau、Brown-Forman、Blue Bottle、% Arabica、Starbucks Reserve）。切角同企業動態：組織設計與重組、加盟 vs 直營、人才與薪酬、領導者決策與接班、企業文化事件（工會、裁員、勞動條件）、商業模式轉變、規模化 vs 精品感的取捨。排除純財報股價、台灣餐飲集團、中國品牌（除非與國際巨頭直接相關）。",
+      "scope": "跨國餐飲集團（Restaurant Brands International／漢堡王／Tim Hortons／Popeyes、McDonald's、Yum! Brands、Chipotle、Domino's、Darden、Compass／Aramark）、跨國飲料與酒（AB InBev、Coca-Cola、PepsiCo、Nestlé、Diageo、Keurig Dr Pepper、Monster）、精品咖啡與烈酒（LVMH Moët Hennessy、Red Bull、Pernod Ricard、Rémy Cointreau、Brown-Forman、Blue Bottle、% Arabica、Starbucks Reserve）。切角同企業動態：組織設計與重組、加盟 vs 直營、人才與薪酬、領導者決策與接班、企業文化事件（工會、勞動條件）、導入 AI 的策略與成效、商業模式轉變、規模化 vs 精品感的取捨。不收以裁員、精簡人事為主軸的新聞；排除純財報股價、台灣餐飲集團、中國品牌（除非與國際巨頭直接相關）。",
       "queries": [
         "McDonald's OR Starbucks OR Chipotle franchisees OR union OR CEO",
         "Restaurant Brands International OR Yum Brands OR Domino's leadership OR restructuring",
@@ -167,14 +176,33 @@
     "電商",
     "選舉政治（科技政策與勞動議題除外）",
     "純股價財報新聞",
-    "中國企業動態（阿里、騰訊、字節跳動等，除非與國際巨頭直接相關）"
+    "中國企業動態（阿里、騰訊、字節跳動等，除非與國際巨頭直接相關）",
+    "以裁員、精簡人事、縮編為主軸的新聞（就算起因是 AI 也不收；主軸是企業的 AI 策略本身或成效數據的不在此限）"
   ],
   "sources": {
     "collectCron": "0 5 * * *",
     "minScore": 5,
     "retentionDays": 14,
     "maxItemsPerGoogleNewsQuery": 20,
-    "blockedPublishers": ["36Kr", "36氪", "36kr.com", "MSN", "msn.com", "蕃新聞", "n.yam.com", "CoinMarketCap", "coinmarketcap.com", "AOL.com", "AOL.co.uk", "TradingView", "tradingview.com", "KuCoin", "kucoin.com", "Stocktwits", "stocktwits.com"],
+    "blockedPublishers": [
+      "36Kr",
+      "36氪",
+      "36kr.com",
+      "MSN",
+      "msn.com",
+      "蕃新聞",
+      "n.yam.com",
+      "CoinMarketCap",
+      "coinmarketcap.com",
+      "AOL.com",
+      "AOL.co.uk",
+      "TradingView",
+      "tradingview.com",
+      "KuCoin",
+      "kucoin.com",
+      "Stocktwits",
+      "stocktwits.com"
+    ],
     "feeds": [
       {
         "key": "woshipm",
@@ -388,7 +416,7 @@
       {
         "key": "gn-google",
         "name": "Google",
-        "query": "(Google OR Alphabet OR Pichai) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Google OR Alphabet OR Pichai) (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -397,7 +425,7 @@
       {
         "key": "gn-musk",
         "name": "Musk 系",
-        "query": "(Musk OR Tesla OR SpaceX OR xAI) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Musk OR Tesla OR SpaceX OR xAI) (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -406,7 +434,7 @@
       {
         "key": "gn-apple",
         "name": "Apple",
-        "query": "(Apple OR \"Tim Cook\") (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Apple OR \"Tim Cook\") (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -415,7 +443,7 @@
       {
         "key": "gn-microsoft",
         "name": "Microsoft",
-        "query": "(Microsoft OR Nadella) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Microsoft OR Nadella) (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -424,7 +452,7 @@
       {
         "key": "gn-openai",
         "name": "OpenAI",
-        "query": "(OpenAI OR \"Sam Altman\") (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(OpenAI OR \"Sam Altman\") (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -433,7 +461,7 @@
       {
         "key": "gn-anthropic",
         "name": "Anthropic",
-        "query": "(Anthropic OR \"Dario Amodei\") (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Anthropic OR \"Dario Amodei\") (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -451,7 +479,7 @@
       {
         "key": "gn-meta",
         "name": "Meta",
-        "query": "(Meta OR Zuckerberg) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Meta OR Zuckerberg) (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -460,7 +488,7 @@
       {
         "key": "gn-amazon",
         "name": "Amazon",
-        "query": "(Amazon OR \"Andy Jassy\") (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Amazon OR \"Andy Jassy\") (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -469,7 +497,7 @@
       {
         "key": "gn-media-mobility",
         "name": "Netflix／Disney／Uber",
-        "query": "(Netflix OR Disney OR Uber) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Netflix OR Disney OR Uber) (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -478,7 +506,7 @@
       {
         "key": "gn-intel-crm-coinbase",
         "name": "Intel／Salesforce／Coinbase",
-        "query": "(Intel OR Salesforce OR Coinbase) (layoffs OR reorganization OR restructuring OR executive OR CEO OR employees OR culture OR union OR hiring OR compensation)",
+        "query": "(Intel OR Salesforce OR Coinbase) (\"AI strategy\" OR \"AI adoption\" OR \"AI agents\" OR \"AI revenue\" OR \"AI investment\" OR productivity OR executive OR CEO OR culture OR union OR hiring OR compensation)",
         "tiers": [
           "corp"
         ],
@@ -487,7 +515,7 @@
       {
         "key": "gn-rbi",
         "name": "RBI 系",
-        "query": "(\"Restaurant Brands International\" OR \"Burger King\" OR \"Tim Hortons\" OR Popeyes) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
+        "query": "(\"Restaurant Brands International\" OR \"Burger King\" OR \"Tim Hortons\" OR Popeyes) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR AI OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -496,7 +524,7 @@
       {
         "key": "gn-mcdonalds",
         "name": "McDonald's",
-        "query": "\"McDonald's\" (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
+        "query": "\"McDonald's\" (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR AI OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -505,7 +533,7 @@
       {
         "key": "gn-yum",
         "name": "Yum! Brands",
-        "query": "(\"Yum Brands\" OR KFC OR \"Taco Bell\" OR \"Pizza Hut\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
+        "query": "(\"Yum Brands\" OR KFC OR \"Taco Bell\" OR \"Pizza Hut\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR AI OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -514,7 +542,7 @@
       {
         "key": "gn-chains",
         "name": "Chipotle／Domino's／Darden",
-        "query": "(Chipotle OR \"Domino's\" OR Darden) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
+        "query": "(Chipotle OR \"Domino's\" OR Darden) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR AI OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -523,7 +551,7 @@
       {
         "key": "gn-starbucks",
         "name": "Starbucks",
-        "query": "Starbucks (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
+        "query": "Starbucks (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR AI OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -532,7 +560,7 @@
       {
         "key": "gn-beverage",
         "name": "跨國飲料",
-        "query": "(\"AB InBev\" OR \"Coca-Cola\" OR PepsiCo OR Nestle OR \"Keurig Dr Pepper\" OR \"Monster Beverage\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
+        "query": "(\"AB InBev\" OR \"Coca-Cola\" OR PepsiCo OR Nestle OR \"Keurig Dr Pepper\" OR \"Monster Beverage\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR AI OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
@@ -541,7 +569,7 @@
       {
         "key": "gn-spirits",
         "name": "烈酒與精品酒",
-        "query": "(Diageo OR \"Pernod Ricard\" OR \"Moet Hennessy\" OR \"Remy Cointreau\" OR \"Brown-Forman\" OR \"Red Bull\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition) -F1 -\"Formula 1\" -racing -\"Red Bulls\" -cycling",
+        "query": "(Diageo OR \"Pernod Ricard\" OR \"Moet Hennessy\" OR \"Remy Cointreau\" OR \"Brown-Forman\" OR \"Red Bull\") (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR AI OR expansion OR strategy OR acquisition) -F1 -\"Formula 1\" -racing -\"Red Bulls\" -cycling",
         "tiers": [
           "food"
         ],
@@ -559,11 +587,29 @@
       {
         "key": "gn-foodservice",
         "name": "團膳",
-        "query": "(\"Compass Group\" OR Aramark) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR layoffs OR restructuring OR expansion OR strategy OR acquisition)",
+        "query": "(\"Compass Group\" OR Aramark) (CEO OR executive OR franchisees OR franchisee OR union OR strike OR workers OR wages OR AI OR expansion OR strategy OR acquisition)",
         "tiers": [
           "food"
         ],
         "lang": "en-US"
+      },
+      {
+        "key": "gn-ai-enterprise",
+        "name": "企業 AI 策略與成效",
+        "query": "(\"AI strategy\" OR \"AI adoption\" OR \"AI transformation\" OR \"generative AI\") (results OR productivity OR ROI OR revenue OR \"cost savings\") (company OR enterprise OR CEO) -layoffs",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "en-US"
+      },
+      {
+        "key": "gn-ai-enterprise-zh",
+        "name": "企業 AI 導入成效",
+        "query": "企業 AI (導入 OR 落地 OR 策略) (成效 OR 效益 OR 營收 OR 生產力)",
+        "tiers": [
+          "corp"
+        ],
+        "lang": "zh-TW"
       }
     ],
     "keywords": {
@@ -675,7 +721,6 @@
         "組織",
         "員工",
         "職場",
-        "裁員",
         "企業文化",
         "人才",
         "遠距",

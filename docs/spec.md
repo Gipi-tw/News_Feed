@@ -1,12 +1,12 @@
 # 日報規格（2026-10 版）
 
-取代原本只寫在 Cowork 排程 prompt 裡的規格。程式裡對應的設定在 `config/digest_config.json`（`configVersion: 7`），配額由 `src/pipeline/quota.ts` 強制執行。
+取代原本只寫在 Cowork 排程 prompt 裡的規格。程式裡對應的設定在 `config/digest_config.json`（`configVersion: 9`），配額由 `src/pipeline/quota.ts` 強制執行。
 
 ## 5 區 45 篇（顯示順序）
 
 | 區塊 | 篇數 | 色系 | 配額 |
 |---|---|---|---|
-| 🏢 企業動態：國際科技巨頭 | 10 | tier0 深藍 | 以 AI 為主軸 ≤ 5（即至少 5 篇與 AI 無關） |
+| 🏢 企業動態：國際科技巨頭 | 10 | tier0 深藍 | 以 AI 為主軸 ≤ 5（即至少 5 篇與 AI 無關）；其中「企業因應 AI 的策略／進展／成效」≥ 3 |
 | 🍔 餐飲・飲料產業 | 10 | tier4 橘棕（border `#d35400`、bg `#fdf2e9`） | 以 AI 為主軸 ≤ 2 |
 | 🧭 領導・組織・工作方式 | 10 | tier1 紅 | 以 AI 為主軸 ≤ 4，以非 AI 角度為主 |
 | 🟡 第二級 | 8 | tier2 黃 | 以 AI 為主軸 ≤ 4；其中 AI 開發實務 ≤ 2 |
@@ -19,6 +19,8 @@
 - 上表的配額由程式強制，不靠模型自律：選文時每則候選都要標主題標籤，程式依標籤挑選、超標時用同區備選遞補。
 - **寧缺勿濫**：某區找不到足夠的好內容就少收，頁尾寫明篇數和原因；不拿 AI 新聞或重複事件硬湊。
 - 排除純財報、股價新聞。同一個持續事件只收新進展。
+- 不收以裁員、精簡人事、縮編為主軸的新聞，就算起因是 AI 也一樣（2026-10-26 決定）。主軸是企業的 AI 策略本身或成效數據的照收。
+- 企業動態的重點改成「企業因應 AI 的策略改變、落地進展、可衡量成效」：除了 15 家科技巨頭，也收其他知名大企業（金融、零售、製造等）的 AI 策略與成效。標成這類的文章也算進「以 AI 為主軸」的上限。
 - 去重：URL 為硬條件（30 天窗口），事件相似為軟條件。
 - 同一事件只留一則：各區選完後，模型再把全份候選（含備選）一起看一次，同一事件的不同報導只留排名最前的那則，其他刪掉、由備選遞補；因此少收時頁尾會註明。
 - 不收的媒體：`sources.blockedPublishers`（目前 36Kr、MSN、蕃新聞、CoinMarketCap、AOL、TradingView、KuCoin、Stocktwits），可在設定頁增減。每一項都和媒體名比對，要完全相同（不分大小寫，所以 MSN 不會擋到 MSNBC）；含「.」的項目另外當網域比對，連子網域一起擋（Google News 有些媒體名就是網域，例如 AOL.com）。收集時就跳過，Google News 連結解回原文後再用網域檢查一次。
@@ -42,7 +44,7 @@
 - 收集每天一次（台北 05:00，`sources.collectCron`）；出日報時只有當天凌晨那次沒成功才補跑。來源清單在 `digest_config.sources`，可在設定頁編輯。高流量 RSS（TechCrunch、The Verge 等只給最新 10–20 篇）一天抓一次會漏掉部分文章，候選常不夠時可改成一天兩次。
 - 評分與選文會帶入完整的興趣輪廓（不再只取開頭 1,500 字），並用提示快取降低重複成本。
 - RSS：woshipm、INSIDE、TechCrunch、極客公園、Bloomberg Tech、WIRED（含 Gear）、Gizmodo、InfoQ、iThome、Slashdot、The Verge、Fast Company、HBR（http）、Lifehacker、MIT SMR、TechNews、PsyPost、NRN，加上 Cowork 實際常用的 Fortune、Restaurant Dive、Food Dive、HR Dive。
-- Google News：沒有 RSS 的站用 `site:` 查（數位時代、經理人、親子天下、Restaurant Business）；追蹤企業／人物各一條（企業區 11 條、餐飲區 9 條）。企業區與餐飲區的查詢都加上組織／經營類關鍵字（精品咖啡除外），避開促銷、菜單、股價閒聊；烈酒查詢另外排除 Red Bull 的賽車和球隊新聞。連結是 Google 轉址，選中後才解回原文網址。
+- Google News：沒有 RSS 的站用 `site:` 查（數位時代、經理人、親子天下、Restaurant Business）；追蹤企業／人物各一條（企業區 11 條、餐飲區 9 條），另有兩條「企業 AI 策略與成效」查詢（英文、中文）。企業區的查詢帶 AI 策略／採用／成效和經營類關鍵字，不再帶 layoffs／restructuring；餐飲區的查詢帶經營類關鍵字（精品咖啡除外），避開促銷、菜單、股價閒聊；烈酒查詢另外排除 Red Bull 的賽車和球隊新聞。連結是 Google 轉址，選中後才解回原文網址。
 - 篩選：專屬來源一律評分；綜合來源要命中關鍵字／人名才評分。Haiku 只看標題＋摘要給「區塊＋0–10 分」；只對選中的文章抓全文。
 - 某區候選不足（< 名額 × 2）時，用該區 `queries` 跑 Google News 補搜尋。
 - 暫不收：36氪、機器之心、新智元、微軟研究院AI頭條（找不到 feed、幾乎全是 AI）；VentureBeat（429）；Just Drinks（403）。
