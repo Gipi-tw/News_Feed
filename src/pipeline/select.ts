@@ -51,10 +51,13 @@ export interface TierSelection {
   attempts: number;
 }
 
+/** Tags that are kinds of AI story, so a tier's "AI ≤ n" cap covers them too. */
+const IMPLIES_AI = ["ai_dev", "ai_strategy"];
+
 /**
  * Model picks → candidates, best first: unknown or repeated numbers are
- * skipped, and AI-dev pieces also count as AI (so a tier's "AI ≤ n" cap
- * covers them — on 10/22 two ai_dev-only picks slipped past 第二級's AI cap).
+ * skipped, and AI-dev / AI-strategy pieces also count as AI (on 10/22 two
+ * ai_dev-only picks slipped past 第二級's AI cap).
  */
 export function mapSelection(
   candidates: SearchHit[],
@@ -68,7 +71,7 @@ export function mapSelection(
     if (!hit || seen.has(s.id)) continue;
     seen.add(s.id);
     const tags = new Set(s.tags ?? []);
-    if (tags.has("ai_dev")) tags.add("ai");
+    if (IMPLIES_AI.some((t) => tags.has(t))) tags.add("ai");
     ranked.push({ ...hit, tags: [...tags] });
     if (ranked.length >= limit) break;
   }

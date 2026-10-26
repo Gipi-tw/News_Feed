@@ -65,7 +65,7 @@ test("global max shrinks a tier when its pool has nothing untagged left", () => 
   assert.equal(ids(ra.picked), "a1");
 });
 
-test("selector picks map by candidate number; bad or repeated numbers are skipped; ai_dev counts as ai", () => {
+test("selector picks map by candidate number; bad or repeated numbers are skipped; ai_dev / ai_strategy count as ai", () => {
   const c = (n: number) => ({ title: `t${n}`, url: `https://news.google.com/rss/articles/${"x".repeat(200)}${n}`, snippet: "" });
   const candidates = [c(0), c(1), c(2), c(3)];
   const ranked = mapSelection(
@@ -76,10 +76,10 @@ test("selector picks map by candidate number; bad or repeated numbers are skippe
       { id: 2, tags: [] }, // repeated
       { id: 0, tags: ["ai"] },
       { id: 1.5 as number, tags: [] },
-      { id: 3 },
+      { id: 3, tags: ["ai_strategy"] },
       { id: 1, tags: [] }, // past the limit
     ],
     3,
   );
-  assert.deepEqual(ranked.map((h) => [h.title, (h.tags ?? []).sort().join(",")]), [["t2", "ai,ai_dev"], ["t0", "ai"], ["t3", ""]]);
+  assert.deepEqual(ranked.map((h) => [h.title, (h.tags ?? []).sort().join(",")]), [["t2", "ai,ai_dev"], ["t0", "ai"], ["t3", "ai,ai_strategy"]]);
 });
