@@ -115,20 +115,17 @@ label.field { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 1
   /* One-line nav: icon instead of the name, bigger tap targets. */
   nav.topnav .inner { gap: 14px; padding: 4px 14px; flex-wrap: nowrap; }
   nav.topnav .brand-text { display: none; }
-  nav.topnav a, nav.topnav button.linkbtn { font-size: 15px; padding: 10px 0; }
+  nav.topnav a, nav.topnav button.linkbtn { padding: 10px 0; }
   /* Masthead: date + count only; the boilerplate is in the footer anyway. */
   .wrap { padding: 14px 14px 72px; }
   header.masthead { padding-bottom: 12px; }
-  .masthead h1 { font-size: 21px; }
   .masthead .meta { margin-top: 2px; }
   .masthead .meta-extra { display: none; }
   .toc { margin: 14px 0; gap: 6px; }
   .toc .chip { padding: 6px 10px; }
   section.tier { margin-top: 28px; }
   .tier-head { padding: 6px 12px; margin-bottom: 12px; gap: 2px 10px; }
-  .tier-head h2 { font-size: 18px; }
   article.card { padding: 14px 16px; margin-bottom: 12px; }
-  .card h3 { font-size: 16.5px; }
 }
 
 /* ── 🎬 影音重點 (not part of the 45) ─────────────────────────────── */
@@ -148,6 +145,32 @@ label.field { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 1
 .video-rest li { margin: 4px 0; overflow-wrap: anywhere; }
 .video-rest a { color: var(--ink); }
 .video-rest .why { display: block; font-size: 12.5px; color: var(--muted); }
+/* ── Phone type sizes: one place, last in the file so it overrides the
+   desktop sizes above. Reading text 17px, small print ≥ 14px; form controls
+   ≥ 16px so iOS doesn't zoom in when one is tapped. ─────────────────── */
 @media (max-width: 480px) {
-  .video .points li { grid-template-columns: 4em minmax(0, 1fr); }
+  body { font-size: 17px; }
+  nav.topnav a, nav.topnav button.linkbtn { font-size: 16px; }
+  .masthead h1 { font-size: 22px; }
+  .masthead .meta { font-size: 15px; }
+  .daypicker { font-size: 16px; }
+  .toc { font-size: 15px; }
+  .to-toc { font-size: 15px; padding: 9px 16px; }
+  .tier-head h2 { font-size: 20px; }
+  .tier-head .count { font-size: 14px; }
+  .card h3 { font-size: 19px; line-height: 1.45; }
+  .src { font-size: 14px; }
+  .fact, .hook { font-size: 17px; line-height: 1.8; }
+  .label { font-size: 13px; }
+  .links { font-size: 15px; }
+  footer { font-size: 14px; }
+  .btn, label.field { font-size: 15px; }
+  .video .verdict { font-size: 15px; }
+  .video .pill { font-size: 13px; }
+  .video .points { font-size: 16px; }
+  /* Timestamp leads the sentence instead of taking a column, so the text gets the full width. */
+  .video .points li { display: block; }
+  .video .ts { display: inline; padding: 8px 0; font-size: 14px; margin-right: 8px; } /* inline padding widens the tap area without opening up the line */
+  .video-rest ul { font-size: 16px; }
+  .video-rest .why { font-size: 14px; }
 }
