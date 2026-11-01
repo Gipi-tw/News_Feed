@@ -5,7 +5,7 @@ import { todayInTz } from "../lib/date";
 import type { BuiltArticle, Candidate, SearchHit, SelectedArticle, TierConfig, TierKey } from "../lib/types";
 import { runSearches } from "../lib/search";
 import { enrichCandidates } from "./fetch";
-import { getRecentEntries, hardFilter } from "./dedup";
+import { getRecentArticles, getRecentEntries, hardFilter } from "./dedup";
 import { selectForTier } from "./select";
 import { loadReadingSignals, readingSignalsPrompt, signalStats } from "../lib/engagement";
 import { summarizeTier } from "./summarize";
@@ -13,7 +13,7 @@ import { researchTier } from "./research";
 import { enforceQuotas } from "./quota";
 import { buildNotes, type TierOutcome } from "./notes";
 import { collectedCandidates, markUsed, resolveLinks } from "./candidates";
-import { dropSameEvent, findSameEvent, type EventItem } from "./same-event";
+import { REPEAT_DAYS, dropSameEvent, findSameEvent, type EventItem, type PublishedItem } from "./same-event";
 import { publisherBlocker } from "../collect/blocklist";
 import { runCollect } from "../collect";
 import { attachVideos, unshownVideoCounts } from "../videos";
@@ -41,6 +41,7 @@ interface TierPool<T> {
   shortfallNote: string;
   error?: string;
   deduped?: number; // dropped as the same event as a better-ranked pick
+  repeated?: number; // dropped as an event already published in the last few days
 }
 
 /**
@@ -87,6 +88,7 @@ export async function runDigest(opts?: {
       today,
       cfg.dedup.windowDays,
     );
+    const published = await getRecentArticles(today, REPEAT_DAYS);
 
     const mode = env.searchProviderOverride || cfg.search.provider;
     let articlesFlat: SelectedArticle[];
@@ -123,7 +125,7 @@ export async function runDigest(opts?: {
         );
       }
       assertSomeTierWorked(pools);
-      await dropSameEventPicks(pools, (a) => ({ title: a.title, sourceName: a.sourceName, snippet: a.factSummary }), log, detail);
+      await dropSameEventPicks(pools, (a) => ({ title: a.title, sourceName: a.sourceName, snippet: a.factSummary }), published, log, detail);
 
       const enforced = enforceQuotas(
         pools.map((p) => ({ key: p.tier.key, ranked: p.ranked, count: p.tier.count, rules: p.tier.rules })),
@@ -184,7 +186,7 @@ export async function runDigest(opts?: {
         await resolveLinks(pools, knownUrls, cfg.sources?.blockedPublishers);
       }
       await progress("檢查同一事件重複…");
-      await dropSameEventPicks(pools, (h) => ({ title: h.title, sourceName: h.sourceName, snippet: h.snippet }), log, detail);
+      await dropSameEventPicks(pools, (h) => ({ title: h.title, sourceName: h.sourceName, snippet: h.snippet }), published, log, detail);
 
       const enforced = enforceQuotas(
         pools.map((p) => ({ key: p.tier.key, ranked: p.ranked, count: p.tier.count, rules: p.tier.rules })),
@@ -299,24 +301,32 @@ export async function runDigest(opts?: {
 }
 
 /**
- * Drop same-event duplicates across all tiers before quotas are enforced, so
- * the spares backfill. Best effort: if the check fails, the picks ship as is.
+ * Drop same-event duplicates across all tiers, and repeats of what ran in the
+ * last few days, before quotas are enforced, so the spares backfill. Best
+ * effort: if the check fails, the picks ship as is.
  */
 async function dropSameEventPicks<T>(
   pools: TierPool<T>[],
   describe: (t: T) => EventItem,
+  published: PublishedItem[],
   log: Logger,
   detail: Record<string, unknown>,
 ): Promise<void> {
   try {
-    const groups = await findSameEvent(pools.flatMap((p) => p.ranked.map(describe)));
-    const dropped = dropSameEvent(pools, groups);
+    const { groups, repeats } = await findSameEvent(pools.flatMap((p) => p.ranked.map(describe)), published);
+    const dropped = dropSameEvent(pools, groups, repeats.map((r) => r.id));
     pools.forEach((p, i) => {
-      if (dropped[i]) p.deduped = dropped[i];
+      if (dropped.sameEvent[i]) p.deduped = dropped.sameEvent[i];
+      if (dropped.repeated[i]) p.repeated = dropped.repeated[i];
     });
+    const sum = (ns: number[]) => ns.reduce((a, b) => a + b, 0);
     detail.sameEvent = groups.map((g) => g.event);
+    detail.repeats = repeats.map((r) => `${r.event}（${published[r.published].date.slice(5)} 已出）`);
     if (groups.length) {
-      log(`同一事件重複：${groups.map((g) => g.event).join("、")}（刪 ${dropped.reduce((a, b) => a + b, 0)} 則）`);
+      log(`同一事件重複：${groups.map((g) => g.event).join("、")}（刪 ${sum(dropped.sameEvent)} 則）`);
+    }
+    if (repeats.length) {
+      log(`最近 ${REPEAT_DAYS} 天已出過：${(detail.repeats as string[]).join("、")}（刪 ${sum(dropped.repeated)} 則）`);
     }
   } catch (err) {
     log(`同一事件檢查失敗，略過：${errMsg(err)}`);

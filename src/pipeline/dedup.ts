@@ -1,5 +1,6 @@
 import { prisma } from "../lib/db";
 import type { DedupRecord } from "../lib/types";
+import type { PublishedItem } from "./same-event";
 
 function daysAgo(date: string, days: number): string {
   const d = new Date(date + "T00:00:00Z");
@@ -27,6 +28,19 @@ export async function getRecentEntries(
     }
   }
   return { urls, titles: rows.map((r) => r.title) };
+}
+
+/**
+ * Articles from the last `days` days' digests (and earlier editions today),
+ * newest first — what Gipi has already been shown, for the same-event check.
+ */
+export async function getRecentArticles(today: string, days: number): Promise<PublishedItem[]> {
+  const rows = await prisma.article.findMany({
+    where: { digest: { date: { gte: daysAgo(today, days), lte: today }, status: "complete" } },
+    orderBy: [{ digest: { date: "desc" } }, { tier: "asc" }, { position: "asc" }],
+    select: { title: true, sourceName: true, factSummary: true, digest: { select: { date: true } } },
+  });
+  return rows.map((r) => ({ date: r.digest.date, title: r.title, sourceName: r.sourceName, snippet: r.factSummary }));
 }
 
 /** Hard dedup: drop any candidate whose URL was already published (SPEC §4.3). */
