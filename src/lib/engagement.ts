@@ -1,5 +1,6 @@
 import { prisma } from "./db";
 import type { DigestConfig } from "./types";
+import type { VideoSummary } from "../videos/summarize";
 
 // 閱讀紀錄 → 選文回饋. The digest page (ReadTracker) records, per card, how
 // often it crossed the reading line, how long it sat there, and whether its
@@ -17,8 +18,13 @@ export interface EngagementDelta {
   copies: number;
 }
 
-export const READ_MS = 8_000; // this long at the reading line = 讀了
-export const SKIP_MS = 1_500; // crossed the line but left sooner = 滑過
+// Time at the reading line grows with the card: a 900-字 video summary takes
+// longer to get through than a 150-字 article card without being any more
+// interesting (Gipi, 11/1). So cards are judged by reading speed — 字 per
+// second at the line — not by seconds. Gipi skims at a median ~67 字/秒.
+export const READ_CPS = 40; // ≤ this = actually read it
+const CLOSE_CPS = 20; // ≤ this = 細讀
+export const SKIP_CPS = 200; // ≥ this = passed faster than anyone reads = 滑過
 export const MIN_LIKED = 5; // cold start: below this, don't touch scoring at all
 export const WINDOW_DAYS = 21;
 const MAX_EXAMPLES = 30;
@@ -66,8 +72,23 @@ export async function recordEngagement(deltas: EngagementDelta[]): Promise<void>
   );
 }
 
+/** 字 on an article card: title + 事實 + Hook. */
+export const articleChars = (a: { title: string; factSummary: string; opinionHook: string }) =>
+  (a.title + a.factSummary + a.opinionHook).length;
+
+/** 字 on a 🎬 card: title + every line of the summary. */
+export function videoChars(title: string, s: VideoSummary | null): number {
+  if (!s) return title.length;
+  const lines = [s.verdictReason, s.oneLiner, s.hook, ...s.keyPoints.map((k) => k.point), ...s.quotes.map((q) => q.text), ...s.segments.map((g) => g.why)];
+  return title.length + lines.join("").length;
+}
+
+/** 字/秒 at the reading line; Infinity when the card never sat there. */
+export const charsPerSec = (chars: number, dwellMs: number) => (dwellMs > 0 ? chars / (dwellMs / 1000) : Infinity);
+
 export interface SignalRow {
   title: string;
+  chars: number;
   tier: string;
   tierLabel: string;
   sourceName: string;
@@ -83,7 +104,7 @@ export interface SignalExample {
   title: string;
   tierLabel: string;
   sourceName: string;
-  how: string; // 點開原文、讀 23 秒…
+  how: string; // 點開原文、細讀…
 }
 
 export interface ReadingSignals {
@@ -94,14 +115,17 @@ export interface ReadingSignals {
   skipped: SignalExample[];
 }
 
-const isLiked = (r: SignalRow) => r.clicks > 0 || r.copies > 0 || r.dwellMs >= READ_MS;
+const isRead = (r: { chars: number; dwellMs: number }) => charsPerSec(r.chars, r.dwellMs) <= READ_CPS;
+const isLiked = (r: SignalRow) => r.clicks > 0 || r.copies > 0 || isRead(r);
 
 function how(r: SignalRow): string {
   const parts: string[] = [];
   if (r.clicks) parts.push("點開原文");
   if (r.copies) parts.push("複製文字");
-  if (r.dwellMs >= SKIP_MS) parts.push(`讀 ${Math.round(r.dwellMs / 1000)} 秒`);
-  return parts.join("、") || "停不到 2 秒";
+  const cps = charsPerSec(r.chars, r.dwellMs);
+  if (cps <= CLOSE_CPS) parts.push("細讀");
+  else if (cps <= READ_CPS) parts.push("讀過");
+  return parts.join("、") || (cps >= SKIP_CPS ? "直接滑過" : "瞄過");
 }
 
 const example = (r: SignalRow): SignalExample => ({
@@ -119,7 +143,7 @@ export function classifySignals(rows: SignalRow[]): ReadingSignals {
   // flinging past a whole tier to get to 🎬 says nothing about its articles.
   const readTiers = new Set(liked.map((r) => `${r.digestId}|${r.tier}`));
   const skipped = rows
-    .filter((r) => r.seenCount > 0 && !isLiked(r) && r.dwellMs < SKIP_MS && readTiers.has(`${r.digestId}|${r.tier}`))
+    .filter((r) => r.seenCount > 0 && !isLiked(r) && charsPerSec(r.chars, r.dwellMs) >= SKIP_CPS && readTiers.has(`${r.digestId}|${r.tier}`))
     .sort((a, b) => b.lastAt.getTime() - a.lastAt.getTime());
   return {
     seen: rows.filter((r) => r.seenCount > 0).length,
@@ -130,8 +154,8 @@ export function classifySignals(rows: SignalRow[]): ReadingSignals {
   };
 }
 
-// An opened link or a copy outranks any amount of reading time.
-const strength = (r: SignalRow) => (r.clicks + r.copies) * 600_000 + r.dwellMs;
+// An opened link or a copy outranks any reading; reading ranks by ms per 字.
+const strength = (r: SignalRow) => (r.clicks + r.copies) * 1e6 + r.dwellMs / Math.max(r.chars, 1);
 
 /**
  * The system-prompt section for scoring and selection; "" until there's
@@ -168,7 +192,7 @@ export async function loadReadingSignals(cfg: DigestConfig, now = new Date()): P
   const articles = eng.length
     ? await prisma.article.findMany({
         where: { id: { in: eng.map((e) => e.targetId) } },
-        select: { id: true, title: true, tier: true, sourceName: true, digestId: true },
+        select: { id: true, title: true, tier: true, sourceName: true, digestId: true, factSummary: true, opinionHook: true },
       })
     : [];
   const byId = new Map(articles.map((a) => [a.id, a]));
@@ -177,7 +201,46 @@ export async function loadReadingSignals(cfg: DigestConfig, now = new Date()): P
   for (const e of eng) {
     const a = byId.get(e.targetId);
     if (!a) continue; // its digest was deleted
-    rows.push({ ...e, ...a, tierLabel: labels.get(a.tier) ?? a.tier });
+    rows.push({
+      ...e,
+      title: a.title,
+      chars: articleChars(a),
+      tier: a.tier,
+      tierLabel: labels.get(a.tier) ?? a.tier,
+      sourceName: a.sourceName,
+      digestId: a.digestId,
+    });
   }
   return classifySignals(rows);
+}
+
+export interface VideoSignals {
+  seen: number; // summaries that crossed the reading line
+  read: number; // summaries actually read (by 字/秒, not seconds)
+  opened: number; // opened the video or a timestamp
+}
+
+/** 🎬 cards, same reading-speed rule. Not fed to video selection yet — shown on /settings. */
+export function classifyVideos(rows: { chars: number; dwellMs: number; seenCount: number; clicks: number }[]): VideoSignals {
+  return {
+    seen: rows.filter((r) => r.seenCount > 0).length,
+    read: rows.filter(isRead).length,
+    opened: rows.filter((r) => r.clicks > 0).length,
+  };
+}
+
+export async function loadVideoSignals(now = new Date()): Promise<VideoSignals> {
+  const since = new Date(now.getTime() - WINDOW_DAYS * 86_400_000);
+  const eng = await prisma.engagement.findMany({ where: { kind: "video", lastAt: { gte: since } } });
+  const videos = eng.length
+    ? await prisma.video.findMany({ where: { id: { in: eng.map((e) => e.targetId) } }, select: { id: true, title: true, summary: true } })
+    : [];
+  const chars = new Map(
+    videos.map((v) => {
+      let s: VideoSummary | null = null;
+      try { s = v.summary ? (JSON.parse(v.summary) as VideoSummary) : null; } catch { s = null; }
+      return [v.id, videoChars(v.title, s)];
+    }),
+  );
+  return classifyVideos(eng.filter((e) => chars.has(e.targetId)).map((e) => ({ ...e, chars: chars.get(e.targetId)! })));
 }
