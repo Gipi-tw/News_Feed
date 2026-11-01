@@ -26,6 +26,7 @@ export async function scoreItems(
   items: ScoreInput[],
   cfg: DigestConfig,
   interestProfile: string,
+  readingSignals = "", // engagement.ts — "" until there is enough reading history
 ): Promise<{ results: ScoreOutput[]; failedBatches: number; lastError?: string }> {
   const tierKeys = cfg.tiers.map((t) => t.key);
   const schema = {
@@ -64,7 +65,7 @@ ${cfg.tiers.map((t) => `- ${t.key}｜${t.emoji} ${t.label}：${t.scope}`).join("
 ${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
 
 # 興趣輪廓（全文）
-${interestProfile}`;
+${interestProfile}${readingSignals}`;
 
   const batches: ScoreInput[][] = [];
   for (let start = 0; start < items.length; start += BATCH) batches.push(items.slice(start, start + BATCH));

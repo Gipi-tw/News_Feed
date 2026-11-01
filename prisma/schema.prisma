@@ -101,6 +101,21 @@ model Video {
   @@index([digestId])
 }
 
+// 閱讀紀錄：日報頁自動記下每張卡片的讀法（不用手動 👍👎），一篇文章／影片一列、累加。
+// 評分與選文拿它當「Gipi 最近讀了什麼、滑過什麼」的範例 — see src/lib/engagement.ts
+model Engagement {
+  targetId  String   @id // Article.id or Video.id
+  kind      String // article | video
+  seenCount Int      @default(0) // 幾次瀏覽中經過閱讀線
+  dwellMs   Int      @default(0) // 停在閱讀線上的累計毫秒
+  clicks    Int      @default(0) // 點開原文／影片／時間戳
+  copies    Int      @default(0) // 複製卡片文字
+  firstAt   DateTime @default(now())
+  lastAt    DateTime @updatedAt
+
+  @@index([kind, lastAt])
+}
+
 // 每次收集的紀錄（與日報的 RunLog 分開，免得干擾「產生中」判斷）
 model CollectRun {
   id         String    @id @default(cuid())

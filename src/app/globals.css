@@ -96,6 +96,12 @@ input[type="text"], input[type="password"], input[type="number"], textarea, sele
 textarea { line-height: 1.6; resize: vertical; }
 label.field { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 14px; }
 .muted { color: var(--muted); }
+.signals p { margin: 0; font-size: 14px; line-height: 1.7; }
+.signals details { margin-top: 10px; font-size: 13.5px; }
+.signals summary { cursor: pointer; font-weight: 600; }
+.signals ul { margin: 6px 0 0; padding-left: 18px; }
+.signals li { margin: 3px 0; overflow-wrap: anywhere; }
+.signals li .muted { font-size: 12.5px; }
 .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 .lint-list { font-size: 13px; margin: 8px 0 0; padding-left: 18px; }
 .lint-list li.ok { color: #1e8449; }

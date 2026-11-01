@@ -5,6 +5,7 @@ import { getDigestConfig } from "@/lib/config";
 import VideoSection from "./VideoSection";
 import DayPicker from "./DayPicker";
 import ToTocButton from "./ToTocButton";
+import ReadTracker from "./ReadTracker";
 
 // Renders one digest with the verified template layout (SPEC §5.2):
 // masthead, TOC, colored tier sections, cards with fact/hook/links, footer
@@ -67,7 +68,7 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
               </span>
             </div>
             {items.map((a) => (
-              <article className="card" key={a.id}>
+              <article className="card" key={a.id} data-eng={`a:${a.id}`}>
                 <h3>
                   <span className="num">{String(numberOf.get(a.id) ?? a.position).padStart(2, "0")}</span>
                   {a.urls[0] ? (
@@ -127,6 +128,8 @@ export default async function DigestView({ digest }: { digest: DigestData }) {
       </footer>
 
       <ToTocButton />
+      {/* Keyed so moving to another day re-observes the new cards. */}
+      <ReadTracker key={digest.id} />
     </div>
   );
 }
