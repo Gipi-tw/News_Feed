@@ -6,6 +6,7 @@ import { googleNewsSearchUrl, isGoogleNewsLink } from "./gnews";
 import { keywordMatcher, tierHints } from "./prefilter";
 import { publisherBlocker } from "./blocklist";
 import { scoreItems } from "./score";
+import { loadReadingSignals, readingSignalsPrompt, signalStats, type ReadingSignals } from "../lib/engagement";
 import { usage } from "../lib/anthropic";
 import { runVideos, type VideoRunResult } from "../videos";
 
@@ -177,11 +178,14 @@ async function collect(
     const tokensBefore = { input: usage.inputTokens, output: usage.outputTokens, cacheRead: usage.cacheReadInputTokens };
     let scoreFailure = "";
     const profile = toScore.length || withVideos ? await getInterestProfile() : "";
+    let signals: ReadingSignals | null = null;
     if (toScore.length) {
+      signals = await loadReadingSignals(cfg);
       const { results, failedBatches, lastError } = await scoreItems(
         toScore.map((t) => ({ ...t, hints: JSON.parse(t.hints) as string[] })),
         cfg,
         profile,
+        readingSignalsPrompt(signals),
       );
       for (let i = 0; i < results.length; i += 200) {
         await prisma.$transaction(
@@ -224,7 +228,7 @@ async function collect(
         status: "success",
         finishedAt: new Date(),
         message: `${label}：新增 ${fresh.length} 則、評分 ${scored}/${toScore.length} 則${errors.length ? `、${errors.length} 個來源失敗` : ""}｜估算 US$${scoreCost.toFixed(4)}${scoreFailure ? `；${scoreFailure}` : ""}${videoNote}`.slice(0, 400),
-        detail: JSON.stringify({ perSource, errors, scoreFailure, videos, scoreUsage, estimatedCostUSD: scoreCost }),
+        detail: JSON.stringify({ perSource, errors, scoreFailure, videos, scoreUsage, estimatedCostUSD: scoreCost, readingSignals: signals && signalStats(signals) }),
       },
     });
     log(`新增 ${fresh.length} 則，評分 ${scored} 則`);

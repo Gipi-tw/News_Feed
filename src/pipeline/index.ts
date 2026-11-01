@@ -7,6 +7,7 @@ import { runSearches } from "../lib/search";
 import { enrichCandidates } from "./fetch";
 import { getRecentEntries, hardFilter } from "./dedup";
 import { selectForTier } from "./select";
+import { loadReadingSignals, readingSignalsPrompt, signalStats } from "../lib/engagement";
 import { summarizeTier } from "./summarize";
 import { researchTier } from "./research";
 import { enforceQuotas } from "./quota";
@@ -155,6 +156,10 @@ export async function runDigest(opts?: {
         }
       }
       await progress("選文中…");
+      // Recent reading behaviour, as examples alongside the interest profile.
+      const signals = await loadReadingSignals(cfg);
+      const readingSignals = readingSignalsPrompt(signals);
+      detail.readingSignals = signalStats(signals);
       // One tier at a time: the first call writes the cached system prompt
       // (full interest profile), the other four read it at 0.1× the price.
       const pools: TierPool<SearchHit & { tags: string[] }>[] = [];
@@ -162,7 +167,7 @@ export async function runDigest(opts?: {
       for (const tier of cfg.tiers) {
         try {
           const candidates = byTierHits.get(tier.key) ?? [];
-          const s = await selectForTier({ tier, candidates, recentTitles, interestProfile, today, cfg });
+          const s = await selectForTier({ tier, candidates, recentTitles, interestProfile, readingSignals, today, cfg });
           // Candidates → model picks → picks matched to a candidate (+ retries).
           selection[tier.key] = `${candidates.length}→${s.returned}→${s.ranked.length}${s.attempts > 1 ? `（重選 ${s.attempts - 1} 次）` : ""}`;
           log(`選文（${tier.key}）：候選 ${candidates.length}、模型選 ${s.returned}、對上 ${s.ranked.length}${s.attempts > 1 ? `，重選 ${s.attempts - 1} 次` : ""}`);

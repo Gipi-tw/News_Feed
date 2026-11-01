@@ -51,7 +51,7 @@ export default function VideoSection({ videos }: { videos: VideoView[] }) {
       {done.map((v) => {
         const s = v.summary!;
         return (
-          <article className="card video" key={v.id}>
+          <article className="card video" key={v.id} data-eng={`v:${v.id}`}>
             <h3>
               <a href={at(v.id)} target="_blank" rel="noreferrer">
                 {v.title}
@@ -112,7 +112,7 @@ export default function VideoSection({ videos }: { videos: VideoView[] }) {
           <div className="src">沒有摘要的新片（{rest.length} 支）</div>
           <ul>
             {rest.map((v) => (
-              <li key={v.id}>
+              <li key={v.id} data-eng={`v:${v.id}`}>
                 <a href={at(v.id)} target="_blank" rel="noreferrer">
                   {v.title}
                 </a>

@@ -83,10 +83,11 @@ export async function selectForTier(opts: {
   candidates: SearchHit[];
   recentTitles: string[];
   interestProfile: string;
+  readingSignals?: string; // engagement.ts
   today: string;
   cfg: DigestConfig;
 }): Promise<TierSelection> {
-  const { tier, candidates, recentTitles, interestProfile, today, cfg } = opts;
+  const { tier, candidates, recentTitles, interestProfile, readingSignals = "", today, cfg } = opts;
   if (candidates.length === 0) return { ranked: [], shortfallNote: "今日沒有候選", returned: 0, attempts: 0 };
 
   const list = candidates
@@ -109,7 +110,7 @@ ${cfg.globalExclusions.map((e) => `- ${e}`).join("\n")}
 ${recentTitles.length ? recentTitles.slice(0, 50).map((t) => `- ${t}`).join("\n") : "（無）"}
 
 # 興趣輪廓（全文）
-${interestProfile}`;
+${interestProfile}${readingSignals}`;
 
   const user = `# 本區塊：${tier.emoji} ${tier.label}
 定位與切角：${tier.scope}
