@@ -1,5 +1,5 @@
 {
-  "configVersion": 11,
+  "configVersion": 12,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -819,12 +819,6 @@
         "id": "UCLNyswnPaNvY7RmpZsE1nKQ"
       },
       {
-        "key": "masters-of-scale",
-        "name": "Masters of Scale",
-        "handle": "MastersofScale",
-        "id": "UCQDXdr8B2Ou72uNZynnAt3A"
-      },
-      {
         "key": "hbr",
         "name": "Harvard Business Review",
         "handle": "harvardbusinessreview",
@@ -855,12 +849,6 @@
         "id": "UCzQUP1qoWDoEbmsQxvdjxgQ"
       },
       {
-        "key": "nathan-barry",
-        "name": "Nathan Barry",
-        "handle": "NathanBarry",
-        "id": "UCS8iR4o5fcYAo3TKiRa5e3A"
-      },
-      {
         "key": "yc",
         "name": "Y Combinator",
         "handle": "ycombinator",
@@ -889,12 +877,6 @@
         "name": "Product School",
         "handle": "ProductSchoolSanFrancisco",
         "id": "UC6hlQ0x6kPbAGjYkoz53cvA"
-      },
-      {
-        "key": "reinvention-summit",
-        "name": "The Reinvention Summit",
-        "handle": "TheReinventionSummit",
-        "id": "UC4mUbOiabwSJMMgRaxF-Fgg"
       },
       {
         "key": "coaching-for-leaders",
@@ -955,6 +937,72 @@
         "name": "Dwarkesh Patel",
         "handle": "DwarkeshPatel",
         "id": "UCXl4i9dYBrFOabk0xGmbkRA"
+      },
+      {
+        "key": "ai-daily-brief",
+        "name": "The AI Daily Brief",
+        "handle": "AIDailyBrief",
+        "id": "UCKelCK4ZaO6HeEI1KQjqzWA"
+      },
+      {
+        "key": "hard-fork",
+        "name": "Hard Fork",
+        "handle": "hardfork",
+        "id": "UCZcR2SVWaGWNlMqPxvQS3vw"
+      },
+      {
+        "key": "decoder",
+        "name": "Decoder with Nilay Patel",
+        "handle": "DecoderPod",
+        "id": "UCYRwJnCWfBqFHEHrgc18FFw"
+      },
+      {
+        "key": "every",
+        "name": "Every",
+        "handle": "EveryInc",
+        "id": "UCjIMtrzxYc0lblGhmOgC_CA"
+      },
+      {
+        "key": "lennys-podcast",
+        "name": "Lenny's Podcast",
+        "handle": "LennysPodcast",
+        "id": "UC6t1O76G0jYXOAoYCm153dA"
+      },
+      {
+        "key": "acquired",
+        "name": "Acquired",
+        "handle": "AcquiredFM",
+        "id": "UCyFqFYfTW2VoIQKylJ04Rtw"
+      },
+      {
+        "key": "a16z",
+        "name": "a16z",
+        "handle": "a16z",
+        "id": "UC9cn0TuPq4dnbTY-CBsm8XA"
+      },
+      {
+        "key": "wharton",
+        "name": "Wharton School",
+        "handle": "Wharton",
+        "id": "UCU9Z1eLsDa_meEfsmx-Ys0w"
+      },
+      {
+        "key": "mckinsey",
+        "name": "McKinsey & Company",
+        "handle": "McKinsey",
+        "id": "UCQMqUlg362Hhar_iCZ9tcjQ"
+      },
+      {
+        "key": "simon-sinek",
+        "name": "Simon Sinek",
+        "handle": "simonsinek",
+        "id": "UCPmfPl-BsCd3wmE8i45LAoA"
+      },
+      {
+        "key": "good-inside",
+        "name": "Good Inside（Dr. Becky）",
+        "handle": "GoodInside",
+        "id": "UCQcifo_12x84Uji6h1TVmKg"
       }
     ]
   }
