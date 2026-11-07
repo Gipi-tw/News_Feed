@@ -1,5 +1,5 @@
 {
-  "configVersion": 10,
+  "configVersion": 11,
   "timezone": "Asia/Taipei",
   "scheduleCron": "0 8 * * *",
   "search": {
@@ -42,7 +42,7 @@
       "subtitle": "組織・人才・領導・商業模式",
       "count": 10,
       "tierClass": "tier0",
-      "scope": "國際科技巨頭為主：Google、Musk 系（Tesla/SpaceX/X）、Apple、Microsoft、OpenAI、Anthropic、NVIDIA（含黃仁勳言論）、Meta、Amazon、Netflix、Uber、Disney、Intel、Salesforce、Coinbase；也收其他知名大企業（金融、零售、製造等）因應 AI 的策略與成效。切角：企業因應 AI 的策略改變（產品與商業模式轉向、流程與組織怎麼重新設計、投資與合作布局）、AI 落地的進展（導入到哪裡、遇到什麼問題）、可衡量的成效（營收、成本、生產力、採用率、客戶數據）；人才與薪酬制度、領導者決策與言論、企業文化事件（工會、紀律通報、dogfooding）、商業模式轉變。不收以裁員、精簡人事為主軸的新聞；排除純財報股價新聞。",
+      "scope": "國際科技巨頭為主：Google、Musk 系（Tesla/SpaceX/X）、Apple、Microsoft、OpenAI、Anthropic、NVIDIA（含黃仁勳言論）、Meta、Amazon、Netflix、Uber、Disney、Intel、Salesforce、Coinbase；也收其他知名大企業（金融、零售、製造等）因應 AI 的策略與成效。切角：企業因應 AI 的策略改變（產品與商業模式轉向、流程與組織怎麼重新設計、內部怎麼管 AI 的使用：預算、額度、誰能用哪些工具、AI 代理出包與風險）、AI 落地的進展（導入到哪裡、遇到什麼問題）、可衡量的成效（營收、成本、生產力、採用率、客戶數據）；人才與薪酬制度、領導者決策與言論、企業文化事件（工會、紀律通報、dogfooding）、商業模式轉變。不收以裁員、精簡人事為主軸的新聞；排除純財報股價新聞。",
       "queries": [
         "Google OR Microsoft OR Amazon AI strategy results OR productivity",
         "OpenAI OR Anthropic enterprise adoption OR customers OR revenue",
@@ -94,7 +94,7 @@
       "subtitle": "教練式領導・中階主管・組織設計・人才發展",
       "count": 10,
       "tierClass": "tier1",
-      "scope": "以「非 AI」角度為主的領導與組織管理：教練式領導、中階主管、授權、團隊建立、組織設計與文化、人才發展與績效、商業思維、未來工作型態（RTO／遠距／四天工作週）。研究型內容（HBR、MIT SMR、學術研究、大型調查）優先，要有具體數據或研究設計。",
+      "scope": "以「非 AI」角度為主的領導與組織管理：教練式領導、中階主管、授權、團隊建立、組織設計與文化、人才發展與績效、商業思維、未來工作型態（RTO／遠距／四天工作週）。優先收主管會遇到的具體難題與做法、領導者的親身經驗與反思（含經理人等台灣實務管理文章）；研究與調查要有能直接用在管理上的發現才收，純數據彙整、抽象的領導概念文不收。",
       "queries": [
         "coaching leadership study OR research",
         "middle managers survey OR study",
@@ -146,7 +146,7 @@
       "subtitle": "心理・親子為主，遊戲・健身・投資為輔",
       "count": 7,
       "tierClass": "tier3",
-      "scope": "心理學（焦慮、內耗、情緒調節、內在安頓的研究與新書）與親子教育（青少年發展、教養研究）為主；艾爾登法環《黑夜君臨》／魂系遊戲、健身與運動科學、投資理財與總經為輔。語氣較輕鬆。",
+      "scope": "心理學（焦慮、內耗、情緒調節、決策與自制力、內在安頓的研究與新書）與親子教育（兒童的學習動機與發展、教養做法）為主；青少年心理健康的盛行率、相關性研究與就醫率新聞少收。艾爾登法環《黑夜君臨》／魂系遊戲、投資理財與總經為輔；健身、運動與醫學健康新聞少收。語氣較輕鬆。",
       "queries": [
         "心理學 焦慮 OR 內在安頓 研究",
         "親子教育 OR 青少年發展 研究",
